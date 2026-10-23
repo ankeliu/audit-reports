@@ -277,11 +277,7 @@ class VeridiseConverter(Converter):
         if versions:
             meta["report_date"] = versions[-1]["date"]
             meta["report_version"] = versions[-1]["label"]
-            if fr.get("cover_date") and fr["cover_date"] != versions[-1]["date"]:
-                notes.append(
-                    f"report.report_date is the latest Version History entry ({versions[-1]['label']}, "
-                    f"{versions[-1]['date']}); the cover shows {fr['cover_date']}"
-                )
+            # Archive rule: report_date is the latest Version History entry, not the cover date.
         else:
             meta["report_date"] = fr.get("cover_date")
             notes.append("no Version History found: report.report_date taken from the cover date; confirm")
@@ -320,25 +316,12 @@ class VeridiseConverter(Converter):
         types = {a.get("Type", "") for a in apps}
         scope["languages"] = sorted({t.lower() for t in types if t and t.lower() in {"rust", "solidity", "move", "go"}})
         platform_from_text(report, platforms + " " + " ".join(fr.get("executive_summary", {}).get("_intro", [])))
-        if any("library" in a.get("Platform", "").lower() for a in apps):
-            notes.append(
-                "scope includes a chain-agnostic library alongside the Soroban contracts; scope.platform set "
-                "to 'soroban' (alternative: 'multi'); confirm"
-            )
         in_scope, out_scope = [], []
         for group in fr.get("scope") or []:
             in_scope += group["include"]
             out_scope += group["exclude"]
         scope["in_scope_paths"] = in_scope
         scope["out_of_scope"] = out_scope
-        if len(fr.get("scope") or []) > 1:
-            listing = "; ".join(f"{g['label']}" for g in fr["scope"])
-            notes.append(f"scope.in_scope_paths are relative to their own repository ({listing}); confirm")
-        if any(r["commit_final"] is None for r in scope["repositories"]):
-            notes.append(
-                "scope.repositories[].commit_final left null: Veridise lists fix commits per finding, "
-                "not a final reviewed commit"
-            )
 
         # findings: main series first, then intended-behavior items; invalid items go to the appendix
         findings, invalid = [], []
@@ -391,9 +374,11 @@ class VeridiseConverter(Converter):
         if note:
             notes.append(note)
         if fr.get("copyright") and "all rights reserved" in fr["copyright"].lower():
+            # One license note, not two: replace the generic default note with the specific conflict.
+            notes[:] = [n for n in notes if not n.startswith("publication.license")]
             notes.append(
-                f'the source states "{fr["copyright"]}", which conflicts with the default '
-                "publication.license Apache-2.0; Veridise to confirm reuse terms"
+                f'publication.license defaulted to "Apache-2.0" but the PDF says "{fr["copyright"]}"; '
+                "Veridise to confirm reuse terms"
             )
 
         if invalid:
@@ -406,9 +391,6 @@ class VeridiseConverter(Converter):
                     f"location: {where}). Why invalid: {why}"
                 )
             sections["appendix"] = "#### Items the firm withdrew as invalid\n\n" + "\n".join(items)
-            notes.append(
-                f"{len(invalid)} item(s) Veridise marked Invalid are excluded from findings and listed in Section 8"
-            )
         return report
 
     def _finding(self, f: dict, finding_id: str, short_to_repo: dict) -> dict:

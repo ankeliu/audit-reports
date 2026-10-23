@@ -59,12 +59,6 @@ severity_standard: audit-bank-v0.2
 
 <!-- CONVERSION-NOTE: publication.license defaulted to "Apache-2.0"; firm to confirm reuse terms -->
 
-<!-- CONVERSION-NOTE: report.engagement_end not stated in the report (RV states a 2-week review plus 1 week(s) of remediation support starting 2026-06-29); firm to supply -->
-
-<!-- CONVERSION-NOTE: effort.engineer_weeks left null: the report states a 2-week review plus 1 week(s) of remediation support (calendar time), not effort -->
-
-<!-- CONVERSION-NOTE: firm disclaimer lacks point-in-time / no-warranty / authoritative-PDF language; template default appended; firm to confirm or substitute its own -->
-
 <!-- CONVERSION-NOTE: Impact taken from the Description text; check it (all 15 findings) -->
 
 <!-- CONVERSION-NOTE: category inferred from the finding text; check it (all 15 findings) -->
@@ -936,8 +930,6 @@ Fixed in https://github.com/Moonlight-Protocol/soroban-core/pull/43 (head at htt
 | **Resolved in** | https://github.com/Moonlight-Protocol/soroban-core/commit/cc765e7 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: code excerpts from stellar/rs-soroban-env (outside the audited repo) left out of Location -->
-
 **Description.**
 
 The provider check rejects a Provider entry whose valid_until_ledger is below the current ledger, but
@@ -1492,8 +1484,6 @@ verify_external_operations ( WithdrawToChannelAddress ).
 | **Location** | `contracts/channel-auth/src/contract.rs:L135-L155`, `contracts/privacy-channel/src/contract.rs:L107-L119` |
 | **Resolved in** | https://github.com/Moonlight-Protocol/soroban-core/commit/32d929e |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: remediation PR or commit present on a finding marked Acknowledged; confirm status -->
 
 **Description.**
 

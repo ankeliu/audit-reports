@@ -80,21 +80,7 @@ severity_standard: audit-bank-v0.2
 
 # RedStone Stellar Connector: Security Assessment by Veridise
 
-<!-- CONVERSION-NOTE: publication.license defaulted to "Apache-2.0"; firm to confirm reuse terms -->
-
-<!-- CONVERSION-NOTE: report.report_date is the latest Version History entry (V2, 2025-10-27); the cover shows 2025-10-06 -->
-
-<!-- CONVERSION-NOTE: scope includes a chain-agnostic library alongside the Soroban contracts; scope.platform set to 'soroban' (alternative: 'multi'); confirm -->
-
-<!-- CONVERSION-NOTE: scope.in_scope_paths are relative to their own repository (Rust SDK @ ff1de9; Stellar Contracts @ 726ac4); confirm -->
-
-<!-- CONVERSION-NOTE: scope.repositories[].commit_final left null: Veridise lists fix commits per finding, not a final reviewed commit -->
-
-<!-- CONVERSION-NOTE: firm disclaimer lacks point-in-time / no-warranty / authoritative-PDF language; template default appended; firm to confirm or substitute its own -->
-
-<!-- CONVERSION-NOTE: the source states "© 2025 Veridise Inc. All Rights Reserved.", which conflicts with the default publication.license Apache-2.0; Veridise to confirm reuse terms -->
-
-<!-- CONVERSION-NOTE: 1 item(s) Veridise marked Invalid are excluded from findings and listed in Section 8 -->
+<!-- CONVERSION-NOTE: publication.license defaulted to "Apache-2.0" but the PDF says "© 2025 Veridise Inc. All Rights Reserved."; Veridise to confirm reuse terms -->
 
 <!-- CONVERSION-NOTE: category inferred from the finding text; check it (REDSTONE-VER-001, REDSTONE-VER-002) -->
 

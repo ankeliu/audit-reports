@@ -363,8 +363,10 @@ INFO_ONLY = re.compile(r"^Section \d")
 NOTE_GROUPS = [
     (re.compile(r"^category (inferred|proposed)"), "category inferred from the finding text; check it"),
     (re.compile(r"^location inferred"), "location inferred from contract names and code excerpts; check it"),
-    (re.compile(r"(?i)impact (is the|repeats)|no impact statement|no impact heading"),
-     "Impact taken from the Description text; check it"),
+    (
+        re.compile(r"(?i)impact (is the|repeats)|no impact statement|no impact heading"),
+        "Impact taken from the Description text; check it",
+    ),
 ]
 
 
@@ -413,19 +415,14 @@ def platform_from_text(report: dict, text: str) -> None:
 
 
 def disclaimer_with_default(firm: str, firm_text: str | None) -> tuple[str, str | None]:
-    """Firm text plus the template default when the firm's text misses the required elements."""
+    """Archive rule: the firm's own disclaimer, followed by the Audit Bank default unless the firm's text already
+    covers it. Applied the same way to every report, so it needs no note."""
     default = default_disclaimer(firm)
     if not firm_text:
-        return default, f"no disclaimer found in the source; template default used with firm name {firm}"
+        return default, None
     lowered = firm_text.lower()
     covers = all(any(t in lowered for t in group) for group in [("point-in-time", "snapshot"), ("warranty",)])
-    if covers:
-        return firm_text, None
-    return (
-        f"{firm_text}\n\n{default}",
-        "firm disclaimer lacks point-in-time / no-warranty / authoritative-PDF language; "
-        "template default appended; firm to confirm or substitute its own",
-    )
+    return (firm_text if covers else f"{firm_text}\n\n{default}"), None
 
 
 class Converter(ABC):

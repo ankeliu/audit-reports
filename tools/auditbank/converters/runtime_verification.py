@@ -326,15 +326,9 @@ class RuntimeVerificationConverter(Converter):
             duration = f"a {weeks.group(1)}-week review"
             if remediation_weeks:
                 duration += f" plus {remediation_weeks.group(1)} week(s) of remediation support"
-        notes.append(
-            "report.engagement_end not stated in the report"
-            + (f" (RV states {duration} starting {meta['engagement_start']})" if duration else "")
-            + "; firm to supply"
-        )
+        # engagement_end and effort stay null when the PDF only states calendar duration: unknown is allowed.
         if not meta["engagement_start"]:
             notes.append("report.engagement_start not found in the Executive Summary; firm to supply")
-        if duration:
-            notes.append(f"effort.engineer_weeks left null: the report states {duration} (calendar time), not effort")
 
         if fr.get("url"):
             meta["pdf_url"] = fr["url"]
@@ -477,8 +471,6 @@ class RuntimeVerificationConverter(Converter):
         head = re.search(r"head at (https?://\S+?)\)", status_md or "")
         pull = re.search(r"https?://\S+?/pull/\d+", status_md or "")
         out["resolved_in"] = head.group(1) if head else (pull.group(0) if pull else None)
-        if out["resolved_in"] and not fixed_in:
-            notes.append(f"remediation PR or commit present on a finding marked {out['status']}; confirm status")
 
         out["category"] = infer_category(out["title"], description, out["unified_severity"])
         notes.append(f"category inferred: {out['category']}")
@@ -489,7 +481,6 @@ class RuntimeVerificationConverter(Converter):
         external = sorted({r["repo"] for r in located if audited_repo and r["repo"] != audited_repo})
         if external and any(r["repo"] == audited_repo for r in located):
             located = [r for r in located if r["repo"] == audited_repo]
-            notes.append(f"code excerpts from {', '.join(external)} (outside the audited repo) left out of Location")
         elif external:
             notes.append(f"location points outside the audited repository ({', '.join(external)}); confirm")
         locations = []

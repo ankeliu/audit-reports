@@ -178,11 +178,8 @@ class HalbornConverter(Converter):
             notes.append("engagement dates not found on the page")
         dates = sorted(f["remediationDate"][:10] for f in fr["findings"] if f.get("remediationDate"))
         if dates:
+            # Archive rule: report_date is the latest fix date; the page's "last updated" moves with edits.
             meta["report_date"] = dates[-1]
-            notes.append(
-                f"report.report_date taken from the latest finding remediationDate ({dates[-1]}); "
-                f"page last updated {(fr.get('updated_at') or '?')[:10]}; firm to confirm the publication date"
-            )
         elif fr.get("updated_at"):
             meta["report_date"] = fr["updated_at"][:10]
             notes.append("report.report_date taken from the page's last-updated date; firm to confirm")
@@ -259,9 +256,8 @@ class HalbornConverter(Converter):
             notes.append("Solved without a remediation commit: recorded as Fixed - Not Verified; confirm")
         else:
             out["remediation_verified_by"] = "not-reviewed"
+        # The firm's status label governs even when a commit is attached (e.g. a partial or documentation-only fix).
         out["resolved_in"] = f.get("remediationHash") or None
-        if out["resolved_in"] and state != "Solved":
-            notes.append(f"remediation commit present on a finding marked {state}; consider Partially Resolved")
 
         description_html, excerpts = _strip_code_headers(f.get("description") or "")
         description = html_to_md(description_html) or ""

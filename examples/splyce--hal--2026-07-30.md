@@ -100,17 +100,11 @@ severity_standard: audit-bank-v0.2
 
 <!-- CONVERSION-NOTE: publication.license defaulted to "Apache-2.0"; firm to confirm reuse terms -->
 
-<!-- CONVERSION-NOTE: report.report_date taken from the latest finding remediationDate (2026-07-30); page last updated 2026-08-12; firm to confirm the publication date -->
-
 <!-- CONVERSION-NOTE: scope.repositories[].commit_final is the last of 64 listed remediation commits; Halborn to confirm it is the final reviewed commit -->
-
-<!-- CONVERSION-NOTE: firm disclaimer lacks point-in-time / no-warranty / authoritative-PDF language; template default appended; firm to confirm or substitute its own -->
 
 <!-- CONVERSION-NOTE: category inferred from the finding text; check it (all 67 findings) -->
 
 <!-- CONVERSION-NOTE: location inferred from contract names and code excerpts; check it (SPLYCE-HAL-001, SPLYCE-HAL-002, SPLYCE-HAL-008, SPLYCE-HAL-009, SPLYCE-HAL-011, SPLYCE-HAL-013, SPLYCE-HAL-015, SPLYCE-HAL-025, SPLYCE-HAL-027, SPLYCE-HAL-031, SPLYCE-HAL-035, SPLYCE-HAL-038, SPLYCE-HAL-043, SPLYCE-HAL-044, SPLYCE-HAL-046, SPLYCE-HAL-047, SPLYCE-HAL-051, SPLYCE-HAL-052, SPLYCE-HAL-053, SPLYCE-HAL-054, SPLYCE-HAL-055, SPLYCE-HAL-056, SPLYCE-HAL-057, SPLYCE-HAL-058, SPLYCE-HAL-059, SPLYCE-HAL-060, SPLYCE-HAL-061, SPLYCE-HAL-062, SPLYCE-HAL-063, SPLYCE-HAL-064, SPLYCE-HAL-065, SPLYCE-HAL-067) -->
-
-<!-- CONVERSION-NOTE: remediation commit present on a finding marked Acknowledged; consider Partially Resolved (SPLYCE-HAL-050, SPLYCE-HAL-056, SPLYCE-HAL-062) -->
 
 ## 1. Executive summary
 
@@ -3973,8 +3967,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/proxy_asset_manager/src/constants.rs` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/1dc7b8949dc90362b753b4611e0721cc963b8549 |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: remediation commit present on a finding marked Risk Accepted; consider Partially Resolved -->
 
 **Description.**
 
