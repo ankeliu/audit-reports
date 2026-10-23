@@ -8,7 +8,10 @@ Rules every converter follows (see CLAUDE_CODE_PLAN.md section 4.0):
 """
 
 import hashlib
+import logging
 import re
+import shutil
+import subprocess
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from pathlib import Path
@@ -25,6 +28,8 @@ CACHE_DIR = REPO_ROOT / "tests" / "fixtures" / "_downloads"
 USER_AGENT = "Mozilla/5.0 (compatible; auditbank/0.2; +https://github.com/ankeliu/audit-reports)"
 DEFAULT_LICENSE = "Apache-2.0"
 MAX_DOWNLOAD_BYTES = 50 * 1024 * 1024
+
+logging.getLogger("pdfminer").setLevel(logging.ERROR)
 
 UNIFIED_FROM_LABEL = {
     "critical": "Critical",
@@ -83,6 +88,18 @@ def _kind(name: str, head: bytes) -> str:
     if name.lower().endswith((".md", ".markdown")):
         return "md"
     return "html"
+
+
+def pdf_text(path) -> str:
+    """`pdftotext -layout` (poppler), falling back to pdfplumber's layout extraction."""
+    if shutil.which("pdftotext"):
+        result = subprocess.run(["pdftotext", "-layout", str(path), "-"], capture_output=True, check=True, timeout=120)
+        return result.stdout.decode("utf-8", errors="replace")
+    import pdfplumber
+
+    logging.getLogger("pdfminer").setLevel(logging.ERROR)
+    with pdfplumber.open(path) as pdf:
+        return "\f".join((page.extract_text(layout=True) or "") for page in pdf.pages)
 
 
 def html_to_md(html: str | None) -> str | None:

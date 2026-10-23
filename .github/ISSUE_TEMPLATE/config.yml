@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report format and filling instructions
+    url: https://github.com/ankeliu/audit-reports/blob/main/FILLING_INSTRUCTIONS.md
+    about: Read this before preparing a standard-format report.

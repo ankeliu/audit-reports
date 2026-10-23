@@ -19,11 +19,13 @@ def is_standard_md(text: str) -> bool:
     return bool(re.match(r"^﻿?---\s*\n[\s\S]*?^schema_version:", text, re.M))
 
 
-def _pdf_first_pages(path: Path) -> str:
+def _pdf_identity(path: Path) -> str:
+    """Metadata plus the first pages (RV puts its name after the cover and table of contents)."""
     import pdfplumber
 
     with pdfplumber.open(path) as pdf:
-        return "\n".join((page.extract_text() or "") for page in pdf.pages[:3])
+        meta = " ".join(str(v) for v in (pdf.metadata or {}).values())
+        return meta + "\n" + "\n".join((page.extract_text() or "") for page in pdf.pages[:8])
 
 
 def detect(source: str, firm: str | None = None) -> tuple[str | None, RawDoc]:
@@ -46,7 +48,7 @@ def detect(source: str, firm: str | None = None) -> tuple[str | None, RawDoc]:
             return None, raw
         raise DetectionError("markdown file has no `schema_version:` frontmatter; " + NO_CONVERTER)
     if raw.kind == "pdf":
-        text = _pdf_first_pages(raw.path)
+        text = _pdf_identity(raw.path)
         for key, marker in PDF_MARKERS.items():
             if marker.lower() in text.lower() and key in CONVERTERS:
                 return key, raw

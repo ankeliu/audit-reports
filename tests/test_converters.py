@@ -69,3 +69,13 @@ def test_halborn_splyce():
     assert summary == {"total": 67, "critical": 1, "high": 0, "moderate": 10, "low": 35, "informational": 21}
     assert _codes(validate_report(report, today=TODAY)) == DRAFT_WARNINGS
     _assert_clean_draft(report)
+
+
+def test_examples_are_clean_drafts():
+    examples = sorted((FIXTURES.parent.parent / "examples").glob("*.md"))
+    examples = [p for p in examples if p.name != "README.md"]
+    assert len(examples) == 3
+    for path in examples:
+        text = path.read_text()
+        assert render(parse(text)) == text, path.name
+        assert _codes(validate_text(text, today=TODAY)) == DRAFT_WARNINGS, path.name

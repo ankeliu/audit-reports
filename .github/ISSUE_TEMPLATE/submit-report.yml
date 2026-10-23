@@ -1,0 +1,66 @@
+name: Submit an audit report
+description: Add a published Audit Bank report to the archive. The repo converts or validates it and opens a PR for review.
+title: "Report submission: "
+labels: ["report-submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Submit a report **only once your firm would publish it publicly** (client approval given, embargoes elapsed, redactions applied).
+        Within ~2 minutes a bot comments here with the validation result and, if it passes, opens a PR adding the standard-format file.
+        Use the [submission page](https://ankeliu.github.io/audit-reports/) to check a standard `.md` instantly before submitting.
+  - type: dropdown
+    id: firm
+    attributes:
+      label: Audit firm
+      options:
+        - Runtime Verification (RV)
+        - Halborn (HAL)
+        - OtterSec (OS)
+        - Veridise (VER)
+        - Certora (CER)
+        - Zellic (ZEL)
+        - Spearbit (SPB)
+        - Oak Security (OAK)
+        - Quantstamp (QS)
+        - Hashlock (HSH)
+        - ChainSecurity (CS)
+    validations:
+      required: true
+  - type: input
+    id: source_url
+    attributes:
+      label: Published report URL
+      description: Halborn report page, PDF URL, or raw URL of a standard `.md`. Optional if you attach a file below.
+      placeholder: https://www.halborn.com/audits/...
+  - type: textarea
+    id: attachment
+    attributes:
+      label: Attachment
+      description: Drag your PDF or standard `.md` here (GitHub uploads it and inserts a link). Attachments in this issue are public.
+  - type: input
+    id: project_slug
+    attributes:
+      label: Project slug
+      description: Lowercase kebab-case, e.g. `trustless-work`. Used for the directory and finding IDs.
+      placeholder: my-project
+    validations:
+      required: true
+  - type: checkboxes
+    id: client_approval
+    attributes:
+      label: Client approval
+      options:
+        - label: The client has approved public publication of this report
+          required: true
+  - type: input
+    id: reviewer_handle
+    attributes:
+      label: Firm reviewer
+      description: GitHub handle of the engineer at your firm who will approve the PR (required for AI-converted reports).
+      placeholder: "@handle"
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Anything the reviewer should know.

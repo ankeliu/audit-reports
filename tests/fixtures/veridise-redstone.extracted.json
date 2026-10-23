@@ -1,0 +1,189 @@
+{
+ "_comment": "Extracted subset of Veridise's public RedStone Stellar Connector report (4 of 10 items, narrative trimmed to first paragraphs) for offline converter tests. Content (c) 2025 Veridise Inc.",
+ "url": "https://veridise.com/wp-content/uploads/2025/10/VAR-Redstone-251006-Oracles-SDK-V2.pdf",
+ "source_file": "veridise-redstone.pdf",
+ "project": "RedStone Stellar Connector",
+ "cover_date": "2025-10-06",
+ "client": [
+  "RedStone"
+ ],
+ "auditors": [
+  "Alberto Gonzalez",
+  "Aayushman Thapa Magar"
+ ],
+ "contact": "contact@veridise.com",
+ "versions": [
+  {
+   "date": "2025-10-27",
+   "label": "V2"
+  },
+  {
+   "date": "2025-10-20",
+   "label": "V1"
+  }
+ ],
+ "copyright": "© 2025 Veridise Inc. All Rights Reserved.",
+ "commit_urls": {
+  "ff1de9da45e874ec09366ce4406e110131056a59": "https://github.com/redstone-finance/rust-sdk/tree/ff1de9da45e874ec09366ce4406e110131056a59",
+  "726ac4bd7770ef16ab987d361b4683613bd983a0": "https://github.com/redstone-finance/redstone-oracles-monorepo/tree/726ac4bd7770ef16ab987d361b4683613bd983a0"
+ },
+ "executive_summary": {
+  "_intro": [
+   "From Oct. 6, 2025 to Oct. 14, 2025, RedStone engaged Veridise to conduct a security assessment of their RedStone Stellar Connector. The security assessment covered the Rust SDK, a collection of utilities designed to facilitate the deserialization and verification of the RedStone payload, as well as the Soroban smart contracts, which implement the oracle price-push model for third-party contracts to consume data from. Veridise conducted the assessment over 2 person-weeks, with 2 security analysts reviewing the project over 1 week on commits ff1de9 (Rust-SDK) ‗ and 726ac4 (Soroban contracts) † . The review strategy involved a tool-assisted analysis of the program source code performed by Veridise security analysts as well as thorough code review."
+  ],
+  "Project Summary": "The security assessment focused on the RedStone Rust SDK and, the RedStonePriceFeed and RedStoneAdapter Soroban smart contracts. RedStone is a modular, multi-chain oracle network that delivers market data to smart contracts with a focus on cost efficiency and speed. The system separates data production from on-chain delivery and supports two complementary models; the pull model that includes signed data packages (containing price information) within the user transaction and, the push model that periodically updates on-chain adapters with price information. The following were the main components for the audit:\n- Rust SDK. The RedStone Rust SDK is the payload-processing and verification engine. It provides utilities to parse payload bytes into data packages, recover and validate signer identities against a configured registry, enforce timestamp freshness, and aggregate per-feed values across unique signers. It is designed to be compatible with different chain contexts while preserving the same verification and aggregation capabilities.\n- RedStoneAdapter. This contract serves as an oracle gateway on Stellar that supports two ways to consume prices. First, a per-transaction (pull) path where callers include a RedStone payload and receive a fresh, verified price. Second, a cached (push) path, where a trusted updater records verified prices on-chain so other contracts can read the latest available value without carrying a payload. The RedStoneAdapter contract utilizes the Rust SDK for payload processing and verification.\n- RedStonePriceFeed. This contract serves as a wrapper around the RedStoneAdapter contract, which provides price information on a per feed basis.",
+  "Code Assessment": "The RedStone Stellar Connector developers provided the source code of the Rust SDK and Soroban contracts for the code review. The source code appears to be mostly original code written by the RedStone Stellar Connector developers. The repositories contained documentation in the form of READMEs that were helpful in understanding the intended behavior of the codebase. Veridise security analysts’ understanding of the project was also furthered by the additional protocol documentation which gave a high-level overview of the RedStone Stellar Connector. The source code contained a test suite, which the Veridise security analysts noted were extensive and thorough.",
+  "Summary of Issues Detected": "The security assessment uncovered 5 issues, with 2 low-severity issues, 2 warnings, and 1 informational finding. Specifically, V-RED-VUL-001 describes that raw addresses were normalized to lowercase as if they were ASCII bytes, which could have resulted in the recovery of unintended addresses. V-RED-VUL-002 highlights that including a null byte in the middle of a feed ID could have allowed malicious users to spoof legitimate feed IDs. Finally, V-RED-VUL-003 emphasizes the importance of implementing a two-step ownership transfer pattern to make the project more robust against human error. Some findings were determined to reflect intended behavior or were deemed invalid after discussions with the developers; these are detailed in Appendix A.",
+  "Recommendations": "After conducting the assessment of the protocol, the security analysts had a few suggestions to improve the RedStone Stellar Connector project. Overall, the codebase demonstrates high quality with a comprehensive test suite, and the identified issues were self-contained to specific lines of code requiring only small changes to fix with the issues originating from edge cases.",
+  "Incident Response": "The Adapter contract operates under a multisignature configuration that requires approval from three out of five trusted signers to authorize price submissions. As discussed in (V-RED-APP-VUL-001), the compromise of only two signers, less than half of the total, could enable the post of arbitrary prices. In light of this risk, the protocol team should plan and adopt a response procedure aimed at mitigating the operational risks stemming from signer compromise. This plan should include a defined process for immediate signer rotation (V-RED-APP-VUL-003), allowing compromised accounts to be replaced quickly through the upgrade mechanisms available in the contracts. The response plan must also account for how the protocol communicates incidents to its downstream integrators and consumers (V-RED-APP-VUL-002). In situations where signer compromise or suspicious price behavior is detected, there should be a clear and timely mechanism to notify third-party consumers not to rely on the current price data until verification or recovery procedures have been completed.",
+  "Volatility Scenarios": "During periods of high market volatility or network congestion, trusted signers may observe significantly different off-chain price data depending on their data sources or timing of price retrieval. As the Adapter contract aggregates these submissions using a median-based approach, substantial divergence among signer inputs can result in an inaccurate on-chain median that does not reflect the true market value. Since the current implementation does not include any on-chain validation or rejection mechanism for outlier prices, the protocol should implement an off-chain consistency check to mitigate this risk. Establishing such an off-chain validation layer would reduce the likelihood of erroneous median prices being propagated on-chain during extreme volatility.",
+  "Disclaimer": "We hope that this report is informative but provide no warranty of any kind, explicit or implied. The contents of this report should not be construed as a complete guarantee that the system is secure in all dimensions. In no event shall Veridise or any of its employees be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the results reported here."
+ },
+ "application_summary": [
+  {
+   "Name": "Soroban Smart Contracts",
+   "Version": "726ac4",
+   "Type": "Rust",
+   "Platform": "Stellar"
+  },
+  {
+   "Name": "Rust SDK",
+   "Version": "ff1de9",
+   "Type": "Rust",
+   "Platform": "Library"
+  }
+ ],
+ "engagement_summary": [
+  {
+   "Dates": "Oct. 6–Oct. 14, 2025",
+   "Method": "Manual & Tools",
+   "Consultants Engaged": "2",
+   "Level of Effort": "2 person-weeks"
+  }
+ ],
+ "vulnerability_summary": [],
+ "methodology": "The Security Assessment process consists of the following steps:\n- Gather an initial understanding of the protocol’s logic, users, and workflows by reviewing the provided documentation and consulting with the developers.\n- Identify and prioritize the most significant security risks based on that understanding.\n- Systematically review the codebase for execution paths that could trigger the identified security risks, considering different assumptions.\n- Prioritize one finding over another by assigning a severity level to each.",
+ "scope": [
+  {
+   "label": "Rust SDK @ ff1de9",
+   "commit": "ff1de9",
+   "include": [
+    "crates/redstone/src/lib.rs",
+    "crates/redstone/src/casper/*.rs",
+    "crates/redstone/src/contract/*.rs",
+    "crates/redstone/src/core/*.rs",
+    "crates/redstone/src/crypto/*.rs",
+    "crates/redstone/src/default_ext/*.rs",
+    "crates/redstone/src/network/*.rs",
+    "crates/redstone/src/protocol/*.rs",
+    "crates/redstone/src/radix/*.rs",
+    "crates/redstone/src/solana/*.rs",
+    "crates/redstone/src/soroban/*.rs",
+    "crates/redstone/src/types/*.rs",
+    "crates/redstone/src/utils/*.rs"
+   ],
+   "exclude": [
+    "crates/redstone/src/core/test_helpers.rs",
+    "crates/redstone/src/helpers"
+   ]
+  },
+  {
+   "label": "Stellar Contracts @ 726ac4",
+   "commit": "726ac4",
+   "include": [
+    "stellarMultiFeed/common/src/lib.rs",
+    "stellarMultiFeed/common/src/ownable.rs",
+    "stellarMultiFeed/common/src/upgradable.rs",
+    "stellarMultiFeed/contracts/redstone-adapter/src/config.rs",
+    "stellarMultiFeed/contracts/redstone-adapter/src/event.rs",
+    "stellarMultiFeed/contracts/redstone-adapter/src/lib.rs",
+    "stellarMultiFeed/contracts/redstone-adapter/src/util.rs",
+    "stellarMultiFeed/contracts/redstone-price-feed/src/config.rs",
+    "stellarMultiFeed/contracts/redstone-price-feed/src/lib.rs"
+   ],
+   "exclude": []
+  }
+ ],
+ "trust_model": "In addition to assuming that any out-of-scope components behave correctly, Veridise analysts assumed the following properties held when modeling security for RedStone Stellar Connector.\n- Owners and updaters. It is assumed that high-privilege roles such as owners and updaters do not act maliciously and only perform actions and duties that are expected.\n- Upgrade process. The Stellar contracts can be upgraded by replacing their WASM. The steps to install the WASM into the ledger is not included in the source code and is assumed to be performed correctly.\n- Out of scope dependencies. The review of the Rust SDK was limited to the /crates /redstone/src path of the repository. Any out-of-scope components are assumed to perform correctly and as intended.\n- Data collection layer. During the review, the data collection and payload generation components of RedStone are assumed to function correctly and that the price information is collected and signed reliably.",
+ "findings": [
+  {
+   "id": "V-RED-VUL-001",
+   "group": "main",
+   "title": "Address normalization via to_ascii_lowercase() allows unauthorized signature validation",
+   "severity": "Low",
+   "commit": "ff1de9",
+   "type": "Logic Error",
+   "status": "Fixed",
+   "locations": [
+    "rust-sdk/crates/redstone/src/types/signer_address.rs:25"
+   ],
+   "fix_urls": [
+    "https://github.com/redstone-finance/rust-sdk/pull/60"
+   ],
+   "fix_commits": [
+    "e24a58a"
+   ],
+   "description": "The RedStone oracle system validates data package signatures by recovering the signer’s address from ECDSA signatures and checking if that address belongs to the authorized signer list configured in Config. The signature recovery process in Crypto::recover_address() recovers the public key from a signature, hashes it with Keccak256, and extracts the last 20 bytes to form an Ethereum-style address. This raw 20-byte address is then wrapped in a SignerAddress type via SignerAddress::from(Vec<u8>).",
+   "impact": "If an attacker controls a private key whose address matches the corrupted form of a legitimate signer’s address, they can create valid signatures that pass validation. Consider a legitimate signer with address 0x4142434445464748494A4B4C4D4E4F5051525354 (containing bytes ’A’, ’B’, ’C’, etc. in the 0x41-0x5A range). After corruption via to_ascii_lowercase(), this becomes 0x6162636465666768696a6b6c6d6e6f7071727374. An attacker controlling the private key for address 0x6162636465666768696a6b6c6d6e6f7071727374 can sign data packages, and the system will incorrectly validate these signatures as coming from the legitimate signer. This vulnerability can be confirmed with a test demonstrating that two distinct addresses become equal after SignerAddress conversion. The test shows addresses 0x8bb8f32df04c8b654987daaed53d6b6091e3b774 and 0x8bb8f32df06c8b656987daaed53d6b6091e3b774 collapse to the same SignerAddress value, despite being cryptographically distinct addresses controlled by different private keys. The following test can be copied and pasted in the config.rs file at StellarMultiFeed/contracts/redstone-adapter.",
+   "recommendation": "Remove the to_ascii_lowercase() call from SignerAddress::new(). After removing this transformation, verify that the existing test suite passes without requiring any test data modifications. If tests fail due to the removal, investigate whether those tests were written to accommodate the incorrect behavior rather than validate correct functionality. Additionally, add the vulnerability demonstration test to the test suite and ensure it correctly fails the final assertion (expecting the two distinct addresses to remain unequal after conversion).",
+   "developers_response": "The developers implemented the suggested recommendation."
+  },
+  {
+   "id": "V-RED-VUL-005",
+   "group": "main",
+   "title": "Informational: Code Quality and Best Practice Issues",
+   "severity": "Info",
+   "commit": "726ac4",
+   "type": "Maintainability",
+   "status": "Acknowledged",
+   "locations": [
+    "redstone-oracles-monorepo/packages/[...]/lib.rs:38, 38-39",
+    "rust-sdk/crates/redstone/src/types/mod.rs:34"
+   ],
+   "fix_urls": [],
+   "fix_commits": [],
+   "description": "Multiple minor code quality and best practice issues have been identified in the codebase:\n1. Typo in Error Message In rust-sdk/crates/redstone/src/types/mod.rs, there is a typographical error in the panic message: panic!(\"Number to big: {:?} digits\", self.len()). The error message should read \"Number too big\" instead of \"Number to big\".\n1. Soroban Contract Initialization Pattern",
+   "impact": "Not using constructors can unintentionally expose contracts to front-running risks, where malicious actors can abuse their knowledge of pending transactions to set a different owner or feed id. Furthermore, using constructors also makes contracts more efficient by reducing their size.",
+   "recommendation": "1. Fix the typo: Change \"Number to big\" to \"Number too big\" in the error message.\n2. Use Soroban constructors: It is recommended to make use of the __constructor() function to initialize contracts in RedStoneAdapter and RedStonePriceFeed implementations to prevent initialization front-running and improve contract efficiency.",
+   "developers_response": "The developers acknowledged the finding but decided to not introduce code changes."
+  },
+  {
+   "id": "V-RED-APP-VUL-001",
+   "group": "intended",
+   "title": "Missing price deviation checks enable attacks with less than 50% of the trusted signers",
+   "severity": "Low",
+   "commit": "726ac4",
+   "type": "Data Validation",
+   "status": "Intended Behavior",
+   "locations": [
+    "redstone-oracles-monorepo/packages/[...]/config.rs:32",
+    "rust-sdk/crates/redstone/src/core/aggregator.rs:61-86"
+   ],
+   "fix_urls": [],
+   "fix_commits": [],
+   "description": "The RedStone adapter contract implements an oracle system that aggregates price data from multiple trusted signers. The system is configured with 5 authorized signers and requires a minimum of 3 valid signatures to accept a price update (signer_count_threshold: 3). When price updates are submitted via the write_prices() function, the payload is processed through get_prices_from_payload(), which invokes the RedStone SDK’s process_payload() function. This SDK function verifies that at least 3 signatures from the authorized signer set are valid, then calculates the median of the signed price values to determine the final price stored on-chain. The contract does not implement any validation to ensure price values from different signers are within reasonable proximity of each other. The median calculation tolerates less than 50% of input values being malicious. When only 3 signatures are provided (the minimum threshold), 2 malicious signers constitute 67% of the data points, enabling them to control the median output. Without deviation checks, these 2 signers can submit identical extreme values that override the honest signer’s price. For example, if the honest price is $100 and two malicious signers submit $1, the median of [$1, $1, $100] equals $1. The lack of validation against price deviation means this manipulation succeeds even though an honest signer participated. Notably, these 2 malicious signers represent only 40% of the total 5-signer set, yet they can fully compromise the oracle’s integrity.",
+   "impact": "Two compromised signers can manipulate any price feed to arbitrary values by submitting identical malicious prices. The absence of deviation checks means that even honest signer participation cannot prevent the attack when malicious signers form a simple majority of the minimum required signatures even if they do not represent a majority of the complete set of trusted signers.",
+   "recommendation": "Implement price deviation validation in the RedStone SDK or adapter contract that verifies all submitted price values are within an acceptable percentage threshold of each other before accepting the aggregated result. This ensures that when an honest signer submits a legitimate price that significantly differs from colluding malicious signers, the transaction fails rather than accepting the manipulated median. With this control in place, attackers would need to compromise at least 3 signers to successfully manipulate prices (to outvote the deviation check triggered by honest signers), which represents a majority of the total 5-signer set and aligns with standard Byzantine fault tolerance assumptions.",
+   "developers_response": "The developers acknowledged the reported behavior and confirmed that it is intentional and aligned with the protocol’s design. Having defined trusted_signers, it is assumed that the data is signed and not manipulated at any stage, from signing to sending to the contract. The contract is part of the entire system where data is verified at multiple levels using a similar mechanism as proposed, off-chain. The operating principle of the entire system across other blockchains, including the entire EVM ecosystem, is calculating the median on-chain from trusted_signers data as an additional rather than primary security measure. While we understand this threat, the probability of data manipulation in the system is practically zero in practice. We will discuss this further; however, at this moment this approach is consistent with the operation on other blockchains."
+  },
+  {
+   "id": "V-RED-APP-VUL-005",
+   "group": "invalid",
+   "title": "Overflow check not enabled for release builds",
+   "severity": "Warning",
+   "commit": "ff1de9",
+   "type": "Maintainability",
+   "status": "Invalid",
+   "locations": [
+    "rust-sdk/crates/redstone/Cargo.toml"
+   ],
+   "fix_urls": [],
+   "fix_commits": [],
+   "description": "By default, Rust enables integer overflow checks in debug builds but disables them in release builds for performance, unless overflow-checks = true is present Cargo.toml . It is identified overflow-checks = true is missing in Cargo.toml (located in redstone/Cargo.toml )",
+   "impact": "Arithmetic operations can overflow (or underflow) and wrap silently instead of aborting, leading to unexpected behavior and results.",
+   "proof": "Run the following test from within the /crates/redstone folder. (For the purpose of verifying the bug, the test was included in /crates/redstone/src/core/config.rs file)",
+   "recommendation": "It is recommended to include overflow-checks = true in the Cargo.toml file.",
+   "why_invalid": "It turns out that Cargo only considers the profile settings defined in the Cargo.toml manifest at the root of the workspace. Profile settings defined in dependencies are ignored. Since the Rust SDK is a dependency of the Soroban contracts workspace, which sets overflow-checks = true, the final binary will be built with overflow checks enabled. Developers building the package standalone can manually add the check if needed. Reference: https://doc.rust-lang.org/cargo/reference/profiles.html#profiles"
+  }
+ ]
+}

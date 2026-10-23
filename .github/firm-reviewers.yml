@@ -1,0 +1,14 @@
+# Firm abbreviation -> GitHub handles allowed to sign off AI-converted reports for that firm.
+# A `firm-reviewed` label or an approving review only counts when it comes from a handle listed here.
+# Fill as firms join; abbreviations match schema/vocab.json.
+RV: []
+HAL: []
+OS: []
+VER: []
+CER: []
+ZEL: []
+SPB: []
+OAK: []
+QS: []
+HSH: []
+CS: []

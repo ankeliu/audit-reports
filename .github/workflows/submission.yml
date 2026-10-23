@@ -1,0 +1,106 @@
+name: submission
+
+# Issue form -> convert/validate -> comment -> PR. The issue body and anything it links to are
+# untrusted: they reach the tooling only through environment variables and downloaded files.
+
+on:
+  issues:
+    types: [opened, edited]
+  issue_comment:
+    types: [created]
+
+concurrency:
+  group: submission-${{ github.event.issue.number }}
+  cancel-in-progress: true
+
+jobs:
+  process:
+    if: >-
+      contains(github.event.issue.labels.*.name, 'report-submission') &&
+      !github.event.issue.pull_request &&
+      (github.event_name == 'issues' ||
+       (startsWith(github.event.comment.body, '/rerun') &&
+        (github.event.comment.user.login == github.event.issue.user.login ||
+         contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association))))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: tools/pyproject.toml
+      - name: Install tooling
+        run: |
+          sudo apt-get install -y -qq poppler-utils > /dev/null
+          pip install -q -e "tools/[ai]"
+
+      - name: Convert and validate
+        id: sub
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          ai_flag=""
+          if [ -n "$ANTHROPIC_API_KEY" ]; then ai_flag="--ai"; fi
+          python -m auditbank.submission \
+            --issue-number "${{ github.event.issue.number }}" \
+            --workdir "$RUNNER_TEMP/submission" \
+            --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            --github-output "$GITHUB_OUTPUT" $ai_flag
+
+      - name: Comment on the issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue comment "${{ github.event.issue.number }}" --body-file "$RUNNER_TEMP/submission/comment.md"
+
+      - name: Label failed submission
+        if: steps.sub.outputs.ok != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create needs-fix --color d93f0b --description "Submission failed validation" 2>/dev/null || true
+          gh issue edit "${{ github.event.issue.number }}" --add-label needs-fix
+
+      - name: Rebuild the index
+        if: steps.sub.outputs.ok == 'true'
+        run: |
+          auditbank index
+
+      - name: Clear needs-fix
+        if: steps.sub.outputs.ok == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue edit "${{ github.event.issue.number }}" --remove-label needs-fix 2>/dev/null || true
+
+      - name: Open the PR
+        if: steps.sub.outputs.ok == 'true'
+        id: pr
+        uses: peter-evans/create-pull-request@v7
+        with:
+          # A PAT or app token (SUBMISSION_TOKEN) lets the validate workflow run on the bot's PR;
+          # with the default token, checks run once a human labels or reviews the PR.
+          token: ${{ secrets.SUBMISSION_TOKEN || github.token }}
+          branch: ${{ steps.sub.outputs.branch }}
+          base: main
+          title: ${{ steps.sub.outputs.title }}
+          body-path: ${{ runner.temp }}/submission/pr-body.md
+          commit-message: "feat(reports): ${{ steps.sub.outputs.title }}"
+          add-paths: |
+            ${{ steps.sub.outputs.report_path }}
+            reports/index.json
+            reports/README.md
+          labels: ${{ steps.sub.outputs.needs_firm_review == 'true' && 'report,needs-firm-review' || 'report' }}
+          reviewers: ${{ steps.sub.outputs.reviewer }}
+          delete-branch: true
+
+      - name: Link the PR
+        if: steps.pr.outputs.pull-request-url
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" --body "PR: ${{ steps.pr.outputs.pull-request-url }}"

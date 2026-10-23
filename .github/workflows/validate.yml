@@ -2,10 +2,11 @@ name: validate
 
 on:
   pull_request:
-    paths: ["reports/**", "schema/**", "tools/**", "tests/**", "AUDIT_REPORT_TEMPLATE.md"]
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+  pull_request_review:
+    types: [submitted, dismissed]
   push:
     branches: [main]
-    paths: ["reports/**", "schema/**", "tools/**", "tests/**", "AUDIT_REPORT_TEMPLATE.md"]
 
 permissions:
   contents: read
@@ -22,15 +23,96 @@ jobs:
           python-version: "3.11"
           cache: pip
           cache-dependency-path: tools/pyproject.toml
-      - run: pip install -e "tools/[dev]"
+      - run: pip install -q -e "tools/[dev]"
       - run: ruff check --config tools/pyproject.toml tools tests
       - run: pytest
       - run: auditbank schema --check
-      - run: auditbank index --check
+      - name: Index is current
+        if: github.event_name != 'push'
+        run: auditbank index --check
+
+      - name: Changed reports
+        id: changed
+        if: github.event_name != 'push'
+        run: |
+          git diff --name-only --diff-filter=AMR "origin/${{ github.event.pull_request.base.ref }}...HEAD" \
+            -- 'reports/*/*.md' > "$RUNNER_TEMP/changed.txt"
+          echo "count=$(wc -l < "$RUNNER_TEMP/changed.txt" | tr -d ' ')" >> "$GITHUB_OUTPUT"
+          cat "$RUNNER_TEMP/changed.txt"
 
       - name: Validate changed reports
-        if: github.event_name == 'pull_request'
+        if: steps.changed.outputs.count != '0' && github.event_name != 'push'
+        run: xargs -a "$RUNNER_TEMP/changed.txt" auditbank validate
+
+      - name: CONVERSION-NOTEs need the firm-reviewed label
+        if: steps.changed.outputs.count != '0' && github.event_name != 'push'
+        env:
+          LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+        run: xargs -a "$RUNNER_TEMP/changed.txt" python -m auditbank.ci gate --labels "$LABELS"
+
+      - name: AI-converted reports need firm sign-off
+        if: steps.changed.outputs.count != '0' && github.event_name != 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          mapfile -t files < <(git diff --name-only --diff-filter=AMR "origin/${{ github.base_ref }}...HEAD" -- 'reports/*/*.md')
-          if [ ${#files[@]} -eq 0 ]; then echo "no report files changed"; exit 0; fi
-          auditbank validate "${files[@]}"
+          gh api --paginate "repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews" \
+            | jq -s 'add // []' > "$RUNNER_TEMP/reviews.json"
+          xargs -a "$RUNNER_TEMP/changed.txt" python -m auditbank.ci signoff --reviews "$RUNNER_TEMP/reviews.json"
+
+  # A listed firm reviewer adding `firm-reviewed` records the sign-off in the file itself.
+  stamp:
+    if: >-
+      github.event_name == 'pull_request' && github.event.action == 'labeled' &&
+      github.event.label.name == 'firm-reviewed' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -q -e tools/
+      - name: Stamp conversion_method
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git diff --name-only --diff-filter=AMR "origin/${{ github.event.pull_request.base.ref }}...HEAD" \
+            -- 'reports/*/*.md' > "$RUNNER_TEMP/changed.txt"
+          if ! xargs -a "$RUNNER_TEMP/changed.txt" python -m auditbank.ci stamp --sender "${{ github.event.sender.login }}"; then
+            gh pr comment "${{ github.event.pull_request.number }}" --body \
+              "@${{ github.event.sender.login }} is not listed in \`.github/firm-reviewers.yml\` for this firm, so the \`firm-reviewed\` label was removed."
+            gh pr edit "${{ github.event.pull_request.number }}" --remove-label firm-reviewed
+            exit 1
+          fi
+          if git diff --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "chore(reports): record firm sign-off by @${{ github.event.sender.login }}"
+          git push
+
+  # After merge: keep reports/index.json and reports/README.md in sync.
+  index:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -q -e tools/
+      - run: auditbank index
+      - name: Commit index
+        run: |
+          if git diff --quiet -- reports/; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "chore(reports): rebuild index"
+          git push
