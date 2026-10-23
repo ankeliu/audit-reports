@@ -27,7 +27,7 @@ def run_js(jobs):
 
 def _texts():
     texts = [FIXTURES / "minimal-valid.md", FIXTURES / "invalid-counts.md", TEMPLATE_PATH]
-    texts += sorted(Path(__file__).parent.glob("../examples/*.md"))
+    texts += [p for p in sorted(Path(__file__).parent.glob("../examples/*.md")) if p.name != "README.md"]
     return [p.read_text() for p in texts]
 
 
