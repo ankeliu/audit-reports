@@ -185,7 +185,8 @@ def comment(result: dict, run_url: str | None = None) -> str:
             lines += [
                 f"<details><summary>{len(notes)} CONVERSION-NOTE(s) for the firm reviewer</summary>",
                 "",
-                *[f"- {n}" for n in notes],
+                *[f"- {n}" for n in notes[:100]],
+                *([f"- ... and {len(notes) - 100} more (see the file)"] if len(notes) > 100 else []),
                 "",
                 "</details>",
                 "",
