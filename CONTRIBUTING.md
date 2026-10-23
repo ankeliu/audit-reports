@@ -8,7 +8,7 @@ This repo accepts Stellar Audit Bank reports in the standard format, one PR per 
    pip install -e tools/
    auditbank validate path/to/report.md
    ```
-3. **Submit.** Either open a PR adding `reports/{project-slug}/{project-slug}--{firm-abbrev}--{YYYY-MM-DD}.md`, or use the submission page (`<PAGES_URL>`), which checks your file or converts your published report and files the PR for you.
+3. **Submit.** Either open a PR adding `reports/{project-slug}/{project-slug}--{firm-abbrev}--{YYYY-MM-DD}.md`, or use the submission page (<https://ankeliu.github.io/audit-reports/>), which checks your file or converts your published report and files the PR for you.
 4. **Review.** CI runs the same checks as `auditbank validate`. The SDF audit coordinator confirms the engagement, the submitting account, and client publication approval, then merges. AI-converted files also need an approving review from an engineer at your firm.
 
 Corrections are new PRs that bump `report.report_version`. Questions: your Audit Bank Slack channel.

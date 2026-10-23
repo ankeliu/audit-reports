@@ -98,4 +98,4 @@ Keep the template's default text or substitute the firm's own standard disclaime
 
 ## Submission
 
-One PR per report, filename `reports/{project-slug}/{project-slug}--{firm-abbrev}--{YYYY-MM-DD}.md` (lowercase slug, firm abbreviation lowercase, date = `report.report_date`). Either open the PR yourself or use the submission page (`<PAGES_URL>`): paste your published report URL or upload your `.md`/PDF, get an instant validation result, and it files the PR. The SDF audit coordinator reviews and merges. If the file was AI-converted, an engineer from your firm must approve the PR.
+One PR per report, filename `reports/{project-slug}/{project-slug}--{firm-abbrev}--{YYYY-MM-DD}.md` (lowercase slug, firm abbreviation lowercase, date = `report.report_date`). Either open the PR yourself or use the submission page (<https://ankeliu.github.io/audit-reports/>): paste your published report URL or upload your `.md`/PDF, get an instant validation result, and it files the PR. The SDF audit coordinator reviews and merges. If the file was AI-converted, an engineer from your firm must approve the PR.

@@ -25,7 +25,7 @@ This draft is circulating to all Audit Bank firms for feedback before we lock v0
 One public repo. The standard file is an addendum to a report the firm has already published, so there is nothing to stage privately.
 
 1. **Submit when you would publish.** A firm submits a report only when it would normally publish it publicly (client approval given, embargoes elapsed, redactions applied). Readiness-gated, no fixed cadence.
-2. **One PR per report** (report `.md`, linking the firm's authoritative PDF/URL). Open it directly, or use the submission page (`<PAGES_URL>`), which validates your file or converts your published report and files the PR for you.
+2. **One PR per report** (report `.md`, linking the firm's authoritative PDF/URL). Open it directly, or use the submission page (<https://ankeliu.github.io/audit-reports/>), which validates your file or converts your published report and files the PR for you.
 3. **CI validates** YAML schema, findings-count consistency, required fields, severity/status/category vocabulary, disclaimer present, filename convention.
 4. **Human in the loop.** The SDF audit coordinator confirms the PR corresponds to an Audit Bank engagement, the submitting account belongs to the firm, and client publication approval exists, then merges. If the file was AI-converted, a firm engineer must approve the PR before merge (`conversion_method: ai-converted-firm-reviewed`).
 5. **Corrections** come as new PRs bumping `report_version`. Reports stay pinned to the schema version they were submitted under.
@@ -34,7 +34,7 @@ One public repo. The standard file is an addendum to a report the firm has alrea
 
 - [`tools/`](tools/) -- the `auditbank` Python package: `auditbank validate` checks a report against the schema and cross-field rules (the same checks CI runs); `auditbank convert` drafts a standard file from a firm's published report (Halborn, Runtime Verification, Veridise) for firm review; `auditbank index` rebuilds the archive index.
 - [`schema/`](schema/) -- JSON Schema and controlled vocabularies (severity, status, category, firm abbreviations).
-- Submission page (`<PAGES_URL>`) -- paste a published report URL or a standard `.md` for an instant check, then file the submission.
+- Submission page (<https://ankeliu.github.io/audit-reports/>) -- paste a published report URL or a standard `.md` for an instant check, then file the submission.
 
 ## Feedback requested from firms
 
