@@ -15,7 +15,14 @@ def default_out(report: dict, slug: str) -> Path:
     return REPORTS_DIR / slug / f"{slug}--{abbrev}--{report['report']['report_date']}.md"
 
 
-def convert(source: str, firm: str | None = None, project_slug: str | None = None, out=None, use_ai=False) -> Path:
+def convert(
+    source: str,
+    firm: str | None = None,
+    project_slug: str | None = None,
+    out=None,
+    use_ai=False,
+    ai_log: list | None = None,
+) -> Path:
     key, raw = detect(source, firm)
     if key is None:  # already a standard file: copy it to the output path untouched
         if not out:
@@ -33,7 +40,7 @@ def convert(source: str, firm: str | None = None, project_slug: str | None = Non
     if use_ai:
         from .ai import fill_gaps
 
-        report = fill_gaps(report, firm_report)
+        report = fill_gaps(report, firm_report, log=ai_log)
     report = finalize(report)
     out = Path(out) if out else default_out(report, slug)
     out.parent.mkdir(parents=True, exist_ok=True)

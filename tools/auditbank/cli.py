@@ -36,15 +36,15 @@ def cmd_validate(args) -> int:
 
 
 def cmd_convert(args) -> int:
+    from .ai import log_markdown
     from .convert import convert
 
+    ai_log: list = []
     out = convert(
-        args.source,
-        firm=args.firm,
-        project_slug=args.project_slug,
-        out=args.out,
-        use_ai=args.ai,
+        args.source, firm=args.firm, project_slug=args.project_slug, out=args.out, use_ai=args.ai, ai_log=ai_log
     )
+    if ai_log:
+        print(log_markdown(ai_log))
     problems = validate_file(out)
     _print_problems(str(out), problems)
     return 1 if has_errors(problems) else 0

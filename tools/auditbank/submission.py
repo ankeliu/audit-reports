@@ -17,6 +17,7 @@ from urllib.parse import urlparse
 
 import requests
 
+from .ai import log_markdown
 from .convert import convert
 from .converters import CONVERTERS
 from .converters.base import USER_AGENT
@@ -125,7 +126,7 @@ def place_standard_md(path: Path, info: dict) -> Path:
 
 def run(body: str, workdir: Path, use_ai: bool = False) -> dict:
     """Returns {ok, report_path, problems, info, error, conversion_method}."""
-    result: dict = {"ok": False, "report_path": None, "problems": [], "info": None, "error": None}
+    result: dict = {"ok": False, "report_path": None, "problems": [], "info": None, "error": None, "ai_log": []}
     try:
         info = check_form(parse_issue_form(body))
         result["info"] = info
@@ -143,7 +144,7 @@ def run(body: str, workdir: Path, use_ai: bool = False) -> dict:
                 raise SubmissionError(
                     f"no converter for {info['firm']} yet: submit a standard .md (see AUDIT_REPORT_TEMPLATE.md)"
                 )
-            out = convert(source, firm=key, project_slug=info["slug"], use_ai=use_ai)
+            out = convert(source, firm=key, project_slug=info["slug"], use_ai=use_ai, ai_log=result["ai_log"])
     except (SubmissionError, DetectionError, requests.RequestException, ValueError) as exc:
         result["error"] = str(exc)
         return result
@@ -214,7 +215,7 @@ def pr_body(result: dict, issue_number: int) -> str:
     )
     reviewer = f"@{info['reviewer']}" if info["reviewer"] else "_not given_"
     head = f"Closes #{issue_number}\n\nSubmitted via the issue form. Firm reviewer: {reviewer}.\n\n"
-    return head + template
+    return head + template + ("\n" + log_markdown(result["ai_log"]) if result.get("ai_log") else "")
 
 
 def main(argv=None) -> int:
