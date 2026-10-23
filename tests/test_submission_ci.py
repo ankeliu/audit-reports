@@ -98,7 +98,12 @@ def draft(tmp_path, monkeypatch):
 
 def test_gate_blocks_notes_without_label(draft):
     assert ci.gate([draft], set())
-    assert ci.gate([draft], {"firm-reviewed"}) == []
+    assert ci.gate([draft], {"firm-reviewed"}, labeler="rv-engineer") == []
+
+
+def test_gate_ignores_label_from_unlisted_account(draft):
+    assert ci.gate([draft], {"firm-reviewed"}, labeler="someone-else")
+    assert ci.gate([draft], {"firm-reviewed"}, labeler=None)
 
 
 def test_stamp_requires_listed_reviewer(draft):
