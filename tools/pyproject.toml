@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "auditbank"
+version = "0.2.0"
+description = "Validate, convert, and index Stellar Audit Bank standard audit reports"
+license = "Apache-2.0"
+requires-python = ">=3.11"
+dependencies = [
+  "pyyaml>=6",
+  "jsonschema>=4.18",
+  "requests>=2.31",
+  "beautifulsoup4>=4.12",
+  "markdownify>=0.12",
+  "pdfplumber>=0.11",
+]
+
+[project.optional-dependencies]
+ai = ["anthropic>=0.40"]
+dev = ["pytest>=8", "ruff>=0.5"]
+
+[project.scripts]
+auditbank = "auditbank.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["auditbank*"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]

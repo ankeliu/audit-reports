@@ -1,0 +1,44 @@
+{
+  "$comment": "Shared by tools/auditbank/parse.py and site/app.js. Keep every regex compatible with both Python re and JavaScript RegExp: no named groups, no inline flags, no lookbehind.",
+  "frontmatter": "^---\\n([\\s\\S]*?)\\n---[ \\t]*(?:\\n|$)",
+  "comment": "<!--([\\s\\S]*?)-->",
+  "conversion_note": "^\\s*CONVERSION-NOTE:\\s*([\\s\\S]*?)\\s*$",
+  "h1": "^#[ \\t]+(.+?)[ \\t]*$",
+  "h2": "^##[ \\t]+(?:\\d+\\.[ \\t]*)?(.+?)[ \\t]*$",
+  "finding_heading": "^###[ \\t]+\\[([^\\]]+)\\][ \\t]*(.*?)[ \\t]*$",
+  "table_row": "^\\|[ \\t]*\\*\\*(.+?)\\*\\*(?:[ \\t]*\\*\\([^)]*\\)\\*)?[ \\t]*\\|[ \\t]*(.*?)[ \\t]*\\|[ \\t]*$",
+  "lead": "^\\*\\*(Description|Impact|Proof / attack path|Recommendation|Remediation notes)\\.\\*\\*[ \\t]*(?:\\*\\([^)]*\\)\\*)?[ \\t]*(.*)$",
+  "fence": "^[ \\t]*(```|~~~)",
+  "hr": "^[ \\t]*---[ \\t]*$",
+  "optional_marker": "[ \\t]*\\*\\([^)]*\\)\\*",
+  "redacted_true": "^true[ \\t]*(?:--|\u2014|-|:)[ \\t]*(.+)$",
+  "sections": [
+    ["executive summary", "executive_summary"],
+    ["project context", "project_context"],
+    ["findings", "findings"],
+    ["unified severity definitions", "severity_definitions"],
+    ["severity definitions", "severity_definitions"],
+    ["assumptions and limitations", "assumptions_limitations"],
+    ["methodology", "methodology"],
+    ["disclaimer", "disclaimer"],
+    ["appendix", "appendix"]
+  ],
+  "fields": {
+    "Unified severity": "unified_severity",
+    "Firm severity rating": "firm_severity_rating",
+    "Difficulty / likelihood": "difficulty_likelihood",
+    "Status": "status",
+    "Remediation verified by": "remediation_verified_by",
+    "Category": "category",
+    "Location": "location",
+    "Resolved in": "resolved_in",
+    "Redacted": "redacted"
+  },
+  "leads": {
+    "Description": "description",
+    "Impact": "impact",
+    "Proof / attack path": "proof",
+    "Recommendation": "recommendation",
+    "Remediation notes": "remediation_notes"
+  }
+}

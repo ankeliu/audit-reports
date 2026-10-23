@@ -1,0 +1,659 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ankeliu/audit-reports/schema/report-schema.json",
+  "title": "Stellar Audit Bank standard audit report (parsed form)",
+  "description": "Generated from schema/vocab.json by `auditbank schema --write`; do not edit by hand. Describes the parsed report: YAML frontmatter plus `heading`, `conversion_notes`, `findings` and `sections` extracted from the markdown body.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "report",
+    "publication",
+    "audit",
+    "scope",
+    "findings_summary",
+    "severity_standard",
+    "heading",
+    "findings",
+    "sections"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.2"
+    },
+    "report": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "title",
+        "audit_firm",
+        "firm_contact",
+        "auditors",
+        "client",
+        "report_date",
+        "engagement_start",
+        "engagement_end",
+        "report_version",
+        "pdf_url",
+        "firm_report_url"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "audit_firm": {
+          "type": "string",
+          "enum": [
+            "Runtime Verification",
+            "Halborn",
+            "OtterSec",
+            "Veridise",
+            "Certora",
+            "Zellic",
+            "Spearbit",
+            "Oak Security",
+            "Quantstamp",
+            "Hashlock",
+            "ChainSecurity"
+          ]
+        },
+        "firm_contact": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "auditors": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "client": {
+          "type": "string",
+          "minLength": 1
+        },
+        "report_date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "engagement_start": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "engagement_end": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "report_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pdf_url": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^https?://\\S+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "firm_report_url": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^https?://\\S+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "anyOf": [
+        {
+          "properties": {
+            "pdf_url": {
+              "type": "string",
+              "pattern": "^https?://\\S+$"
+            }
+          }
+        },
+        {
+          "properties": {
+            "firm_report_url": {
+              "type": "string",
+              "pattern": "^https?://\\S+$"
+            }
+          }
+        }
+      ]
+    },
+    "publication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "disclosure_status",
+        "embargo_until",
+        "license",
+        "conversion_method"
+      ],
+      "properties": {
+        "disclosure_status": {
+          "type": "string",
+          "enum": [
+            "public",
+            "embargoed",
+            "redacted"
+          ]
+        },
+        "embargo_until": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "license": {
+          "type": "string",
+          "minLength": 1
+        },
+        "conversion_method": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "firm-native",
+                "ai-converted-firm-reviewed"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "if": {
+        "properties": {
+          "disclosure_status": {
+            "const": "embargoed"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "embargo_until": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "embargo_until": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    "audit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "code-review",
+              "formal-verification",
+              "fuzzing",
+              "design-review",
+              "threat-modeling",
+              "economic-review",
+              "cryptographic-review",
+              "penetration-test",
+              "opsec-review",
+              "fix-review",
+              "audit-contest"
+            ]
+          }
+        },
+        "methods": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "tooling": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "effort": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "engineer_weeks",
+        "reviewers"
+      ],
+      "properties": {
+        "engineer_weeks": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "reviewers": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "chain",
+        "platform",
+        "repositories",
+        "in_scope_paths"
+      ],
+      "properties": {
+        "chain": {
+          "type": "string",
+          "minLength": 1
+        },
+        "platform": {
+          "type": "string",
+          "enum": [
+            "soroban",
+            "stellar-classic",
+            "offchain",
+            "multi"
+          ]
+        },
+        "languages": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "repositories": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "url",
+              "commit_start",
+              "commit_final"
+            ],
+            "properties": {
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^https?://\\S+$"
+                  },
+                  {
+                    "const": "withheld"
+                  }
+                ]
+              },
+              "commit_start": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{40}$"
+                  },
+                  {
+                    "const": "withheld"
+                  }
+                ]
+              },
+              "commit_final": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{40}$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "in_scope_paths": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            {
+              "const": "withheld"
+            }
+          ]
+        },
+        "out_of_scope": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "loc": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        }
+      }
+    },
+    "findings_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total",
+        "critical",
+        "high",
+        "moderate",
+        "low",
+        "informational"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "critical": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "high": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "moderate": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "low": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "informational": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "severity_standard": {
+      "const": "audit-bank-v0.2"
+    },
+    "heading": {
+      "type": "string",
+      "minLength": 1
+    },
+    "conversion_notes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "title",
+          "unified_severity",
+          "firm_severity_rating",
+          "difficulty_likelihood",
+          "status",
+          "remediation_verified_by",
+          "category",
+          "location",
+          "resolved_in",
+          "redacted",
+          "description",
+          "impact",
+          "proof",
+          "recommendation",
+          "remediation_notes"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Z0-9]+-(RV|HAL|OS|VER|CER|ZEL|SPB|OAK|QS|HSH|CS)-\\d{3}$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "unified_severity": {
+            "type": "string",
+            "enum": [
+              "Critical",
+              "High",
+              "Moderate",
+              "Low",
+              "Informational"
+            ]
+          },
+          "firm_severity_rating": {
+            "type": "string",
+            "minLength": 1
+          },
+          "difficulty_likelihood": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Resolved",
+              "Fixed - Not Verified",
+              "Acknowledged",
+              "Risk Accepted",
+              "Mitigated (off-chain)",
+              "Partially Resolved",
+              "Unresolved",
+              "Disputed"
+            ]
+          },
+          "remediation_verified_by": {
+            "type": "string",
+            "enum": [
+              "firm",
+              "client-reported",
+              "not-reviewed"
+            ]
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "access-control-auth",
+              "accounting-arithmetic",
+              "liveness-dos",
+              "upgrade-migration",
+              "state-archival-ttl",
+              "cross-contract-trust",
+              "oracle-external-dependency",
+              "economic-design",
+              "governance-centralization",
+              "cryptography",
+              "data-validation",
+              "key-management-privacy",
+              "observability",
+              "code-quality",
+              "operational"
+            ]
+          },
+          "location": {
+            "type": "string",
+            "minLength": 1
+          },
+          "resolved_in": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "redacted": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "value",
+              "reason"
+            ],
+            "properties": {
+              "value": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1
+          },
+          "impact": {
+            "type": "string",
+            "minLength": 1
+          },
+          "proof": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "recommendation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "remediation_notes": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "conversion_notes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "sections": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "executive_summary",
+        "project_context",
+        "assumptions_limitations",
+        "disclaimer"
+      ],
+      "properties": {
+        "executive_summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "project_context": {
+          "type": "string",
+          "minLength": 1
+        },
+        "assumptions_limitations": {
+          "type": "string",
+          "minLength": 1
+        },
+        "methodology": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "disclaimer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "appendix": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

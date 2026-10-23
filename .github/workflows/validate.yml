@@ -1,0 +1,36 @@
+name: validate
+
+on:
+  pull_request:
+    paths: ["reports/**", "schema/**", "tools/**", "tests/**", "AUDIT_REPORT_TEMPLATE.md"]
+  push:
+    branches: [main]
+    paths: ["reports/**", "schema/**", "tools/**", "tests/**", "AUDIT_REPORT_TEMPLATE.md"]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: tools/pyproject.toml
+      - run: pip install -e "tools/[dev]"
+      - run: ruff check --config tools/pyproject.toml tools tests
+      - run: pytest
+      - run: auditbank schema --check
+      - run: auditbank index --check
+
+      - name: Validate changed reports
+        if: github.event_name == 'pull_request'
+        run: |
+          mapfile -t files < <(git diff --name-only --diff-filter=AMR "origin/${{ github.base_ref }}...HEAD" -- 'reports/*/*.md')
+          if [ ${#files[@]} -eq 0 ]; then echo "no report files changed"; exit 0; fi
+          auditbank validate "${files[@]}"

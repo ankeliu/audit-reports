@@ -1,0 +1,17 @@
+{
+  "schema_version": "0.2",
+  "unified_severity": ["Critical", "High", "Moderate", "Low", "Informational"],
+  "difficulty": ["Low", "Medium", "High"],
+  "status": ["Resolved", "Fixed - Not Verified", "Acknowledged", "Risk Accepted", "Mitigated (off-chain)", "Partially Resolved", "Unresolved", "Disputed"],
+  "remediation_verified_by": ["firm", "client-reported", "not-reviewed"],
+  "category": ["access-control-auth", "accounting-arithmetic", "liveness-dos", "upgrade-migration", "state-archival-ttl", "cross-contract-trust", "oracle-external-dependency", "economic-design", "governance-centralization", "cryptography", "data-validation", "key-management-privacy", "observability", "code-quality", "operational"],
+  "disclosure_status": ["public", "embargoed", "redacted"],
+  "conversion_method": ["firm-native", "ai-converted-firm-reviewed"],
+  "audit_type": ["code-review", "formal-verification", "fuzzing", "design-review", "threat-modeling", "economic-review", "cryptographic-review", "penetration-test", "opsec-review", "fix-review", "audit-contest"],
+  "platform": ["soroban", "stellar-classic", "offchain", "multi"],
+  "firms": {
+    "RV": "Runtime Verification", "HAL": "Halborn", "OS": "OtterSec", "VER": "Veridise", "CER": "Certora",
+    "ZEL": "Zellic", "SPB": "Spearbit", "OAK": "Oak Security", "QS": "Quantstamp", "HSH": "Hashlock", "CS": "ChainSecurity"
+  },
+  "withheld": "withheld"
+}
