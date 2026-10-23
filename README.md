@@ -35,6 +35,7 @@ One public repo. The standard file is an addendum to a report the firm has alrea
 - [`tools/`](tools/) -- the `auditbank` Python package: `auditbank validate` checks a report against the schema and cross-field rules (the same checks CI runs); `auditbank convert` drafts a standard file from a firm's published report (Halborn, Runtime Verification, Veridise) for firm review; `auditbank index` rebuilds the archive index.
 - [`schema/`](schema/) -- JSON Schema and controlled vocabularies (severity, status, category, firm abbreviations).
 - Submission page (<https://ankeliu.github.io/audit-reports/>) -- paste a published report URL or a standard `.md` for an instant check, then file the submission.
+- [`examples/`](examples/) -- unreviewed converter output for one Halborn, one Runtime Verification, and one Veridise report. Temporary: removed once each firm approves its converter.
 
 ## Feedback requested from firms
 
@@ -45,5 +46,17 @@ One public repo. The standard file is an addendum to a report the firm has alrea
 5. Remediation provenance: does the `firm / client-reported / not-reviewed` distinction plus `Fixed - Not Verified` status correctly bound your post-engagement obligations?
 6. Does the mandatory disclaimer/license section, with your own boilerplate substitutable, cover your legal requirements? What's missing?
 7. Would you want SARIF as a companion output alongside this markdown? (The frontmatter + finding blocks are designed to be losslessly convertible.)
+
+## Open questions
+
+1. **Veridise mappings.** `Warning` -> `Low`, `Intended Behavior` -> `Risk Accepted`, and `Invalid` items excluded from findings (listed in the Appendix). To confirm with Veridise.
+2. **Vocabulary for v0.3.** Should an `Intended Behavior`-style status be added instead of mapping it to `Risk Accepted`?
+3. **Halborn `commit_final`.** The report page lists many remediation commits; the converter takes the last one listed. To confirm with Halborn.
+4. **Firm reviewers.** `.github/firm-reviewers.yml` is empty. The AI-conversion sign-off check has no effect until each firm names its GitHub handles.
+5. **Default license for converted drafts.** Drafts default to `Apache-2.0`, but firms keep copyright and some publish under "All Rights Reserved" (e.g. Veridise). Each firm confirms its terms during review.
+6. **Report date for web reports.** Halborn's page has no publication date; the converter uses the latest finding remediation date and flags it.
+7. **Firm disclaimers.** The Halborn, RV, and Veridise disclaimers don't cover every element Section 7 requires (point-in-time, no warranty, PDF authoritative). Converters append the template default; firms may substitute their own.
+8. **RV "Difficulty".** RV's Difficulty runs opposite to likelihood (High = hard to exploit), so it is stored as `Difficulty: High` rather than a bare `High`.
+9. **Moving to `stellar/audit-reports`.** Change `REPO` in `site/app.js`, the Pages URL in README / FILLING_INSTRUCTIONS / CONTRIBUTING / the issue form, and the `$id` in `tools/auditbank/schema_gen.py` (then `auditbank schema --write`).
 
 Contact: Anke Liu / Michael Berryhill / Ashley Wright -- SDF Ecosystem Growth, or your Audit Bank Slack channel.
