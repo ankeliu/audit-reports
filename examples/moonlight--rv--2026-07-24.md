@@ -1,7 +1,7 @@
 ---
 schema_version: '0.2'
 report:
-  title: Moonlight Stellar -- Security Audit Report
+  title: 'Moonlight Stellar: Security Audit Report'
   audit_firm: Runtime Verification
   firm_contact: null
   auditors: null
@@ -55,7 +55,7 @@ findings_summary:
 severity_standard: audit-bank-v0.2
 ---
 
-# Moonlight Stellar -- Security Audit by Runtime Verification
+# Moonlight Stellar: Security Audit by Runtime Verification
 
 <!-- CONVERSION-NOTE: publication.license defaulted to "Apache-2.0"; firm to confirm reuse terms -->
 

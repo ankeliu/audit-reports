@@ -30,10 +30,6 @@ splyce
 
 - [X] The client has approved public publication of this report
 
-### Firm reviewer
-
-@some-engineer
-
 ### Notes
 
 _No response_
@@ -50,8 +46,13 @@ def test_issue_form_dropdown_matches_vocab():
 def test_parse_and_check_form():
     info = check_form(parse_issue_form(ISSUE_BODY))
     assert info["abbrev"] == "HAL" and info["firm"] == "Halborn"
-    assert info["slug"] == "splyce" and info["reviewer"] == "some-engineer"
+    assert info["slug"] == "splyce"
     assert info["source"].startswith("https://www.halborn.com/") and info["attachment"] is None
+
+
+def test_project_slug_is_optional():
+    info = check_form(parse_issue_form(ISSUE_BODY.replace("splyce\n\n### Client", "_No response_\n\n### Client")))
+    assert info["slug"] is None
 
 
 def test_attachment_link_is_found():
@@ -68,7 +69,7 @@ def test_attachment_link_is_found():
     "old,new,message",
     [
         ("- [X]", "- [ ]", "client-approval"),
-        ("splyce\n\n### Client", "Splyce Finance\n\n### Client", "kebab-case"),
+        ("splyce\n\n### Client", "Splyce Finance\n\n### Client", "lowercase words"),
         ("Halborn (HAL)", "Someone Else (SE)", "unknown audit firm"),
         ("https://www.halborn.com/audits/splyce/smart-contract-assessment-de69cd", "_No response_", "attach"),
     ],

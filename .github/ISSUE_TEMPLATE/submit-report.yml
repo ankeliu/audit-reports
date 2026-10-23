@@ -6,9 +6,8 @@ body:
   - type: markdown
     attributes:
       value: |
-        Submit a report **only once your firm would publish it publicly** (client approval given, embargoes elapsed, redactions applied).
-        Within ~2 minutes a bot comments here with the validation result and, if it passes, opens a PR adding the standard-format file.
-        Use the [submission page](https://ankeliu.github.io/audit-reports/) to check a standard `.md` instantly before submitting.
+        Submit a report **only once your firm would publish it publicly** (client approval given, embargoes over, redactions applied).
+        Within about two minutes a bot replies here with the result and, if it passes, opens a PR. Your firm's listed reviewers are asked to review it.
   - type: dropdown
     id: firm
     attributes:
@@ -42,10 +41,8 @@ body:
     id: project_slug
     attributes:
       label: Project slug
-      description: Lowercase kebab-case, e.g. `trustless-work`. Used for the directory and finding IDs.
-      placeholder: my-project
-    validations:
-      required: true
+      description: Optional. Leave blank to use the project name from the report. Lowercase words joined by hyphens, e.g. `trustless-work`.
+      placeholder: trustless-work
   - type: checkboxes
     id: client_approval
     attributes:
@@ -53,12 +50,6 @@ body:
       options:
         - label: The client has approved public publication of this report
           required: true
-  - type: input
-    id: reviewer_handle
-    attributes:
-      label: Firm reviewer
-      description: GitHub handle of the engineer at your firm who will approve the PR (required for AI-converted reports).
-      placeholder: "@handle"
   - type: textarea
     id: notes
     attributes:

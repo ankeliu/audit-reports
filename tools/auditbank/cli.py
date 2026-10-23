@@ -95,7 +95,7 @@ def main(argv=None) -> int:
     p.add_argument("--firm", choices=["hal", "rv", "ver"], help="skip auto-detection")
     p.add_argument("--project-slug", help="lowercase-kebab project slug (default: derived from the source)")
     p.add_argument("--out", help="output path (default: reports/<slug>/<slug>--<firm>--<date>.md)")
-    p.add_argument("--ai", action="store_true", help="fill structural gaps with Claude (needs ANTHROPIC_API_KEY)")
+    p.add_argument("--ai", action="store_true", help="use AI to fill gaps the source leaves (needs ANTHROPIC_API_KEY)")
     p.set_defaults(func=cmd_convert)
 
     p = sub.add_parser("index", help="rebuild reports/index.json and reports/README.md")

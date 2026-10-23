@@ -312,8 +312,8 @@ class RuntimeVerificationConverter(Converter):
             client = project or slug.replace("-", " ").title()
             notes.append(f"client name '{client}' taken from the report title; confirm")
         meta["client"] = client
-        meta["title"] = f"{project or client} -- Security Audit Report"
-        report["heading"] = f"{project or client} -- Security Audit by Runtime Verification"
+        meta["title"] = f"{project or client}: Security Audit Report"
+        report["heading"] = f"{project or client}: Security Audit by Runtime Verification"
         meta["report_date"] = _date(fr.get("delivered") or "")
         if not meta["report_date"]:
             notes.append("report.report_date not found (no `Delivered:` date); firm to supply")
@@ -521,13 +521,13 @@ def _code_repo_refs(text: str) -> list[str]:
 
 
 def _invariants_md(text: str) -> str:
-    """Group headings (`A. Value conservation`) -> H4; each `I1 —` / `T1 —` item -> a bullet."""
+    """Group headings (`A. Value conservation`) -> H4; each numbered `I1` / `T1` item -> a bullet."""
     out: list[str] = []
     for line in text.split("\n"):
         stripped = line.strip()
         if re.match(r"^[A-Z]\. \S", stripped) and len(stripped) < 90 and not stripped.endswith("."):
             out += ["", f"#### {_escape(stripped)}", ""]
-        elif re.match(r"^[IT]\d+\s+—", stripped):
+        elif re.match(r"^[IT]\d+\s+\u2014", stripped):
             out.append(f"- {_escape(stripped)}")
         elif stripped and out and out[-1].startswith(("- ", "  ")):
             out.append(f"  {_escape(stripped)}")

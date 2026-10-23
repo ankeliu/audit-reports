@@ -1,7 +1,7 @@
 ---
 schema_version: '0.2'
 report:
-  title: Example Escrow -- Smart Contract Audit
+  title: 'Example Escrow: Smart Contract Audit'
   audit_firm: Runtime Verification
   firm_contact: contact@example.com
   auditors: null
@@ -53,7 +53,7 @@ findings_summary:
 severity_standard: audit-bank-v0.2
 ---
 
-# Example Escrow -- Code Review by Runtime Verification
+# Example Escrow: Code Review by Runtime Verification
 
 ## 1. Executive summary
 

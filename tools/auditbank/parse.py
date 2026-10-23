@@ -62,7 +62,7 @@ def _normalize_scalars(value):
 
 
 def _is_null(text: str | None) -> bool:
-    return text is None or text.strip().lower() in {"", "null", "none", "n/a", "—", "-"}
+    return text is None or text.strip().lower() in {"", "null", "none", "n/a", "\u2014", "-"}
 
 
 def _extract_notes(text: str) -> tuple[str, list[str]]:

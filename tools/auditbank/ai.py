@@ -1,4 +1,4 @@
-"""`--ai`: model-assisted gap filling for converter drafts (CLAUDE_CODE_PLAN.md section 7).
+"""`--ai`: AI-assisted gap filling for converter drafts.
 
 Exactly four jobs, each leaving a CONVERSION-NOTE for the firm reviewer:
 1. split a single Description blob into Description / Impact / Proof when the source doesn't separate them;

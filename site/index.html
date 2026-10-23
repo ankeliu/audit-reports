@@ -17,11 +17,11 @@
     <p class="eyebrow">Stellar Audit Bank</p>
     <h1>Standard audit reports</h1>
     <p class="lede">
-      A machine-readable archive of published Audit Bank audits. Each file is a derived summary of the firm's
-      report; the firm's PDF or report page stays authoritative.
+      A public archive of completed Stellar Audit Bank audits in one standard format. Each file summarizes a report the
+      firm has already published; the firm's PDF or report page remains the authoritative version.
     </p>
     <nav class="toc" aria-label="Sections">
-      <a href="#submit">Submit a published report</a>
+      <a href="#submit">Convert a published report</a>
       <a href="#check">Check a standard-format file</a>
       <a href="#archive">Archive</a>
       <a href="#reference">Reference</a>
@@ -30,14 +30,14 @@
 
   <main>
     <section id="submit" aria-labelledby="submit-title">
-      <h2 id="submit-title">Submit a published report</h2>
+      <h2 id="submit-title">Convert a published report</h2>
       <p>
-        Give the link to your firm's published report, or its PDF. The repo converts it to the standard format and
-        replies on a GitHub issue in about two minutes, then opens a PR for an engineer at your firm to review and sign off.
-        Submit only once your firm would publish the report anyway (client approval given, embargoes elapsed).
+        Give the link to your firm's published report, or its PDF. It is converted to the standard format, the result is
+        posted on a GitHub issue in about two minutes, and a PR is opened for an engineer at your firm to review.
+        Submit only once your firm would publish the report anyway.
       </p>
       <p class="muted small">
-        Converters exist for Halborn report pages and Runtime Verification and Veridise PDFs. Other firms:
+        Works for Halborn report pages and Runtime Verification and Veridise PDFs. Other firms:
         <a href="#check">check and submit a standard-format file</a>.
       </p>
       <form id="convert-form" class="form-grid" novalidate>
@@ -50,12 +50,8 @@
         </label>
         <label for="firm">Audit firm</label>
         <select id="firm" required></select>
-        <label for="slug">Project slug</label>
-        <input id="slug" required pattern="[a-z0-9]+(-[a-z0-9]+)*" placeholder="trustless-work">
-        <label for="reviewer">Firm reviewer (GitHub handle)</label>
-        <input id="reviewer" placeholder="@handle">
         <div class="form-actions">
-          <button type="submit" class="primary">Open submission issue</button>
+          <button type="submit" class="primary">Convert and submit</button>
           <span id="detected" class="muted small" role="status"></span>
         </div>
       </form>
@@ -72,7 +68,7 @@
         Already have a report in the standard format (for example, written from the
         <a href="https://github.com/ankeliu/audit-reports/blob/main/AUDIT_REPORT_TEMPLATE.md">template</a>, or a
         converted draft you've edited)? Paste or drop the <code>.md</code> to check it against the same schema and rules
-        CI runs. It stays in your browser. For a PDF or a link, use <a href="#submit">Submit a published report</a>.
+        CI runs. It stays in your browser. For a PDF or a link, use <a href="#submit">Convert a published report</a>.
       </p>
       <label class="drop" id="drop">
         <input type="file" id="file" accept=".md,.markdown,text/markdown,text/plain">

@@ -6,7 +6,7 @@
 
 ## Firm sign-off checklist (FILLING_INSTRUCTIONS.md Step 8)
 
-- [ ] All frontmatter fields filled, `"withheld"`, or `null` -- and `disclosure_status` consistent with any withheld/redacted content
+- [ ] All frontmatter fields filled, `"withheld"`, or `null`, and `disclosure_status` consistent with any withheld/redacted content
 - [ ] `findings_summary` counts match the finding blocks exactly
 - [ ] Every finding has all eight required table fields (Difficulty / likelihood may be null) plus Description, Impact, Recommendation
 - [ ] Every Critical/High finding has a Proof / attack path or an explicit `Withheld pending remediation`

@@ -177,7 +177,7 @@ def parse_date(text: str | None) -> str | None:
 def parse_date_range(text: str) -> tuple[str | None, str | None]:
     """`Oct. 6–Oct. 14, 2025` or `Oct. 6–14, 2025` or `Sep. 28, 2025–Oct. 3, 2025`."""
     m = re.search(
-        r"([A-Z][a-z]+)\.?\s+(\d{1,2})(?:,\s*(\d{4}))?\s*[–—-]\s*(?:([A-Z][a-z]+)\.?\s+)?(\d{1,2}),\s*(\d{4})",
+        r"([A-Z][a-z]+)\.?\s+(\d{1,2})(?:,\s*(\d{4}))?\s*[\u2013\u2014-]\s*(?:([A-Z][a-z]+)\.?\s+)?(\d{1,2}),\s*(\d{4})",
         text or "",
     )
     if not m:
@@ -265,13 +265,13 @@ class VeridiseConverter(Converter):
         client = (fr.get("client") or [None])[0]
         project = fr.get("project") or client
         meta["client"] = client or project
-        meta["title"] = f"{project} -- Security Assessment"
+        meta["title"] = f"{project}: Security Assessment"
         meta["auditors"] = fr.get("auditors") or None
         meta["firm_contact"] = fr.get("contact")
         meta["pdf_url"] = fr.get("url")
         if not meta["pdf_url"]:
             notes.append("report.pdf_url unknown (converted from a local file); add the public PDF URL")
-        report["heading"] = f"{project} -- Security Assessment by Veridise"
+        report["heading"] = f"{project}: Security Assessment by Veridise"
 
         versions = sorted((v for v in fr.get("versions") or [] if v.get("date")), key=lambda v: v["date"])
         if versions:

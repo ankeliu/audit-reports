@@ -32,7 +32,6 @@ FIELDS = {
     "Attachment": "attachment",
     "Project slug": "project_slug",
     "Client approval": "client_approval",
-    "Firm reviewer": "reviewer_handle",
     "Notes": "notes",
 }
 NO_RESPONSE = "_No response_"
@@ -44,6 +43,13 @@ MAX_BYTES = 50 * 1024 * 1024
 
 class SubmissionError(ValueError):
     pass
+
+
+def firm_reviewers(abbrev: str) -> list[str]:
+    """GitHub handles listed for the firm in .github/firm-reviewers.yml (the base branch's copy in CI)."""
+    from .ci import reviewers
+
+    return reviewers().get(abbrev, [])
 
 
 def parse_issue_form(body: str) -> dict:
@@ -62,14 +68,12 @@ def check_form(form: dict) -> dict:
     m = re.search(r"\(([A-Z]+)\)\s*$", form.get("firm") or "")
     if not m or m.group(1) not in firms:
         raise SubmissionError(f"unknown audit firm {form.get('firm')!r}")
-    slug = (form.get("project_slug") or "").strip().strip("`")
-    if not re.fullmatch(r"[a-z0-9]+(-[a-z0-9]+)*", slug):
-        raise SubmissionError(f"project slug {slug!r} must be lowercase kebab-case, e.g. `trustless-work`")
+    # Optional: when blank, the converter derives it from the report (Halborn URL, or the client name).
+    slug = (form.get("project_slug") or "").strip().strip("`") or None
+    if slug and not re.fullmatch(r"[a-z0-9]+(-[a-z0-9]+)*", slug):
+        raise SubmissionError(f"project slug {slug!r} must be lowercase words joined by hyphens, e.g. `trustless-work`")
     if not re.search(r"- \[[xX]\]", form.get("client_approval") or ""):
         raise SubmissionError("the client-approval checkbox must be ticked")
-    reviewer = (form.get("reviewer_handle") or "").strip().lstrip("@") or None
-    if reviewer and not re.fullmatch(r"[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})", reviewer):
-        raise SubmissionError(f"reviewer handle {reviewer!r} is not a valid GitHub username")
     source = (form.get("source_url") or "").strip() or None
     attachment = ATTACHMENT_URL.search(form.get("attachment") or "")
     if source and urlparse(source).scheme != "https":
@@ -80,7 +84,6 @@ def check_form(form: dict) -> dict:
         "abbrev": m.group(1),
         "firm": firms[m.group(1)],
         "slug": slug,
-        "reviewer": reviewer,
         "source": source,
         "attachment": attachment.group(0) if attachment else None,
         "attachment_name": _attachment_name(form.get("attachment") or "", attachment.group(0) if attachment else ""),
@@ -118,7 +121,12 @@ def place_standard_md(path: Path, info: dict) -> Path:
     except ParseError as exc:
         raise SubmissionError(f"could not parse the .md: {exc}") from exc
     date = (report.get("report") or {}).get("report_date") or "unknown-date"
-    out = REPORTS_DIR / info["slug"] / f"{info['slug']}--{info['abbrev'].lower()}--{date}.md"
+    slug = info["slug"] or re.sub(
+        r"[^a-z0-9]+", "-", str((report.get("report") or {}).get("client") or "").lower()
+    ).strip("-")
+    if not slug:
+        raise SubmissionError("could not derive a project slug: fill in report.client or the Project slug field")
+    out = REPORTS_DIR / slug / f"{slug}--{info['abbrev'].lower()}--{date}.md"
     out.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(path, out)
     return out
@@ -214,8 +222,9 @@ def pr_body(result: dict, issue_number: int) -> str:
         "**Conversion method:** "
         + ("converted by the repo tooling; needs firm sign-off" if ai else result["conversion_method"]),
     )
-    reviewer = f"@{info['reviewer']}" if info["reviewer"] else "_not given_"
-    head = f"Closes #{issue_number}\n\nSubmitted via the issue form. Firm reviewer: {reviewer}.\n\n"
+    listed = firm_reviewers(info["abbrev"])
+    reviewers = ", ".join(f"@{h}" for h in listed) if listed else "none listed yet in `.github/firm-reviewers.yml`"
+    head = f"Closes #{issue_number}\n\nSubmitted via the issue form. {info['firm']} reviewers: {reviewers}.\n\n"
     return head + template + ("\n" + log_markdown(result["ai_log"]) if result.get("ai_log") else "")
 
 
@@ -240,9 +249,9 @@ def main(argv=None) -> int:
         date = (report.get("report") or {}).get("report_date")
         outputs.update(
             report_path=result["report_path"].relative_to(REPO_ROOT).as_posix(),
-            branch=f"submit/{info['slug']}-{info['abbrev'].lower()}-{date}",
+            branch=f"submit/{result['report_path'].parent.name}-{info['abbrev'].lower()}-{date}",
             title=f"Add {report['report'].get('client')} report by {info['firm']} ({date})",
-            reviewer=info["reviewer"] or "",
+            reviewer=",".join(firm_reviewers(info["abbrev"])),
             needs_firm_review=str(result.get("conversion_method") is None).lower(),
             firm=firm_abbrev(info["firm"]) or "",
         )

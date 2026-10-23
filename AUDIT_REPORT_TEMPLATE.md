@@ -1,7 +1,7 @@
 ---
 # ============================================================
-# STELLAR AUDIT BANK -- STANDARD AUDIT REPORT (machine-readable)
-# Schema version: 0.2-draft | Maintained by SDF Ecosystem Growth
+# STELLAR AUDIT BANK: STANDARD AUDIT REPORT (machine-readable)
+# Schema version: 0.2 | Maintained by SDF Ecosystem Growth
 # Reports are pinned to the schema version they were submitted
 # under; published reports are never retroactively re-mapped.
 # Fill every field; where confidentiality prevents disclosure,
@@ -10,7 +10,7 @@
 # ============================================================
 schema_version: "0.2"
 report:
-  title: ""                    # e.g. "Trustless Work -- Smart Escrow Audit"
+  title: ""                    # e.g. "Trustless Work: Smart Escrow Audit"
   audit_firm: ""               # canonical firm name, e.g. "Runtime Verification"
   firm_contact: ""             # email or URL for report verification inquiries
   auditors: null               # optional list of named auditors; null if firm prefers no attribution
@@ -19,7 +19,7 @@ report:
   engagement_start: ""         # YYYY-MM-DD
   engagement_end: ""           # YYYY-MM-DD
   report_version: "1.0"        # bump on any post-publication revision
-  pdf_url: null                # canonical URL of the firm's original PDF -- the PDF is the authoritative document; this markdown is a derived summary
+  pdf_url: null                # URL of the firm's original PDF; the PDF is the authoritative report and this file summarizes it
   firm_report_url: null        # firm-hosted report page, if public
 publication:
   disclosure_status: "public"  # public | embargoed | redacted (see instructions)
@@ -29,8 +29,8 @@ publication:
 audit:
   type: []                     # one or more of: code-review | formal-verification | fuzzing | design-review | threat-modeling | economic-review | cryptographic-review | penetration-test | opsec-review | fix-review | audit-contest
   methods: []                  # free-form list, e.g. ["manual line-by-line review", "invariant testing"]
-  tooling: null                # optional: notable tools used (static analyzers, fuzzers, AI assistants, solvers). Disclosure encouraged, never penalized -- every finding is human-verified regardless (see instructions)
-effort:                        # optional denominators -- fill if the firm wants engagement context recorded
+  tooling: null                # optional: notable tools used (static analyzers, fuzzers, AI assistants, solvers). Listing them is encouraged and never counts against the firm; every finding is confirmed by a person regardless
+effort:                        # optional: engagement size, so finding counts can be read in context
   engineer_weeks: null
   reviewers: null
 scope:
@@ -54,13 +54,13 @@ findings_summary:
 severity_standard: "audit-bank-v0.2"   # confirms use of the unified scale in Section 4; the firm's own rating is preserved per finding and governs in case of dispute
 ---
 
-# {Project Name} -- {Audit Type} by {Audit Firm}
+# {Project Name}: {Audit Type} by {Audit Firm}
 
 ## 1. Executive summary
 
 <!-- Guidance: ~250 words. Three paragraphs:
 (1) who engaged whom, when, and what was audited;
-(2) what was found -- lead with the most severe issues and their real-world impact;
+(2) what was found, leading with the most severe issues and their real-world impact;
 (3) overall assessment and the single most important next step for the project.
 No methodology detail here. No marketing language. -->
 
@@ -81,21 +81,21 @@ is held. Link to project docs for the rest. -->
 
 <!-- HIGHEST-PRIORITY SECTION. One subsection per finding, ordered by unified
 severity (Critical first), then by finding ID. Every finding uses the exact
-field block below -- parsers depend on it. See FILLING_INSTRUCTIONS.md. -->
+field block below; tools parse it. See FILLING_INSTRUCTIONS.md. -->
 
 ### [{FINDING-ID}] {One-line title stating the actual issue}
 
 | Field | Value |
 |---|---|
 | **Unified severity** | Critical / High / Moderate / Low / Informational |
-| **Firm severity rating** | free text -- the firm's own label, score, and system (e.g. "BVSS 2.0: 7.5 (High)"). This is the firm's judgment, preserved verbatim; it governs in case of dispute with the unified rating |
-| **Difficulty / likelihood** *(optional)* | Low / Medium / High, or the firm's own rating verbatim -- how hard the exploit is to realize (e.g. any user < governance takeover < admin/deploy keys). Null if the firm doesn't rate this axis |
+| **Firm severity rating** | the firm's own label, score, and scale, as written in its report (e.g. "BVSS 2.0: 7.5 (High)"). If it disagrees with the unified severity, this rating wins |
+| **Difficulty / likelihood** *(optional)* | Low / Medium / High, or the firm's own rating as written: how hard the issue is to exploit (e.g. any user, governance takeover, admin or deploy keys). Null if the firm doesn't rate this |
 | **Status** | Resolved / Fixed - Not Verified / Acknowledged / Risk Accepted / Mitigated (off-chain) / Partially Resolved / Unresolved / Disputed |
 | **Remediation verified by** | firm / client-reported / not-reviewed |
 | **Category** | see taxonomy in FILLING_INSTRUCTIONS.md |
 | **Location** | `path/to/file.rs:L120-L145` (or "withheld") |
 | **Resolved in** | commit hash / PR URL / null |
-| **Redacted** | false / true -- reason (e.g. "PoC withheld pending remediation"). Redaction must be consistent with the authoritative PDF: if the full finding is already public in the PDF, there is nothing to redact here |
+| **Redacted** | false / true: reason (e.g. "true: PoC withheld pending remediation"). Must match the published PDF: if the finding is fully public there, there is nothing to redact |
 
 **Description.**
 <!-- 2-6 sentences. First sentence states the flaw plainly. Then the root
@@ -106,7 +106,7 @@ functions/lines. -->
 <!-- 1-4 sentences. Concrete worst case: who loses what (or which guarantee
 breaks), under which preconditions. Quantify where possible. -->
 
-**Proof / attack path.** *(required for Critical and High -- but "Withheld pending remediation" is always an acceptable value; see disclosure rules)*
+**Proof / attack path.** *(required for Critical and High; "Withheld pending remediation" is always acceptable)*
 <!-- Numbered attacker steps, a link to a PoC test, or "Withheld pending
 remediation". Minimal-reproducible. -->
 
@@ -115,7 +115,7 @@ remediation". Minimal-reproducible. -->
 
 **Remediation notes.** *(fill after a fix review engagement, else null)*
 <!-- What the project changed, whether the fix fully addresses root cause,
-residual risk -- and who verified it (must match "Remediation verified by"). -->
+residual risk, and who verified it (must match "Remediation verified by"). -->
 
 ---
 
@@ -137,7 +137,7 @@ governs in case of dispute. -->
 
 ## 5. Assumptions and limitations
 
-<!-- No length cap -- for formal verification the assumptions ARE the result.
+<!-- No length limit: for formal verification, the assumptions are the result.
 State: trust assumptions the analysis relies on, properties verified vs. not
 verified, and known scope gaps the firm chooses to disclose (e.g. in-scope
 components reviewed with limited depth due to time constraints). Disclosure of
@@ -145,12 +145,12 @@ coverage gaps is at the firm's discretion. -->
 
 ## 6. Methodology *(optional)*
 
-<!-- Optional -- the firm may omit this section entirely and defer to its own
+<!-- Optional: the firm may leave this section out and point to its own
 PDF (linked in frontmatter). If included: keep high-level (~200 words
 guidance). Phases, tooling and how tool/AI output was human-verified, tests
 added. -->
 
-## 7. Disclaimer and license *(mandatory -- firm may substitute its own standard language)*
+## 7. Disclaimer and license *(required; the firm may use its own standard text)*
 
 <!-- Default text; replace with the firm's own disclaimer if preferred. -->
 

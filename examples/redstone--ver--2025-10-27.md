@@ -1,7 +1,7 @@
 ---
 schema_version: '0.2'
 report:
-  title: RedStone Stellar Connector -- Security Assessment
+  title: 'RedStone Stellar Connector: Security Assessment'
   audit_firm: Veridise
   firm_contact: contact@veridise.com
   auditors:
@@ -78,7 +78,7 @@ findings_summary:
 severity_standard: audit-bank-v0.2
 ---
 
-# RedStone Stellar Connector -- Security Assessment by Veridise
+# RedStone Stellar Connector: Security Assessment by Veridise
 
 <!-- CONVERSION-NOTE: publication.license defaulted to "Apache-2.0"; firm to confirm reuse terms -->
 

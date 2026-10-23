@@ -189,25 +189,19 @@
     return "";
   }
 
-  function suggestSlugFromName(name, firm) {
-    const base = decodeURIComponent(name || "").replace(/\.pdf$/i, "");
-    if (firm === "VER") return slugify(base.split("-")[1] || "");
-    if (firm === "RV") return slugify(base.split("_")[0] || "");
-    return "";
-  }
-
-  function suggestSlug(url, firm) {
-    const parts = url.pathname.split("/").filter(Boolean);
-    if (firm === "HAL" && parts[0] === "audits" && parts[1]) return slugify(parts[1]);
-    return suggestSlugFromName(parts[parts.length - 1] || "", firm);
-  }
-
-  function applyDetection(firm, slug, label) {
-    if (firm) {
-      $("firm").value = firm;
-      $("detected").textContent = `Detected ${vocab ? vocab.firms[firm] : firm}${label ? ` from the ${label}` : ""}.`;
+  function shortName(link) {
+    try {
+      const parts = new URL(link).pathname.split("/").filter(Boolean);
+      return parts[0] === "audits" && parts[1] ? parts[1] : decodeURIComponent(parts.pop() || link);
+    } catch (_) {
+      return link;
     }
-    if (slug && !$("slug").value) $("slug").value = slug;
+  }
+
+  function applyDetection(firm, label) {
+    if (!firm) return;
+    $("firm").value = firm;
+    $("detected").textContent = `Detected ${vocab ? vocab.firms[firm] : firm} from the ${label}.`;
   }
 
   function setPdf(file) {
@@ -217,7 +211,7 @@
     $("pdf-next").hidden = true;
     const firm = detectFromName(file.name);
     $("detected").textContent = "";
-    applyDetection(firm, suggestSlugFromName(file.name, firm), "file name");
+    applyDetection(firm, "file name");
   }
 
   function setupConvertForm() {
@@ -239,7 +233,7 @@
         $("pdf-label").replaceChildren(el("strong", {}, "Choose the PDF"), " or drop it here");
       }
       const match = Object.keys(CONVERTIBLE).find((k) => CONVERTIBLE[k](url));
-      if (match) applyDetection(match, suggestSlug(url, match), "link");
+      if (match) applyDetection(match, "link");
       else $("detected").textContent = "Unrecognized site: pick the firm below. Other firms submit a standard .md.";
     });
 
@@ -258,26 +252,17 @@
       e.preventDefault();
       const url = $("source-url").value.trim();
       const abbrev = select.value;
-      const slug = $("slug").value.trim();
-      const problem = !url && !pdfFile
-        ? "Give the report link or choose the PDF."
-        : !abbrev
-          ? "Pick the audit firm."
-          : !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug)
-            ? "Project slug must be lowercase words joined by hyphens, e.g. trustless-work."
-            : "";
+      const problem = !url && !pdfFile ? "Give the report link or choose the PDF." : !abbrev ? "Pick the audit firm." : "";
       if (problem) {
         $("detected").textContent = problem;
         return;
       }
       window.open(
         issueUrl({
-          title: `${slug} (${vocab ? vocab.firms[abbrev] : abbrev})`,
+          title: `${pdfFile ? pdfFile.name : shortName(url)} (${vocab ? vocab.firms[abbrev] : abbrev})`,
           firm: vocab ? firmOption(abbrev) : abbrev,
           source_url: pdfFile ? "" : url,
           attachment: pdfFile ? `Drag ${pdfFile.name} into this box, replacing this line.` : "",
-          project_slug: slug,
-          reviewer_handle: $("reviewer").value,
         }),
         "_blank",
         "noopener",

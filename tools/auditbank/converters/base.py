@@ -1,6 +1,6 @@
 """Shared converter machinery: fetch -> extract -> normalize -> report dict.
 
-Rules every converter follows (see CLAUDE_CODE_PLAN.md section 4.0):
+Rules every converter follows:
 - `Firm severity rating` is the firm's label verbatim; unified severity is only *proposed*.
 - Every inferred value carries a CONVERSION-NOTE; nothing is silently asserted.
 - `conversion_method` stays null: the merge step sets it after firm sign-off.

@@ -1,101 +1,133 @@
-# Filling instructions -- Stellar Audit Bank standard report (v0.2-draft)
+# Filling instructions: Stellar Audit Bank standard report (v0.2)
 
-These instructions are written to be followed by a human auditor or by an AI agent converting an existing report. Follow them exactly; downstream tooling (ecosystem security dashboards, AI audit assistants, cross-audit context retrieval) parses these files programmatically.
+Follow these instructions whether you write the report by hand or convert an existing one. Tools parse these files automatically, so the structure matters.
 
 ## Purpose
 
-Every completed Audit Bank audit is published in this format so audit firms and ecosystem security tool builders have structured, high-quality context on prior audits: what was reviewed, what was found, on one comparable scale, and whether it was fixed. Your report is both a human document and a dataset row. The firm's original PDF remains the authoritative report; this file is a derived summary.
+Every completed Audit Bank audit is published in this format so audit firms and security tool builders can see, for any prior audit, what was reviewed, what was found, how severe it was on one shared scale, and whether it was fixed. The firm's original PDF or report page remains the authoritative report. This file is a summary of it.
 
-## Golden rules
+## Ground rules
 
-1. **Findings are the product.** Spend your effort there. Everything else is context and should be short.
-2. **First sentence of every finding states the actual issue.** A reader scanning only titles and first sentences must understand every issue in the report.
-3. **Depth without verbosity.** Go deep on root cause, attack path, and fix. Do not go deep on "how the system works" -- keep project context near ~300 words and link out. Length figures are guidance, not hard caps; the Assumptions and limitations section has no cap at all.
-4. **Every finding is human-verified.** Tool- and AI-assisted discovery is welcome and disclosure in `audit.tooling` is encouraged -- it is context, never a quality penalty. No finding enters this report without an engineer confirming it is real, reachable, and correctly rated.
-5. **Confidentiality beats completeness, honestly declared.** Never publish what the client hasn't approved or what would endanger unfixed code. Use the redaction mechanics below instead of leaving fields blank -- "withheld" is a valid, first-class value; silently omitting is not.
-6. **Never invent.** Unknown = `null`. Do not drop Informational findings to make counts look better; do not merge distinct issues into one finding.
+1. **Findings matter most.** Put your effort there and keep everything else short.
+2. **Lead with the issue.** The first sentence of every finding states the actual flaw. Someone reading only titles and first sentences should understand every issue.
+3. **Deep on findings, brief on background.** Explain root cause, attack path, and fix in full. Keep project context to about 300 words and link to the project's docs. Word counts are guidance, not limits, and Assumptions and limitations has no limit.
+4. **A person confirms every finding.** Tools and AI may help find issues, and listing them in `audit.tooling` is encouraged and never counts against you. But an engineer must confirm each finding is real, reachable, and correctly rated.
+5. **Withhold openly, never silently.** Don't publish anything the client hasn't approved or that would put unfixed code at risk. Mark it `"withheld"` instead of leaving it blank or leaving it out.
+6. **Don't invent or drop anything.** Use `null` for unknowns. Keep every Informational finding, and don't merge separate issues into one.
 
-## Severity: two fields, firm-owned
+## Severity: two fields, both set by the firm
 
-Every finding carries two severity fields:
+Every finding has two severity fields:
 
-- **Unified severity** (required enum): `Critical | High | Moderate | Low | Informational`, assigned by the firm using the definitions in the template's Section 4. This exists solely for cross-audit comparability.
-- **Firm severity rating** (required free text): the firm's own label, score, and system, verbatim -- e.g. "BVSS 2.0: 7.5 (High)", "Spec deviation, no exploitability claim". Nothing is lost in translation because nothing is translated away.
+- **Unified severity** (required): `Critical`, `High`, `Moderate`, `Low`, or `Informational`, using the definitions in Section 4 of the template. It exists so findings can be compared across audits.
+- **Firm severity rating** (required): your own label, score, and scale, exactly as in your report, for example "BVSS 2.0: 7.5 (High)" or "Spec deviation, no exploitability claim".
 
 Rules:
-- The **firm performs the mapping**, not SDF. In case of dispute between the two fields, the firm's original rating governs.
-- Mapping guide: Critical → Critical; High / Major → High; Medium / Moderate → Moderate; Low / Minor → Low; Informational / Note / Best Practice / Gas / QA → Informational. CVSS: 9.0-10 → Critical, 7.0-8.9 → High, 4.0-6.9 → Moderate, 0.1-3.9 → Low. Definitions win over numeric scores -- sanity-check the band against Section 4.
-- Findings that aren't exploitability claims (formal spec gaps, violated properties, centralization risks, economic manipulation): rate by consequence using the Section 4 definitions, which cover broken guarantees and control compromise, not only fund loss. When in doubt, rate Moderate and explain in the Description.
-- Reports are pinned to the schema version they were submitted under. Published reports are never retroactively re-mapped to later scales.
+
+- **The firm chooses the unified severity**, not SDF. If the two fields ever disagree, the firm's own rating wins.
+- Mapping guide: Critical to Critical; High or Major to High; Medium or Moderate to Moderate; Low or Minor to Low; Informational, Note, Best Practice, Gas, or QA to Informational. CVSS: 9.0 to 10 is Critical, 7.0 to 8.9 High, 4.0 to 6.9 Moderate, 0.1 to 3.9 Low. If a score and the Section 4 definitions disagree, the definitions win.
+- Findings that aren't exploits (spec gaps, violated properties, centralization risks, economic manipulation) are rated by consequence using Section 4, which covers broken guarantees and loss of control as well as loss of funds. If unsure, use Moderate and explain why in the Description.
+- A report keeps the schema version it was submitted under. Published reports are never re-rated against later scales.
 
 ## Disclosure and redaction
 
-- `publication.disclosure_status`: `public` (cleared for the public archive), `embargoed` (submit now, publish after `embargo_until`), `redacted` (public with specific fields withheld).
-- Submit your report **when you would normally publish it to the world** -- i.e. after client publication approval and, typically, after remediation -- not at engagement close.
-- **Proof / attack path** is required for Critical and High, but `Withheld pending remediation` is always an acceptable value -- for unremediated findings, for patterns that exist in adjacent deployed code, or per your disclosure policy. Set `Redacted: true` with the reason on that finding.
-- **Redaction tracks the authoritative PDF.** Redact in this summary only what is also withheld from (or redacted in) the published PDF. If the full finding is already public in the PDF, redacting it here serves no purpose -- disclosure decisions are made once, at the report level, and both artifacts reflect them identically.
-- `repositories[].url`, `in_scope_paths`, and `Location` may be `"withheld"` for private pre-launch codebases -- disclosure of these is the client's decision, not the firm's obligation.
+- Submit a report **only when you would publish it anyway**: after the client approves publication and usually after fixes, not when the engagement ends.
+- `publication.disclosure_status` is `public`, `embargoed` (with the release date in `embargo_until`), or `redacted` (public, with specific fields withheld).
+- **Proof / attack path** is required for Critical and High findings, but `Withheld pending remediation` is always acceptable: for unfixed issues, for patterns that exist in other deployed code, or because of your disclosure policy. Set `Redacted` to `true` with the reason on that finding.
+- **Match the PDF.** Withhold something here only if it is also withheld in the published PDF. If the finding is fully public in the PDF, there is nothing to redact here.
+- `repositories[].url`, `in_scope_paths`, and `Location` may be `"withheld"` for private, pre-launch code. Whether to disclose them is the client's decision.
 
-## Step-by-step
+## Step by step
 
-### Step 1 -- YAML frontmatter
-- Fill every field; `"withheld"` where confidentiality applies, `null` where genuinely unknown or inapplicable. Dates `YYYY-MM-DD`, commit hashes full 40 characters.
-- `repositories` is a list -- one entry per repo for multi-repo engagements. `commit_final` stays `null` unless a fix review engagement actually occurred.
-- `publication.license`: state reuse terms (e.g. "CC BY-ND 4.0" or "All rights reserved -- summary published with permission"). Copyright stays with the firm.
-- `publication.conversion_method`: `firm-native` (written in this format) or `ai-converted-firm-reviewed` (AI-converted from your PDF, then reviewed and signed off by a firm engineer). AI-converted reports without firm review are not accepted.
-- `auditors` is optional -- named credit or no attribution, firm's choice.
-- `effort` fields are optional context (engineer-weeks, reviewer count) so findings counts are never read without a denominator.
-- `findings_summary` counts MUST equal the number of finding blocks per unified severity. Recompute after any edit.
+### Step 1: YAML frontmatter
 
-### Step 2 -- Executive summary (~250 words guidance)
-Three paragraphs: engagement facts; most severe findings and their real-world impact; overall assessment plus the single most important next step. Written for a non-engineer reviewer.
+- Fill every field. Use `"withheld"` for confidential values and `null` for unknown or not applicable ones. Dates are `YYYY-MM-DD`; commit hashes are the full 40 characters.
+- `repositories` has one entry per repository. Leave `commit_final` as `null` unless a fix review actually took place.
+- `publication.license`: the terms for reusing this summary, for example "CC BY-ND 4.0" or "All rights reserved; summary published with permission". Copyright stays with the firm.
+- `publication.conversion_method`: `firm-native` if you wrote the report in this format, or `ai-converted-firm-reviewed` if it was converted from your PDF and then checked and approved by an engineer at your firm. AI conversions without that review are not accepted.
+- `auditors` is optional: name the auditors or leave it `null`.
+- `effort` (engineer weeks, reviewers) is optional context, so finding counts can be read against the size of the engagement.
+- `findings_summary` must match the number of findings at each unified severity. Recount after every edit.
 
-### Step 3 -- Project context (~300 words guidance + table)
-Only what a future reader needs to understand the findings. Fill the components table with in-scope contracts, paths, and trust assumptions.
+### Step 2: Executive summary (about 250 words)
 
-### Step 4 -- Findings
-- **ID format:** `{PROJECT}-{FIRM}-{NNN}`, uppercase, zero-padded (e.g. `TW-RV-003`). Firm abbreviations: `RV`, `HAL`, `OS`, `VER`, `CER`, `ZEL`, `SPB`, `OAK`, `QS`, `HSH`, `CS`. IDs are permanent -- never renumber after publication.
-- **Order:** Critical → High → Moderate → Low → Informational; within a severity, by ID.
-- **Difficulty / likelihood (optional):** a second axis for how hard the exploit is to realize, independent of impact -- e.g. exploitable by any user (High likelihood) vs. requiring a governance takeover (Medium) vs. requiring admin/deploy keys (Low). Use `Low | Medium | High` or your own rating verbatim (RV's "difficulty" and Certora's "likelihood" both map here); `null` if your methodology doesn't rate this axis. The unified severity remains the single required axis.
-- **Status vocabulary (exact strings):** `Resolved` (fix reviewed and confirmed), `Fixed - Not Verified` (client reports a fix; no fix review performed), `Acknowledged` (client agrees, no fix yet), `Risk Accepted` (client explicitly chose not to fix), `Mitigated (off-chain)` (operational/monitoring mitigation, code unchanged), `Partially Resolved`, `Unresolved`, `Disputed` (firm and client disagree on validity or severity -- summarize both positions in Remediation notes).
-- **Remediation verified by (exact strings):** `firm` (a paid fix review confirmed root cause addressed), `client-reported` (client's claim, unverified by the firm), `not-reviewed`. A client-supplied "fixed" is never recorded as a firm attestation: `Resolved` requires `firm`; client claims use `Fixed - Not Verified` + `client-reported`. Post-engagement tracking is not an ongoing obligation -- fields reflect state as of `report_date` / the fix review, nothing more.
-- **Category (pick exactly one, the dominant):** `access-control-auth` (incl. require_auth misuse, auth-vs-authentication confusion, custom account contracts), `accounting-arithmetic`, `liveness-dos`, `upgrade-migration`, `state-archival-ttl` (Soroban state expiration, rent, TTL extension), `cross-contract-trust` (invocation trust, adapter/dependency boundaries), `oracle-external-dependency`, `economic-design` (incentive/game-theoretic, MEV, manipulation), `governance-centralization` (admin keys, timelocks, upgrade authority), `cryptography`, `data-validation`, `key-management-privacy`, `observability`, `code-quality`, `operational`.
-- **Location:** repo-relative path with line range at the audited commit; multiple locations comma-separated, most important first; `"withheld"` permitted per disclosure rules.
-- **Description:** 2-6 sentences. Sentence 1 = the flaw. Then root cause and exact code behavior. Functions and variables in backticks.
-- **Impact:** concrete worst case -- who loses what, or which guarantee breaks, under which preconditions.
-- **Proof / attack path:** numbered attacker steps, a PoC link, or `Withheld pending remediation`.
-- **Recommendation:** the specific fix. "Add validation" is insufficient.
-- **Remediation notes:** only after a fix review; must be consistent with `Remediation verified by`. Otherwise `null`.
+Three paragraphs: the engagement; the most severe findings and their real-world impact; the overall assessment and the most important next step. Write for a reader who isn't an engineer.
 
-### Step 5 -- Assumptions and limitations
-No length cap. Trust assumptions the analysis relies on; for formal verification, the properties verified and not verified -- these are the result, state them fully. Known scope gaps ("in scope but reviewed with limited depth") may be disclosed here at the firm's discretion.
+### Step 3: Project context (about 300 words, plus the table)
 
-### Step 6 -- Methodology (optional)
-The firm may omit this section entirely and defer to its PDF. If included, keep it high-level (~200 words guidance): phases, tooling, how tool/AI output was human-verified.
+Only what a reader needs to understand the findings. List the in-scope contracts, their paths, and their trust assumptions in the table.
 
-### Step 7 -- Disclaimer and license (mandatory)
-Keep the template's default text or substitute the firm's own standard disclaimer. It must cover: point-in-time review, no warranty of absence of vulnerabilities, not an endorsement or investment advice, PDF authoritative, copyright/license. This section may not be null.
+### Step 4: Findings
 
-### Step 8 -- Self-validation checklist
-- [ ] All frontmatter fields filled, `"withheld"`, or `null` -- and `disclosure_status` consistent with any withheld/redacted content
-- [ ] `findings_summary` counts match the finding blocks exactly
-- [ ] Every finding has all eight required table fields (Difficulty / likelihood may be null) plus Description, Impact, Recommendation
-- [ ] Every Critical/High finding has a Proof / attack path or an explicit `Withheld pending remediation`
-- [ ] Every finding has both a unified severity and the firm's own rating verbatim
-- [ ] `Resolved` status appears only where `Remediation verified by: firm`
-- [ ] Disclaimer and license section present; license stated in frontmatter
-- [ ] `conversion_method` accurate; if AI-converted, a firm engineer has reviewed and signed off
-- [ ] No confidential client information beyond what the client approved for publication
-- [ ] Valid markdown, valid YAML frontmatter (lint before submitting)
+- **ID:** `{PROJECT}-{FIRM}-{NNN}`, uppercase, three digits, for example `TW-RV-003`. Firm abbreviations: `RV`, `HAL`, `OS`, `VER`, `CER`, `ZEL`, `SPB`, `OAK`, `QS`, `HSH`, `CS`. IDs never change after publication.
+- **Order:** Critical, High, Moderate, Low, Informational; by ID within each severity.
+- **Difficulty / likelihood (optional):** how hard the issue is to exploit, separate from its impact. For example, any user can exploit it (High likelihood), it needs a governance takeover (Medium), or it needs admin or deploy keys (Low). Use `Low`, `Medium`, or `High`, or your own rating as written (RV's "difficulty" and Certora's "likelihood" both go here). Use `null` if you don't rate this.
+- **Status (exact values):**
+  - `Resolved`: the fix was reviewed and confirmed
+  - `Fixed - Not Verified`: the client says it is fixed; no fix review was done
+  - `Acknowledged`: the client agrees but hasn't fixed it yet
+  - `Risk Accepted`: the client chose not to fix it
+  - `Mitigated (off-chain)`: handled by operations or monitoring; code unchanged
+  - `Partially Resolved`
+  - `Unresolved`
+  - `Disputed`: the firm and client disagree on validity or severity (summarize both views in Remediation notes)
+- **Remediation verified by (exact values):** `firm` (a fix review confirmed the root cause is addressed), `client-reported` (the client's claim, not checked by the firm), or `not-reviewed`. `Resolved` requires `firm`; a client's claim uses `Fixed - Not Verified` with `client-reported`. These fields describe the state at `report_date` or the fix review; firms aren't expected to track fixes after that.
+- **Category (pick the one that fits best):**
+  - `access-control-auth`: including `require_auth` misuse and custom account contracts
+  - `accounting-arithmetic`
+  - `liveness-dos`
+  - `upgrade-migration`
+  - `state-archival-ttl`: Soroban state expiration, rent, TTL extension
+  - `cross-contract-trust`: trust between contracts, adapters, and dependencies
+  - `oracle-external-dependency`
+  - `economic-design`: incentives, MEV, manipulation
+  - `governance-centralization`: admin keys, timelocks, upgrade authority
+  - `cryptography`
+  - `data-validation`
+  - `key-management-privacy`
+  - `observability`
+  - `code-quality`
+  - `operational`
+- **Location:** path from the repository root, with a line range, at the audited commit. Separate multiple locations with commas, most important first. May be `"withheld"`.
+- **Description:** 2 to 6 sentences. The first states the flaw; the rest give the root cause and the exact code behavior. Put function and variable names in backticks.
+- **Impact:** the realistic worst case: who loses what, or which guarantee breaks, and under what conditions.
+- **Proof / attack path:** numbered attacker steps, a link to a proof-of-concept test, or `Withheld pending remediation`.
+- **Recommendation:** the specific fix. "Add validation" is not enough; say what to validate and where.
+- **Remediation notes:** only after a fix review, and consistent with `Remediation verified by`. Otherwise `null`.
 
-## Instructions for AI agents converting existing PDF reports
+### Step 5: Assumptions and limitations
 
-1. Extract, never summarize away: every finding in the source must appear as a finding block. If the source merges several issues under one heading, split them and note `(split from source finding N)` in Remediation notes.
-2. Copy the firm's original severity verbatim into `Firm severity rating`; propose the unified severity from the Section 4 definitions, flagged for firm confirmation -- the firm owns the final mapping.
-3. Where the source lacks a required field, set `null` -- do not guess. Exception: **Category** may be inferred from the finding content when the source report has no category field (most don't) -- infer it, and flag it with a `<!-- CONVERSION-NOTE: category inferred -->` for firm confirmation. Where the source deliberately withholds something, use `"withheld"` and set redaction fields.
-4. Flag every uncertainty in an HTML comment `<!-- CONVERSION-NOTE: ... -->` for the firm reviewer.
-5. Set `conversion_method: ai-converted-firm-reviewed` only after a firm engineer has actually reviewed the output. Output must pass the Step 8 checklist.
+No length limit. List the trust assumptions the review relies on. For formal verification, state which properties were and weren't verified; these are the result. You may also note parts of the scope that got less depth.
+
+### Step 6: Methodology (optional)
+
+You may leave this out and point to your PDF. If included, keep it to about 200 words: phases, tools, and how tool or AI output was checked by people.
+
+### Step 7: Disclaimer and license (required)
+
+Keep the template's text or use your firm's standard disclaimer. It must say the review is a point-in-time review, that it is no guarantee the code is free of vulnerabilities, that it is not an endorsement or investment advice, that the PDF is authoritative, and under what license this summary may be reused.
+
+### Step 8: Checklist before submitting
+
+- [ ] Every frontmatter field is filled, `"withheld"`, or `null`, and `disclosure_status` matches any withheld or redacted content
+- [ ] `findings_summary` matches the findings exactly
+- [ ] Every finding has all table fields (Difficulty / likelihood may be `null`) plus Description, Impact, and Recommendation
+- [ ] Every Critical and High finding has a Proof / attack path or `Withheld pending remediation`
+- [ ] Every finding has both a unified severity and your firm's own rating
+- [ ] `Resolved` appears only with `Remediation verified by: firm`
+- [ ] The disclaimer is present and the license is stated in the frontmatter
+- [ ] `conversion_method` is correct, and an engineer at your firm has approved any AI conversion
+- [ ] Nothing confidential beyond what the client approved for publication
+- [ ] `auditbank validate` passes
+
+## Converting an existing report (by hand or with tools)
+
+1. Carry over every finding in the source. If the source groups several issues under one heading, split them and add `(split from source finding N)` to Remediation notes.
+2. Copy the firm's severity exactly into `Firm severity rating` and propose a unified severity from Section 4 for the firm to confirm.
+3. If the source lacks a required field, use `null`; don't guess. The one exception is **Category**, which most reports don't have: infer it and flag it for the firm to confirm. If the source deliberately withholds something, use `"withheld"` and fill in the redaction fields.
+4. Flag anything uncertain with an HTML comment, `<!-- CONVERSION-NOTE: ... -->`, for the firm's reviewer. Pull requests can't be merged while these remain unless the firm signs off.
+5. Set `conversion_method: ai-converted-firm-reviewed` only after an engineer at the firm has reviewed the result.
 
 ## Submission
 
-One PR per report, filename `reports/{project-slug}/{project-slug}--{firm-abbrev}--{YYYY-MM-DD}.md` (lowercase slug, firm abbreviation lowercase, date = `report.report_date`). Either open the PR yourself or use the submission page (<https://ankeliu.github.io/audit-reports/>): paste your published report URL or upload your `.md`/PDF, get an instant validation result, and it files the PR. The SDF audit coordinator reviews and merges. If the file was AI-converted, an engineer from your firm must approve the PR.
+One pull request per report, saved as `reports/{project-slug}/{project-slug}--{firm-abbrev}--{YYYY-MM-DD}.md` (lowercase, with the date from `report.report_date`). Open the PR yourself, or use the [submission page](https://ankeliu.github.io/audit-reports/) to send a report link or PDF and have the PR opened for you. The SDF audit coordinator reviews and merges. For AI conversions, an engineer at your firm must approve the PR first.

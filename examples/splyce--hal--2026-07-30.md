@@ -1,7 +1,7 @@
 ---
 schema_version: '0.2'
 report:
-  title: Splyce -- Smart Contract Assessment
+  title: 'Splyce: Smart Contract Assessment'
   audit_firm: Halborn
   firm_contact: null
   auditors: null
@@ -96,7 +96,7 @@ findings_summary:
 severity_standard: audit-bank-v0.2
 ---
 
-# Splyce -- Smart Contract Assessment by Halborn
+# Splyce: Smart Contract Assessment by Halborn
 
 <!-- CONVERSION-NOTE: publication.license defaulted to "Apache-2.0"; firm to confirm reuse terms -->
 
@@ -141,7 +141,7 @@ This security assessment was commissioned by `Splyce`, a permissionless institut
 | Field | Value |
 |---|---|
 | **Unified severity** | Critical |
-| **Firm severity rating** | Critical -- BVSS 2.0 10.00 (AO:A/AC:L/AX:L/R:N/S:U/C:N/A:H/I:M/D:H/Y:N) (source: HAL-01) |
+| **Firm severity rating** | Critical, BVSS 2.0 10.00 (AO:A/AC:L/AX:L/R:N/S:U/C:N/A:H/I:M/D:H/Y:N) (source: HAL-01) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -374,7 +374,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Moderate |
-| **Firm severity rating** | Medium -- BVSS 2.0 6.28 (AO:A/AC:L/AX:M/R:N/S:C/C:N/A:N/I:N/D:H/Y:N) (source: HAL-02) |
+| **Firm severity rating** | Medium, BVSS 2.0 6.28 (AO:A/AC:L/AX:M/R:N/S:C/C:N/A:N/I:N/D:H/Y:N) (source: HAL-02) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -685,7 +685,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Moderate |
-| **Firm severity rating** | Medium -- BVSS 2.0 6.28 (AO:A/AC:L/AX:M/R:N/S:C/C:N/A:N/I:N/D:H/Y:N) (source: HAL-03) |
+| **Firm severity rating** | Medium, BVSS 2.0 6.28 (AO:A/AC:L/AX:M/R:N/S:C/C:N/A:N/I:N/D:H/Y:N) (source: HAL-03) |
 | **Difficulty / likelihood** | null |
 | **Status** | Risk Accepted |
 | **Remediation verified by** | not-reviewed |
@@ -953,7 +953,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Moderate |
-| **Firm severity rating** | Medium -- BVSS 2.0 6.28 (AO:A/AC:L/AX:M/R:N/S:C/C:N/A:N/I:N/D:H/Y:N) (source: HAL-04) |
+| **Firm severity rating** | Medium, BVSS 2.0 6.28 (AO:A/AC:L/AX:M/R:N/S:C/C:N/A:N/I:N/D:H/Y:N) (source: HAL-04) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -1174,7 +1174,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Moderate |
-| **Firm severity rating** | Medium -- BVSS 2.0 6.28 (AO:A/AC:L/AX:M/R:N/S:C/C:N/A:N/I:N/D:H/Y:N) (source: HAL-05) |
+| **Firm severity rating** | Medium, BVSS 2.0 6.28 (AO:A/AC:L/AX:M/R:N/S:C/C:N/A:N/I:N/D:H/Y:N) (source: HAL-05) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -1253,7 +1253,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Moderate |
-| **Firm severity rating** | Medium -- BVSS 2.0 5.86 (AO:A/AC:L/AX:M/R:N/S:U/C:N/A:H/I:M/D:N/Y:N) (source: HAL-06) |
+| **Firm severity rating** | Medium, BVSS 2.0 5.86 (AO:A/AC:L/AX:M/R:N/S:U/C:N/A:H/I:M/D:N/Y:N) (source: HAL-06) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -1322,7 +1322,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Moderate |
-| **Firm severity rating** | Medium -- BVSS 2.0 5.86 (AO:A/AC:M/AX:L/R:N/S:U/C:N/A:H/I:N/D:M/Y:N) (source: HAL-07) |
+| **Firm severity rating** | Medium, BVSS 2.0 5.86 (AO:A/AC:M/AX:L/R:N/S:U/C:N/A:H/I:N/D:M/Y:N) (source: HAL-07) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -1498,7 +1498,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Moderate |
-| **Firm severity rating** | Medium -- BVSS 2.0 5.86 (AO:A/AC:L/AX:M/R:N/S:U/C:N/A:N/I:M/D:N/Y:H) (source: HAL-08) |
+| **Firm severity rating** | Medium, BVSS 2.0 5.86 (AO:A/AC:L/AX:M/R:N/S:U/C:N/A:N/I:M/D:N/Y:H) (source: HAL-08) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -1577,7 +1577,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Moderate |
-| **Firm severity rating** | Medium -- BVSS 2.0 5.03 (AO:A/AC:L/AX:M/R:N/S:U/C:N/A:N/I:H/D:N/Y:N) (source: HAL-09) |
+| **Firm severity rating** | Medium, BVSS 2.0 5.03 (AO:A/AC:L/AX:M/R:N/S:U/C:N/A:N/I:H/D:N/Y:N) (source: HAL-09) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -1689,7 +1689,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Moderate |
-| **Firm severity rating** | Medium -- BVSS 2.0 5.03 (AO:A/AC:L/AX:M/R:N/S:U/C:N/A:N/I:N/D:H/Y:N) (source: HAL-10) |
+| **Firm severity rating** | Medium, BVSS 2.0 5.03 (AO:A/AC:L/AX:M/R:N/S:U/C:N/A:N/I:N/D:H/Y:N) (source: HAL-10) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -1760,7 +1760,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Moderate |
-| **Firm severity rating** | Medium -- BVSS 2.0 4.71 (AO:A/AC:L/AX:M/R:P/S:C/C:N/A:H/I:H/D:H/Y:N) (source: HAL-11) |
+| **Firm severity rating** | Medium, BVSS 2.0 4.71 (AO:A/AC:L/AX:M/R:P/S:C/C:N/A:H/I:H/D:H/Y:N) (source: HAL-11) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -1882,7 +1882,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 4.19 (AO:A/AC:L/AX:M/R:N/S:U/C:N/A:N/I:N/D:M/Y:M) (source: HAL-12) |
+| **Firm severity rating** | Low, BVSS 2.0 4.19 (AO:A/AC:L/AX:M/R:N/S:U/C:N/A:N/I:N/D:M/Y:M) (source: HAL-12) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -1962,7 +1962,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 4.19 (AO:A/AC:L/AX:M/R:N/S:C/C:N/A:N/I:N/D:N/Y:M) (source: HAL-13) |
+| **Firm severity rating** | Low, BVSS 2.0 4.19 (AO:A/AC:L/AX:M/R:N/S:C/C:N/A:N/I:N/D:N/Y:M) (source: HAL-13) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -2032,7 +2032,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 4.19 (AO:A/AC:L/AX:M/R:N/S:U/C:N/A:N/I:N/D:M/Y:M) (source: HAL-14) |
+| **Firm severity rating** | Low, BVSS 2.0 4.19 (AO:A/AC:L/AX:M/R:N/S:U/C:N/A:N/I:N/D:M/Y:M) (source: HAL-14) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -2110,7 +2110,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 3.93 (AO:A/AC:L/AX:M/R:P/S:C/C:N/A:N/I:H/D:H/Y:N) (source: HAL-15) |
+| **Firm severity rating** | Low, BVSS 2.0 3.93 (AO:A/AC:L/AX:M/R:P/S:C/C:N/A:N/I:H/D:H/Y:N) (source: HAL-15) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -2202,7 +2202,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 3.51 (AO:A/AC:M/AX:M/R:N/S:C/C:N/A:N/I:M/D:M/Y:N) (source: HAL-16) |
+| **Firm severity rating** | Low, BVSS 2.0 3.51 (AO:A/AC:M/AX:M/R:N/S:C/C:N/A:N/I:M/D:M/Y:N) (source: HAL-16) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -2286,7 +2286,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 3.35 (AO:A/AC:L/AX:M/R:N/S:U/C:N/A:N/I:N/D:N/Y:M) (source: HAL-17) |
+| **Firm severity rating** | Low, BVSS 2.0 3.35 (AO:A/AC:L/AX:M/R:N/S:U/C:N/A:N/I:N/D:N/Y:M) (source: HAL-17) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -2348,7 +2348,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 3.37 (AO:A/AC:M/AX:M/R:N/S:U/C:N/A:N/I:N/D:N/Y:H) (source: HAL-18) |
+| **Firm severity rating** | Low, BVSS 2.0 3.37 (AO:A/AC:M/AX:M/R:N/S:U/C:N/A:N/I:N/D:N/Y:H) (source: HAL-18) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -2434,7 +2434,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 3.09 (AO:A/AC:L/AX:H/R:N/S:U/C:N/A:H/I:H/D:N/Y:N) (source: HAL-19) |
+| **Firm severity rating** | Low, BVSS 2.0 3.09 (AO:A/AC:L/AX:H/R:N/S:U/C:N/A:H/I:H/D:N/Y:N) (source: HAL-19) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -2520,7 +2520,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 3.14 (AO:A/AC:L/AX:M/R:P/S:C/C:N/A:M/I:M/D:M/Y:N) (source: HAL-20) |
+| **Firm severity rating** | Low, BVSS 2.0 3.14 (AO:A/AC:L/AX:M/R:P/S:C/C:N/A:M/I:M/D:M/Y:N) (source: HAL-20) |
 | **Difficulty / likelihood** | null |
 | **Status** | Risk Accepted |
 | **Remediation verified by** | not-reviewed |
@@ -2608,7 +2608,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 3.13 (AO:A/AC:L/AX:L/R:N/S:U/C:N/A:L/I:L/D:N/Y:N) (source: HAL-21) |
+| **Firm severity rating** | Low, BVSS 2.0 3.13 (AO:A/AC:L/AX:L/R:N/S:U/C:N/A:L/I:L/D:N/Y:N) (source: HAL-21) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -2697,7 +2697,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 3.09 (AO:A/AC:L/AX:H/R:N/S:U/C:N/A:H/I:H/D:N/Y:N) (source: HAL-22) |
+| **Firm severity rating** | Low, BVSS 2.0 3.09 (AO:A/AC:L/AX:H/R:N/S:U/C:N/A:H/I:H/D:N/Y:N) (source: HAL-22) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -2763,7 +2763,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 2.81 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:N/I:H/D:H/Y:H) (source: HAL-23) |
+| **Firm severity rating** | Low, BVSS 2.0 2.81 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:N/I:H/D:H/Y:H) (source: HAL-23) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -2877,7 +2877,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 2.66 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:H/I:H/D:M/Y:N) (source: HAL-24) |
+| **Firm severity rating** | Low, BVSS 2.0 2.66 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:H/I:H/D:M/Y:N) (source: HAL-24) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -2963,7 +2963,7 @@ Halborn remediation date: 2026-07-30.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 2.66 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:H/I:H/D:M/Y:N) (source: HAL-25) |
+| **Firm severity rating** | Low, BVSS 2.0 2.66 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:H/I:H/D:M/Y:N) (source: HAL-25) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -3057,7 +3057,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 2.63 (AO:A/AC:M/AX:M/R:P/S:C/C:N/A:N/I:H/D:N/Y:H) (source: HAL-26) |
+| **Firm severity rating** | Low, BVSS 2.0 2.63 (AO:A/AC:M/AX:M/R:P/S:C/C:N/A:N/I:H/D:N/Y:H) (source: HAL-26) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -3161,7 +3161,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 2.51 (AO:A/AC:L/AX:M/R:P/S:U/C:N/A:H/I:N/D:N/Y:N) (source: HAL-27) |
+| **Firm severity rating** | Low, BVSS 2.0 2.51 (AO:A/AC:L/AX:M/R:P/S:U/C:N/A:H/I:N/D:N/Y:N) (source: HAL-27) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -3238,7 +3238,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 2.50 (AO:A/AC:L/AX:L/R:N/S:U/C:N/A:N/I:L/D:N/Y:N) (source: HAL-28) |
+| **Firm severity rating** | Low, BVSS 2.0 2.50 (AO:A/AC:L/AX:L/R:N/S:U/C:N/A:N/I:L/D:N/Y:N) (source: HAL-28) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -3318,7 +3318,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 2.50 (AO:A/AC:L/AX:L/R:N/S:U/C:N/A:N/I:L/D:N/Y:N) (source: HAL-29) |
+| **Firm severity rating** | Low, BVSS 2.0 2.50 (AO:A/AC:L/AX:L/R:N/S:U/C:N/A:N/I:L/D:N/Y:N) (source: HAL-29) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -3410,7 +3410,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 2.50 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:M/I:H/D:M/Y:N) (source: HAL-30) |
+| **Firm severity rating** | Low, BVSS 2.0 2.50 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:M/I:H/D:M/Y:N) (source: HAL-30) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -3554,7 +3554,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 2.50 (AO:A/AC:L/AX:L/R:N/S:U/C:N/A:N/I:L/D:N/Y:N) (source: HAL-31) |
+| **Firm severity rating** | Low, BVSS 2.0 2.50 (AO:A/AC:L/AX:L/R:N/S:U/C:N/A:N/I:L/D:N/Y:N) (source: HAL-31) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -3627,7 +3627,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 2.50 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:N/I:N/D:C/Y:N) (source: HAL-32) |
+| **Firm severity rating** | Low, BVSS 2.0 2.50 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:N/I:N/D:C/Y:N) (source: HAL-32) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -3701,7 +3701,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 2.34 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:N/I:H/D:H/Y:N) (source: HAL-33) |
+| **Firm severity rating** | Low, BVSS 2.0 2.34 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:N/I:H/D:H/Y:N) (source: HAL-33) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -3787,7 +3787,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 2.34 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:N/I:H/D:H/Y:N) (source: HAL-34) |
+| **Firm severity rating** | Low, BVSS 2.0 2.34 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:N/I:H/D:H/Y:N) (source: HAL-34) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -3885,7 +3885,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 2.34 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:H/I:N/D:H/Y:N) (source: HAL-35) |
+| **Firm severity rating** | Low, BVSS 2.0 2.34 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:H/I:N/D:H/Y:N) (source: HAL-35) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -3968,7 +3968,7 @@ Halborn remediation date: 2026-07-11.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 2.34 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:N/I:H/D:H/Y:N) (source: HAL-36) |
+| **Firm severity rating** | Low, BVSS 2.0 2.34 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:N/I:H/D:H/Y:N) (source: HAL-36) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -4060,7 +4060,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 2.34 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:N/I:H/D:H/Y:N) (source: HAL-37) |
+| **Firm severity rating** | Low, BVSS 2.0 2.34 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:N/I:H/D:H/Y:N) (source: HAL-37) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -4135,7 +4135,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 2.34 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:N/I:N/D:H/Y:H) (source: HAL-38) |
+| **Firm severity rating** | Low, BVSS 2.0 2.34 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:N/I:N/D:H/Y:H) (source: HAL-38) |
 | **Difficulty / likelihood** | null |
 | **Status** | Risk Accepted |
 | **Remediation verified by** | not-reviewed |
@@ -4241,7 +4241,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 2.34 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:N/I:H/D:H/Y:N) (source: HAL-39) |
+| **Firm severity rating** | Low, BVSS 2.0 2.34 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:N/I:H/D:H/Y:N) (source: HAL-39) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -4345,7 +4345,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 2.19 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:N/I:M/D:H/Y:N) (source: HAL-40) |
+| **Firm severity rating** | Low, BVSS 2.0 2.19 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:N/I:M/D:H/Y:N) (source: HAL-40) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -4429,7 +4429,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 2.19 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:N/I:M/D:H/Y:N) (source: HAL-41) |
+| **Firm severity rating** | Low, BVSS 2.0 2.19 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:N/I:M/D:H/Y:N) (source: HAL-41) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -4506,7 +4506,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 2.19 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:N/I:M/D:H/Y:N) (source: HAL-42) |
+| **Firm severity rating** | Low, BVSS 2.0 2.19 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:N/I:M/D:H/Y:N) (source: HAL-42) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -4583,7 +4583,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 2.19 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:N/I:H/D:M/Y:N) (source: HAL-43) |
+| **Firm severity rating** | Low, BVSS 2.0 2.19 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:N/I:H/D:M/Y:N) (source: HAL-43) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -4671,7 +4671,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 2.13 (AO:S/AC:L/AX:L/R:N/S:U/C:N/A:N/I:H/D:H/Y:M) (source: HAL-44) |
+| **Firm severity rating** | Low, BVSS 2.0 2.13 (AO:S/AC:L/AX:L/R:N/S:U/C:N/A:N/I:H/D:H/Y:M) (source: HAL-44) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -4777,7 +4777,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 2.09 (AO:A/AC:L/AX:M/R:P/S:U/C:N/A:N/I:M/D:M/Y:N) (source: HAL-45) |
+| **Firm severity rating** | Low, BVSS 2.0 2.09 (AO:A/AC:L/AX:M/R:P/S:U/C:N/A:N/I:M/D:M/Y:N) (source: HAL-45) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -4857,7 +4857,7 @@ Halborn remediation date: 2026-07-01.
 | Field | Value |
 |---|---|
 | **Unified severity** | Low |
-| **Firm severity rating** | Low -- BVSS 2.0 2.09 (AO:A/AC:L/AX:M/R:N/S:U/C:N/A:L/I:L/D:N/Y:N) (source: HAL-46) |
+| **Firm severity rating** | Low, BVSS 2.0 2.09 (AO:A/AC:L/AX:M/R:N/S:U/C:N/A:L/I:L/D:N/Y:N) (source: HAL-46) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -4915,7 +4915,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Informational |
-| **Firm severity rating** | Informational -- BVSS 2.0 1.86 (AO:A/AC:L/AX:H/R:N/S:U/C:N/A:N/I:L/D:N/Y:M) (source: HAL-47) |
+| **Firm severity rating** | Informational, BVSS 2.0 1.86 (AO:A/AC:L/AX:H/R:N/S:U/C:N/A:N/I:L/D:N/Y:M) (source: HAL-47) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -4998,7 +4998,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Informational |
-| **Firm severity rating** | Informational -- BVSS 2.0 1.68 (AO:A/AC:L/AX:M/R:N/S:U/C:N/A:N/I:N/D:N/Y:L) (source: HAL-48) |
+| **Firm severity rating** | Informational, BVSS 2.0 1.68 (AO:A/AC:L/AX:M/R:N/S:U/C:N/A:N/I:N/D:N/Y:L) (source: HAL-48) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -5082,7 +5082,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Informational |
-| **Firm severity rating** | Informational -- BVSS 2.0 1.68 (AO:A/AC:L/AX:M/R:N/S:U/C:N/A:N/I:L/D:N/Y:N) (source: HAL-49) |
+| **Firm severity rating** | Informational, BVSS 2.0 1.68 (AO:A/AC:L/AX:M/R:N/S:U/C:N/A:N/I:L/D:N/Y:N) (source: HAL-49) |
 | **Difficulty / likelihood** | null |
 | **Status** | Acknowledged |
 | **Remediation verified by** | not-reviewed |
@@ -5150,7 +5150,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Informational |
-| **Firm severity rating** | Informational -- BVSS 2.0 1.72 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:N/I:L/D:M/Y:M) (source: HAL-50) |
+| **Firm severity rating** | Informational, BVSS 2.0 1.72 (AO:S/AC:L/AX:L/R:N/S:C/C:N/A:N/I:L/D:M/Y:M) (source: HAL-50) |
 | **Difficulty / likelihood** | null |
 | **Status** | Acknowledged |
 | **Remediation verified by** | not-reviewed |
@@ -5273,7 +5273,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Informational |
-| **Firm severity rating** | Informational -- BVSS 2.0 1.47 (AO:S/AC:L/AX:M/R:N/S:C/C:N/A:M/I:H/D:N/Y:N) (source: HAL-51) |
+| **Firm severity rating** | Informational, BVSS 2.0 1.47 (AO:S/AC:L/AX:M/R:N/S:C/C:N/A:M/I:H/D:N/Y:N) (source: HAL-51) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -5341,7 +5341,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Informational |
-| **Firm severity rating** | Informational -- BVSS 2.0 1.50 (AO:S/AC:L/AX:L/R:N/S:U/C:N/A:N/I:N/D:N/Y:H) (source: HAL-52) |
+| **Firm severity rating** | Informational, BVSS 2.0 1.50 (AO:S/AC:L/AX:L/R:N/S:U/C:N/A:N/I:N/D:N/Y:H) (source: HAL-52) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -5459,7 +5459,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Informational |
-| **Firm severity rating** | Informational -- BVSS 2.0 1.25 (AO:S/AC:L/AX:L/R:N/S:U/C:N/A:M/I:M/D:N/Y:N) (source: HAL-53) |
+| **Firm severity rating** | Informational, BVSS 2.0 1.25 (AO:S/AC:L/AX:L/R:N/S:U/C:N/A:M/I:M/D:N/Y:N) (source: HAL-53) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -5544,7 +5544,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Informational |
-| **Firm severity rating** | Informational -- BVSS 2.0 1.26 (AO:S/AC:L/AX:M/R:N/S:U/C:N/A:N/I:H/D:H/Y:N) (source: HAL-54) |
+| **Firm severity rating** | Informational, BVSS 2.0 1.26 (AO:S/AC:L/AX:M/R:N/S:U/C:N/A:N/I:H/D:H/Y:N) (source: HAL-54) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -5617,7 +5617,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Informational |
-| **Firm severity rating** | Informational -- BVSS 2.0 1.03 (AO:A/AC:L/AX:H/R:N/S:U/C:N/A:N/I:L/D:N/Y:L) (source: HAL-55) |
+| **Firm severity rating** | Informational, BVSS 2.0 1.03 (AO:A/AC:L/AX:H/R:N/S:U/C:N/A:N/I:L/D:N/Y:L) (source: HAL-55) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -5687,7 +5687,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Informational |
-| **Firm severity rating** | Informational -- BVSS 2.0 0.94 (AO:S/AC:L/AX:L/R:P/S:C/C:N/A:N/I:H/D:N/Y:N) (source: HAL-56) |
+| **Firm severity rating** | Informational, BVSS 2.0 0.94 (AO:S/AC:L/AX:L/R:P/S:C/C:N/A:N/I:H/D:N/Y:N) (source: HAL-56) |
 | **Difficulty / likelihood** | null |
 | **Status** | Acknowledged |
 | **Remediation verified by** | not-reviewed |
@@ -5767,7 +5767,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Informational |
-| **Firm severity rating** | Informational -- BVSS 2.0 0.94 (AO:S/AC:L/AX:L/R:P/S:C/C:N/A:N/I:N/D:H/Y:N) (source: HAL-57) |
+| **Firm severity rating** | Informational, BVSS 2.0 0.94 (AO:S/AC:L/AX:L/R:P/S:C/C:N/A:N/I:N/D:H/Y:N) (source: HAL-57) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -5834,7 +5834,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Informational |
-| **Firm severity rating** | Informational -- BVSS 2.0 0.94 (AO:S/AC:L/AX:L/R:P/S:C/C:N/A:N/I:H/D:N/Y:N) (source: HAL-58) |
+| **Firm severity rating** | Informational, BVSS 2.0 0.94 (AO:S/AC:L/AX:L/R:P/S:C/C:N/A:N/I:H/D:N/Y:N) (source: HAL-58) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -5911,7 +5911,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Informational |
-| **Firm severity rating** | Informational -- BVSS 2.0 0.84 (AO:A/AC:L/AX:M/R:F/S:U/C:N/A:N/I:M/D:N/Y:N) (source: HAL-59) |
+| **Firm severity rating** | Informational, BVSS 2.0 0.84 (AO:A/AC:L/AX:M/R:F/S:U/C:N/A:N/I:M/D:N/Y:N) (source: HAL-59) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -5998,7 +5998,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Informational |
-| **Firm severity rating** | Informational -- BVSS 2.0 0.81 (AO:S/AC:L/AX:L/R:P/S:U/C:N/A:H/I:L/D:N/Y:N) (source: HAL-60) |
+| **Firm severity rating** | Informational, BVSS 2.0 0.81 (AO:S/AC:L/AX:L/R:P/S:U/C:N/A:H/I:L/D:N/Y:N) (source: HAL-60) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -6074,7 +6074,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Informational |
-| **Firm severity rating** | Informational -- BVSS 2.0 0.84 (AO:A/AC:L/AX:M/R:F/S:U/C:N/A:M/I:N/D:N/Y:N) (source: HAL-61) |
+| **Firm severity rating** | Informational, BVSS 2.0 0.84 (AO:A/AC:L/AX:M/R:F/S:U/C:N/A:M/I:N/D:N/Y:N) (source: HAL-61) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -6138,7 +6138,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Informational |
-| **Firm severity rating** | Informational -- BVSS 2.0 0.53 (AO:S/AC:M/AX:M/R:P/S:C/C:N/A:N/I:H/D:H/Y:N) (source: HAL-62) |
+| **Firm severity rating** | Informational, BVSS 2.0 0.53 (AO:S/AC:M/AX:M/R:P/S:C/C:N/A:N/I:H/D:H/Y:N) (source: HAL-62) |
 | **Difficulty / likelihood** | null |
 | **Status** | Acknowledged |
 | **Remediation verified by** | not-reviewed |
@@ -6217,7 +6217,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Informational |
-| **Firm severity rating** | Informational -- BVSS 2.0 0.50 (AO:S/AC:L/AX:L/R:N/S:U/C:N/A:N/I:L/D:N/Y:N) (source: HAL-63) |
+| **Firm severity rating** | Informational, BVSS 2.0 0.50 (AO:S/AC:L/AX:L/R:N/S:U/C:N/A:N/I:L/D:N/Y:N) (source: HAL-63) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -6301,7 +6301,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Informational |
-| **Firm severity rating** | Informational -- BVSS 2.0 0.46 (AO:S/AC:L/AX:H/R:N/S:C/C:N/A:N/I:M/D:L/Y:N) (source: HAL-64) |
+| **Firm severity rating** | Informational, BVSS 2.0 0.46 (AO:S/AC:L/AX:H/R:N/S:C/C:N/A:N/I:M/D:L/Y:N) (source: HAL-64) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -6367,7 +6367,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Informational |
-| **Firm severity rating** | Informational -- BVSS 2.0 0.42 (AO:A/AC:L/AX:M/R:F/S:U/C:N/A:L/I:N/D:N/Y:N) (source: HAL-65) |
+| **Firm severity rating** | Informational, BVSS 2.0 0.42 (AO:A/AC:L/AX:M/R:F/S:U/C:N/A:L/I:N/D:N/Y:N) (source: HAL-65) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -6452,7 +6452,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Informational |
-| **Firm severity rating** | Informational -- BVSS 2.0 0.42 (AO:A/AC:L/AX:M/R:F/S:U/C:N/A:N/I:L/D:N/Y:N) (source: HAL-66) |
+| **Firm severity rating** | Informational, BVSS 2.0 0.42 (AO:A/AC:L/AX:M/R:F/S:U/C:N/A:N/I:L/D:N/Y:N) (source: HAL-66) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |
@@ -6527,7 +6527,7 @@ Halborn remediation date: 2026-07-22.
 | Field | Value |
 |---|---|
 | **Unified severity** | Informational |
-| **Firm severity rating** | Informational -- BVSS 2.0 0.17 (AO:S/AC:L/AX:H/R:N/S:U/C:N/A:N/I:L/D:N/Y:N) (source: HAL-67) |
+| **Firm severity rating** | Informational, BVSS 2.0 0.17 (AO:S/AC:L/AX:H/R:N/S:U/C:N/A:N/I:L/D:N/Y:N) (source: HAL-67) |
 | **Difficulty / likelihood** | null |
 | **Status** | Resolved |
 | **Remediation verified by** | firm |

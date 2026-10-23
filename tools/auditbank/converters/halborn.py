@@ -170,7 +170,7 @@ class HalbornConverter(Converter):
             client = slug.replace("-", " ").title()
             notes.append(f"client name '{client}' derived from the URL; confirm")
         meta["client"] = client
-        meta["title"] = f"{client} -- {fr.get('name') or 'Security Assessment'}"
+        meta["title"] = f"{client}: {fr.get('name') or 'Security Assessment'}"
         meta["firm_report_url"] = fr.get("url")
         meta["engagement_start"] = (fr.get("date_start") or "")[:10] or None
         meta["engagement_end"] = (fr.get("date_end") or "")[:10] or None
@@ -190,7 +190,7 @@ class HalbornConverter(Converter):
             notes.append("report.report_date not found; firm to supply")
         if fr.get("is_pdf_ready"):
             notes.append("the page offers a PDF download; add its URL as report.pdf_url if it is public")
-        report["heading"] = f"{client} -- {fr.get('name') or 'Security Assessment'} by Halborn"
+        report["heading"] = f"{client}: {fr.get('name') or 'Security Assessment'} by Halborn"
 
         scope = report["scope"]
         intro_md = html_to_md(fr.get("introduction_html")) or ""
@@ -241,7 +241,7 @@ class HalbornConverter(Converter):
 
         grade = (f.get("bvss_grade") or [None])[0]
         out["unified_severity"] = unified_from_label(grade)
-        rating = f"{grade} -- BVSS 2.0 {f.get('bvss_score')} ({f.get('bvss_vector')})"
+        rating = f"{grade}, BVSS 2.0 {f.get('bvss_score')} ({f.get('bvss_vector')})"
         out["firm_severity_rating"] = f"{rating} (source: {source_id})"
         if out["unified_severity"]:
             notes.append(severity_note(grade, out["unified_severity"]))

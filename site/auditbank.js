@@ -44,7 +44,7 @@
     }
 
     const isNull = (t) =>
-      t == null || ["", "null", "none", "n/a", "—", "-"].includes(String(t).trim().toLowerCase());
+      t == null || ["", "null", "none", "n/a", "\u2014", "-"].includes(String(t).trim().toLowerCase());
 
     function extractNotes(text) {
       const notes = [];

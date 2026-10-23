@@ -83,7 +83,7 @@ def _cell(key: str, value) -> str:
     if key == "redacted":
         value = value or {"value": False, "reason": None}
         if value.get("value") is True:
-            return f"true -- {value['reason']}" if value.get("reason") else "true"
+            return f"true: {value['reason']}" if value.get("reason") else "true"
         return "false"
     if value is None:
         return "null"
