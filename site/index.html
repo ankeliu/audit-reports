@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Audit Bank Reports</title>
-  <meta name="description" content="Check, convert, and submit Stellar Audit Bank reports in the standard format, and browse the archive.">
+  <meta name="description" content="Submit published Stellar Audit Bank reports (link or PDF), check standard-format files, and browse the archive.">
   <link rel="stylesheet" href="styles.css">
   <script defer src="vendor/js-yaml-4.1.0.min.js"></script>
   <script defer src="vendor/ajv2020-8.17.1.bundle.min.js"></script>
@@ -21,27 +21,69 @@
       report; the firm's PDF or report page stays authoritative.
     </p>
     <nav class="toc" aria-label="Sections">
-      <a href="#check">Check a report</a>
-      <a href="#convert">Convert a published report</a>
+      <a href="#submit">Submit a published report</a>
+      <a href="#check">Check a standard-format file</a>
       <a href="#archive">Archive</a>
       <a href="#reference">Reference</a>
     </nav>
   </header>
 
   <main>
+    <section id="submit" aria-labelledby="submit-title">
+      <h2 id="submit-title">Submit a published report</h2>
+      <p>
+        Give the link to your firm's published report, or its PDF. The repo converts it to the standard format and
+        replies on a GitHub issue in about two minutes, then opens a PR for an engineer at your firm to review and sign off.
+        Submit only once your firm would publish the report anyway (client approval given, embargoes elapsed).
+      </p>
+      <p class="muted small">
+        Converters exist for Halborn report pages and Runtime Verification and Veridise PDFs. Other firms:
+        <a href="#check">check and submit a standard-format file</a>.
+      </p>
+      <form id="convert-form" class="form-grid" novalidate>
+        <label for="source-url">Report link</label>
+        <input id="source-url" type="url" placeholder="https://www.halborn.com/audits/… or a PDF link">
+        <span class="form-or">or PDF</span>
+        <label class="drop compact" id="pdf-drop">
+          <input type="file" id="pdf-file" accept=".pdf,application/pdf">
+          <span id="pdf-label"><strong>Choose the PDF</strong> or drop it here</span>
+        </label>
+        <label for="firm">Audit firm</label>
+        <select id="firm" required></select>
+        <label for="slug">Project slug</label>
+        <input id="slug" required pattern="[a-z0-9]+(-[a-z0-9]+)*" placeholder="trustless-work">
+        <label for="reviewer">Firm reviewer (GitHub handle)</label>
+        <input id="reviewer" placeholder="@handle">
+        <div class="form-actions">
+          <button type="submit" class="primary">Open submission issue</button>
+          <span id="detected" class="muted small" role="status"></span>
+        </div>
+      </form>
+      <div id="pdf-next" class="callout" hidden>
+        <h3>One more step on GitHub</h3>
+        <p>A link can't carry a file, so in the issue that just opened, drag <strong id="pdf-name"></strong> into the
+          <em>Attachment</em> box, then click <em>Create</em>.</p>
+      </div>
+    </section>
+
     <section id="check" aria-labelledby="check-title">
-      <h2 id="check-title">Check a report</h2>
-      <p>Paste or drop a standard-format <code>.md</code>. It is checked in your browser against the same schema and rules CI runs; nothing is uploaded.</p>
+      <h2 id="check-title">Check a standard-format file</h2>
+      <p>
+        Already have a report in the standard format (for example, written from the
+        <a href="https://github.com/ankeliu/audit-reports/blob/main/AUDIT_REPORT_TEMPLATE.md">template</a>, or a
+        converted draft you've edited)? Paste or drop the <code>.md</code> to check it against the same schema and rules
+        CI runs. It stays in your browser. For a PDF or a link, use <a href="#submit">Submit a published report</a>.
+      </p>
       <label class="drop" id="drop">
         <input type="file" id="file" accept=".md,.markdown,text/markdown,text/plain">
-        <span><strong>Choose a file</strong> or drop it here</span>
+        <span><strong>Choose a .md file</strong> or drop it here</span>
       </label>
       <label for="report-text" class="field-label">Report markdown</label>
       <textarea id="report-text" spellcheck="false" placeholder="---&#10;schema_version: &quot;0.2&quot;&#10;report:&#10;  ..."></textarea>
       <div class="row">
         <button type="button" id="check-btn" class="primary">Check</button>
         <button type="button" id="clear-btn">Clear</button>
-        <span id="loading" class="muted" role="status">Loading schema…</span>
+        <span id="loading" class="muted small" role="status">Loading schema…</span>
       </div>
 
       <div id="result" hidden>
@@ -72,28 +114,6 @@
       </div>
     </section>
 
-    <section id="convert" aria-labelledby="convert-title">
-      <h2 id="convert-title">Convert a published report</h2>
-      <p>
-        For Halborn, Runtime Verification, and Veridise reports. Your browser can't fetch firm sites directly, so this
-        opens a submission issue; the repo converts the report and comments the result on the issue in about two minutes.
-        AI-converted drafts need sign-off from an engineer at your firm before merge.
-      </p>
-      <form id="convert-form" class="form-grid">
-        <label for="source-url">Published report URL</label>
-        <input id="source-url" type="url" required placeholder="https://www.halborn.com/audits/…">
-        <label for="firm">Audit firm</label>
-        <select id="firm" required></select>
-        <label for="slug">Project slug</label>
-        <input id="slug" required pattern="[a-z0-9]+(-[a-z0-9]+)*" placeholder="trustless-work">
-        <label for="reviewer">Firm reviewer (GitHub handle)</label>
-        <input id="reviewer" placeholder="@handle">
-        <div class="form-actions">
-          <button type="submit" class="primary">Open submission issue</button>
-          <span id="detected" class="muted small" role="status"></span>
-        </div>
-      </form>
-    </section>
 
     <section id="archive" aria-labelledby="archive-title">
       <h2 id="archive-title">Archive</h2>

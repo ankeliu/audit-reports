@@ -16,6 +16,7 @@
   const $ = (id) => document.getElementById(id);
   let ab = null;
   let vocab = null;
+  let pdfFile = null;
 
   async function fetchJSON(path) {
     // Deployed: schema/ and reports/ sit next to the page. Local preview from the repo root: one level up.
@@ -162,8 +163,16 @@
     box.hidden = false;
   }
 
+  const isPdf = (file) => file.type === "application/pdf" || /\.pdf$/i.test(file.name);
+
   function loadFile(file) {
     if (!file) return;
+    if (isPdf(file)) {
+      // A PDF needs converting: hand it to the submit form instead of parsing it as markdown.
+      setPdf(file);
+      $("submit").scrollIntoView({ behavior: "smooth" });
+      return;
+    }
     const reader = new FileReader();
     reader.onload = () => {
       $("report-text").value = reader.result;
@@ -173,6 +182,43 @@
   }
 
   // ---------------------------------------------------------------- convert
+
+  function detectFromName(name) {
+    if (/^VAR-/i.test(name)) return "VER";
+    if (/_report_/i.test(name)) return "RV";
+    return "";
+  }
+
+  function suggestSlugFromName(name, firm) {
+    const base = decodeURIComponent(name || "").replace(/\.pdf$/i, "");
+    if (firm === "VER") return slugify(base.split("-")[1] || "");
+    if (firm === "RV") return slugify(base.split("_")[0] || "");
+    return "";
+  }
+
+  function suggestSlug(url, firm) {
+    const parts = url.pathname.split("/").filter(Boolean);
+    if (firm === "HAL" && parts[0] === "audits" && parts[1]) return slugify(parts[1]);
+    return suggestSlugFromName(parts[parts.length - 1] || "", firm);
+  }
+
+  function applyDetection(firm, slug, label) {
+    if (firm) {
+      $("firm").value = firm;
+      $("detected").textContent = `Detected ${vocab ? vocab.firms[firm] : firm}${label ? ` from the ${label}` : ""}.`;
+    }
+    if (slug && !$("slug").value) $("slug").value = slug;
+  }
+
+  function setPdf(file) {
+    pdfFile = file;
+    $("source-url").value = "";
+    $("pdf-label").replaceChildren(el("strong", {}, file.name), " selected · choose another");
+    $("pdf-next").hidden = true;
+    const firm = detectFromName(file.name);
+    $("detected").textContent = "";
+    applyDetection(firm, suggestSlugFromName(file.name, firm), "file name");
+  }
 
   function setupConvertForm() {
     const select = $("firm");
@@ -187,41 +233,60 @@
         $("detected").textContent = "";
         return;
       }
-      const match = Object.keys(CONVERTIBLE).find((k) => CONVERTIBLE[k](url));
-      if (match) {
-        select.value = match;
-        $("detected").textContent = `Detected ${vocab ? vocab.firms[match] : match}.`;
-      } else {
-        $("detected").textContent = "No converter for this site: submit a standard .md instead.";
+      if (pdfFile) {
+        pdfFile = null;
+        $("pdf-file").value = "";
+        $("pdf-label").replaceChildren(el("strong", {}, "Choose the PDF"), " or drop it here");
       }
-      if (!$("slug").value) $("slug").value = suggestSlug(url, match);
+      const match = Object.keys(CONVERTIBLE).find((k) => CONVERTIBLE[k](url));
+      if (match) applyDetection(match, suggestSlug(url, match), "link");
+      else $("detected").textContent = "Unrecognized site: pick the firm below. Other firms submit a standard .md.";
+    });
+
+    $("pdf-file").addEventListener("change", (e) => e.target.files[0] && setPdf(e.target.files[0]));
+    const drop = $("pdf-drop");
+    for (const ev of ["dragenter", "dragover"]) drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add("dragover"); });
+    for (const ev of ["dragleave", "drop"]) drop.addEventListener(ev, () => drop.classList.remove("dragover"));
+    drop.addEventListener("drop", (e) => {
+      e.preventDefault();
+      const file = e.dataTransfer.files[0];
+      if (file && isPdf(file)) setPdf(file);
+      else $("detected").textContent = "That isn't a PDF. Standard .md files go in the checker below.";
     });
 
     $("convert-form").addEventListener("submit", (e) => {
       e.preventDefault();
+      const url = $("source-url").value.trim();
       const abbrev = select.value;
-      if (!abbrev) return;
+      const slug = $("slug").value.trim();
+      const problem = !url && !pdfFile
+        ? "Give the report link or choose the PDF."
+        : !abbrev
+          ? "Pick the audit firm."
+          : !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug)
+            ? "Project slug must be lowercase words joined by hyphens, e.g. trustless-work."
+            : "";
+      if (problem) {
+        $("detected").textContent = problem;
+        return;
+      }
       window.open(
         issueUrl({
-          title: `${$("slug").value} (${vocab ? vocab.firms[abbrev] : abbrev})`,
+          title: `${slug} (${vocab ? vocab.firms[abbrev] : abbrev})`,
           firm: vocab ? firmOption(abbrev) : abbrev,
-          source_url: $("source-url").value,
-          project_slug: $("slug").value,
+          source_url: pdfFile ? "" : url,
+          attachment: pdfFile ? `Drag ${pdfFile.name} into this box, replacing this line.` : "",
+          project_slug: slug,
           reviewer_handle: $("reviewer").value,
         }),
         "_blank",
         "noopener",
       );
+      if (pdfFile) {
+        $("pdf-name").textContent = pdfFile.name;
+        $("pdf-next").hidden = false;
+      }
     });
-  }
-
-  function suggestSlug(url, firm) {
-    const parts = url.pathname.split("/").filter(Boolean);
-    if (firm === "HAL" && parts[0] === "audits" && parts[1]) return slugify(parts[1]);
-    const name = decodeURIComponent(parts[parts.length - 1] || "").replace(/\.pdf$/i, "");
-    if (firm === "VER") return slugify(name.split("-")[1] || "");
-    if (firm === "RV") return slugify(name.split("_")[0] || "");
-    return "";
   }
 
   // ---------------------------------------------------------------- archive
