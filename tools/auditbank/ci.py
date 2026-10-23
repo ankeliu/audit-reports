@@ -23,7 +23,7 @@ CONVERSION_METHOD = re.compile(r"^(\s*conversion_method:).*$", re.M)
 
 
 def reviewers() -> dict[str, list[str]]:
-    data = yaml.safe_load(REVIEWERS_PATH.read_text()) or {}
+    data = yaml.safe_load(Path(REVIEWERS_PATH).read_text()) or {}
     return {k: [h.lstrip("@").lower() for h in (v or [])] for k, v in data.items()}
 
 
@@ -102,7 +102,12 @@ def main(argv=None) -> int:
     t = sub.add_parser("stamp")
     t.add_argument("--sender", required=True)
     t.add_argument("files", nargs="*")
+    for parser in (g, s, t):
+        parser.add_argument("--reviewers", help="firm-reviewers.yml to trust (CI passes the base-branch copy)")
     args = ap.parse_args(argv)
+    if args.reviewers:
+        global REVIEWERS_PATH
+        REVIEWERS_PATH = Path(args.reviewers)
 
     files = [Path(f) for f in args.files]
     if args.cmd == "gate":

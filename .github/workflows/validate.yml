@@ -40,6 +40,17 @@ jobs:
           echo "count=$(wc -l < "$RUNNER_TEMP/changed.txt" | tr -d ' ')" >> "$GITHUB_OUTPUT"
           cat "$RUNNER_TEMP/changed.txt"
 
+      - name: Trusted reviewer list and report-only changes
+        if: github.event_name != 'push'
+        run: |
+          # Sign-off checks trust the base branch's reviewer list, never the PR's copy.
+          git show "origin/${{ github.event.pull_request.base.ref }}:.github/firm-reviewers.yml" > "$RUNNER_TEMP/reviewers.yml"
+          if [ "${{ steps.changed.outputs.count }}" != "0" ] && \
+             git diff --name-only "origin/${{ github.event.pull_request.base.ref }}...HEAD" | grep -qE '^(\.github/|tools/|schema/)'; then
+            echo "::error::Report PRs may only change reports/; submit tooling, schema and workflow changes separately."
+            exit 1
+          fi
+
       - name: Validate changed reports
         if: steps.changed.outputs.count != '0' && github.event_name != 'push'
         run: xargs -a "$RUNNER_TEMP/changed.txt" auditbank validate
@@ -54,7 +65,7 @@ jobs:
           labels=$(gh api "repos/${{ github.repository }}/issues/$PR/labels" --jq '[.[].name] | join(",")')
           labeler=$(gh api --paginate "repos/${{ github.repository }}/issues/$PR/events" \
             --jq '.[] | select(.event == "labeled" and .label.name == "firm-reviewed") | .actor.login' | tail -n 1)
-          xargs -a "$RUNNER_TEMP/changed.txt" python -m auditbank.ci gate --labels "$labels" --labeler "$labeler"
+          xargs -a "$RUNNER_TEMP/changed.txt" python -m auditbank.ci gate --reviewers "$RUNNER_TEMP/reviewers.yml" --labels "$labels" --labeler "$labeler"
 
       - name: AI-converted reports need firm sign-off
         if: steps.changed.outputs.count != '0' && github.event_name != 'push'
@@ -63,7 +74,7 @@ jobs:
         run: |
           gh api --paginate "repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews" \
             | jq -s 'add // []' > "$RUNNER_TEMP/reviews.json"
-          xargs -a "$RUNNER_TEMP/changed.txt" python -m auditbank.ci signoff --reviews "$RUNNER_TEMP/reviews.json"
+          xargs -a "$RUNNER_TEMP/changed.txt" python -m auditbank.ci signoff --reviewers "$RUNNER_TEMP/reviewers.yml" --reviews "$RUNNER_TEMP/reviews.json"
 
   # A listed firm reviewer adding `firm-reviewed` records the sign-off in the file itself.
   stamp:
@@ -90,7 +101,9 @@ jobs:
         run: |
           git diff --name-only --diff-filter=AMR "origin/${{ github.event.pull_request.base.ref }}...HEAD" \
             -- 'reports/*/*.md' > "$RUNNER_TEMP/changed.txt"
-          if ! xargs -a "$RUNNER_TEMP/changed.txt" python -m auditbank.ci stamp --sender "${{ github.event.sender.login }}"; then
+          git show "origin/${{ github.event.pull_request.base.ref }}:.github/firm-reviewers.yml" > "$RUNNER_TEMP/reviewers.yml"
+          if ! xargs -a "$RUNNER_TEMP/changed.txt" python -m auditbank.ci stamp \
+              --reviewers "$RUNNER_TEMP/reviewers.yml" --sender "${{ github.event.sender.login }}"; then
             gh pr comment "${{ github.event.pull_request.number }}" --body \
               "@${{ github.event.sender.login }} is not listed in \`.github/firm-reviewers.yml\` for this firm, so the \`firm-reviewed\` label was removed."
             gh pr edit "${{ github.event.pull_request.number }}" --remove-label firm-reviewed
