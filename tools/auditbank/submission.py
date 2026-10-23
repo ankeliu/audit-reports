@@ -79,7 +79,13 @@ def check_form(form: dict) -> dict:
     if source and urlparse(source).scheme != "https":
         raise SubmissionError("the report URL must be an https:// link")
     if not source and not attachment:
-        raise SubmissionError("give a published report URL or attach a PDF / .md")
+        named = re.search(r"[\w.()\[\] -]+\.(?:pdf|md)\b", form.get("attachment") or "", re.I)
+        if named:
+            raise SubmissionError(
+                f"The file {named.group(0).strip()} wasn't attached; the Attachment box only contains text. "
+                "Edit this issue, drag the file into the Attachment box, wait for the upload link to appear, and save."
+            )
+        raise SubmissionError("Add the published report's link, or attach its PDF or standard .md file.")
     return {
         "abbrev": m.group(1),
         "firm": firms[m.group(1)],
@@ -175,7 +181,14 @@ def run(body: str, workdir: Path, use_ai: bool = False) -> dict:
 def comment(result: dict, run_url: str | None = None) -> str:
     lines = []
     if result["error"]:
-        lines += ["### Submission could not be processed", "", f"**{result['error']}**", ""]
+        lines += [
+            "### Submission could not be processed",
+            "",
+            f"**{result['error']}**",
+            "",
+            "Edit this issue to fix it. The check runs again automatically when you save.",
+            "",
+        ]
     else:
         errors = sum(p["level"] == ERROR for p in result["problems"])
         warnings = len(result["problems"]) - errors

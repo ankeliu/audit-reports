@@ -208,7 +208,9 @@
     pdfFile = file;
     $("source-url").value = "";
     $("pdf-label").replaceChildren(el("strong", {}, file.name), " selected · choose another");
-    $("pdf-next").hidden = true;
+    $("pdf-name").textContent = file.name;
+    $("pdf-next").hidden = false;
+    $("convert-btn").textContent = "Open issue to attach the PDF";
     const firm = detectFromName(file.name);
     $("detected").textContent = "";
     applyDetection(firm, "file name");
@@ -231,6 +233,8 @@
         pdfFile = null;
         $("pdf-file").value = "";
         $("pdf-label").replaceChildren(el("strong", {}, "Choose the PDF"), " or drop it here");
+        $("pdf-next").hidden = true;
+        $("convert-btn").textContent = "Convert and submit";
       }
       const match = Object.keys(CONVERTIBLE).find((k) => CONVERTIBLE[k](url));
       if (match) applyDetection(match, "link");
@@ -262,15 +266,11 @@
           title: `${pdfFile ? pdfFile.name : shortName(url)} (${vocab ? vocab.firms[abbrev] : abbrev})`,
           firm: vocab ? firmOption(abbrev) : abbrev,
           source_url: pdfFile ? "" : url,
-          attachment: pdfFile ? `Drag ${pdfFile.name} into this box, replacing this line.` : "",
+          attachment: pdfFile ? `Replace this line by dragging ${pdfFile.name} here, and wait for its link to appear.` : "",
         }),
         "_blank",
         "noopener",
       );
-      if (pdfFile) {
-        $("pdf-name").textContent = pdfFile.name;
-        $("pdf-next").hidden = false;
-      }
     });
   }
 

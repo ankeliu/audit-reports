@@ -51,14 +51,15 @@
         <label for="firm">Audit firm</label>
         <select id="firm" required></select>
         <div class="form-actions">
-          <button type="submit" class="primary">Convert and submit</button>
+          <button type="submit" class="primary" id="convert-btn">Convert and submit</button>
           <span id="detected" class="muted small" role="status"></span>
         </div>
       </form>
       <div id="pdf-next" class="callout" hidden>
-        <h3>One more step on GitHub</h3>
-        <p>A link can't carry a file, so in the issue that just opened, drag <strong id="pdf-name"></strong> into the
-          <em>Attachment</em> box, then click <em>Create</em>.</p>
+        <h3>The PDF has to be attached on GitHub</h3>
+        <p>This page can't upload files. When the issue opens, drag <strong id="pdf-name"></strong> into its
+          <em>Attachment</em> box, wait until a link to the file appears, then click <em>Create</em>.</p>
+        <p class="muted small">If the PDF is online, paste its link above instead and skip this step.</p>
       </div>
     </section>
 
