@@ -5,4 +5,4 @@ Each firm's linked PDF or report page is the authoritative document.
 
 | Project | Firm | Date | Findings (total) | Link |
 |---|---|---|---|---|
-| _No reports yet_ | | | | |
+| Splyce | Halborn | 2026-07-30 | 67 | [report](splyce/splyce--hal--2026-07-30.md) · [firm original](https://www.halborn.com/audits/splyce/smart-contract-assessment-de69cd) |

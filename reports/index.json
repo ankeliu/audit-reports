@@ -1,5 +1,27 @@
 {
   "generated_at": "2026-10-23",
   "schema_version": "0.2",
-  "reports": []
+  "reports": [
+    {
+      "path": "reports/splyce/splyce--hal--2026-07-30.md",
+      "project_slug": "splyce",
+      "client": "Splyce",
+      "audit_firm": "Halborn",
+      "firm_abbrev": "HAL",
+      "report_date": "2026-07-30",
+      "platform": "soroban",
+      "disclosure_status": "public",
+      "conversion_method": null,
+      "findings_summary": {
+        "total": 67,
+        "critical": 1,
+        "high": 0,
+        "moderate": 10,
+        "low": 35,
+        "informational": 21
+      },
+      "pdf_url": null,
+      "firm_report_url": "https://www.halborn.com/audits/splyce/smart-contract-assessment-de69cd"
+    }
+  ]
 }
