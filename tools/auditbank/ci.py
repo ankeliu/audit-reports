@@ -38,8 +38,10 @@ def _notes(path: Path) -> int:
     )
 
 
-def gate(files: list[Path], labels: set[str]) -> list[str]:
-    if FIRM_REVIEWED in labels:
+def gate(files: list[Path], labels: set[str], labeler: str | None = None) -> list[str]:
+    """CONVERSION-NOTEs block merge unless `firm-reviewed` was applied by a reviewer listed for each file's firm."""
+    allowed = reviewers()
+    if FIRM_REVIEWED in labels and labeler and all(labeler.lower() in allowed.get(_firm(p), []) for p in files):
         return []
     return [
         f"{p}: {n} CONVERSION-NOTE(s) remain; resolve them or have a listed firm reviewer add the "
@@ -92,6 +94,7 @@ def main(argv=None) -> int:
     sub = ap.add_subparsers(dest="cmd", required=True)
     g = sub.add_parser("gate")
     g.add_argument("--labels", default="")
+    g.add_argument("--labeler", help="login that most recently applied the firm-reviewed label")
     g.add_argument("files", nargs="*")
     s = sub.add_parser("signoff")
     s.add_argument("--reviews", required=True, help="JSON from GET /repos/{o}/{r}/pulls/{n}/reviews")
@@ -103,7 +106,7 @@ def main(argv=None) -> int:
 
     files = [Path(f) for f in args.files]
     if args.cmd == "gate":
-        problems = gate(files, {x.strip() for x in args.labels.split(",") if x.strip()})
+        problems = gate(files, {x.strip() for x in args.labels.split(",") if x.strip()}, args.labeler)
     elif args.cmd == "signoff":
         problems = signoff(files, json.loads(Path(args.reviews).read_text()))
     else:

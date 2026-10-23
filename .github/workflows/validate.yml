@@ -44,11 +44,17 @@ jobs:
         if: steps.changed.outputs.count != '0' && github.event_name != 'push'
         run: xargs -a "$RUNNER_TEMP/changed.txt" auditbank validate
 
-      - name: CONVERSION-NOTEs need the firm-reviewed label
+      - name: CONVERSION-NOTEs need the firm-reviewed label from a listed reviewer
         if: steps.changed.outputs.count != '0' && github.event_name != 'push'
         env:
-          LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
-        run: xargs -a "$RUNNER_TEMP/changed.txt" python -m auditbank.ci gate --labels "$LABELS"
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          # Live state, not the event payload: labels removed by the bot don't re-trigger this workflow.
+          labels=$(gh api "repos/${{ github.repository }}/issues/$PR/labels" --jq '[.[].name] | join(",")')
+          labeler=$(gh api --paginate "repos/${{ github.repository }}/issues/$PR/events" \
+            --jq '.[] | select(.event == "labeled" and .label.name == "firm-reviewed") | .actor.login' | tail -n 1)
+          xargs -a "$RUNNER_TEMP/changed.txt" python -m auditbank.ci gate --labels "$labels" --labeler "$labeler"
 
       - name: AI-converted reports need firm sign-off
         if: steps.changed.outputs.count != '0' && github.event_name != 'push'
