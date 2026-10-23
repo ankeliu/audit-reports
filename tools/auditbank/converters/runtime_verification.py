@@ -478,7 +478,7 @@ class RuntimeVerificationConverter(Converter):
         pull = re.search(r"https?://\S+?/pull/\d+", status_md or "")
         out["resolved_in"] = head.group(1) if head else (pull.group(0) if pull else None)
         if out["resolved_in"] and not fixed_in:
-            notes.append(f"remediation PR/commit present on a {out['status']} finding; confirm status")
+            notes.append(f"remediation PR or commit present on a finding marked {out['status']}; confirm status")
 
         out["category"] = infer_category(out["title"], description, out["unified_severity"])
         notes.append(f"category inferred: {out['category']}")

@@ -63,15 +63,11 @@ severity_standard: audit-bank-v0.2
 
 <!-- CONVERSION-NOTE: effort.engineer_weeks left null: the report states a 2-week review plus 1 week(s) of remediation support (calendar time), not effort -->
 
-<!-- CONVERSION-NOTE: Section 1 is RV's Executive Summary verbatim; trim toward ~250 words if desired -->
-
-<!-- CONVERSION-NOTE: Section 2 built from RV's Scope component descriptions; roles and business logic are in the PDF; the key contracts table is not filled -->
-
-<!-- CONVERSION-NOTE: Section 5 is RV's Invariants section, including T. Trust assumptions -->
-
 <!-- CONVERSION-NOTE: firm disclaimer lacks point-in-time / no-warranty / authoritative-PDF language; template default appended; firm to confirm or substitute its own -->
 
-<!-- CONVERSION-NOTE: Section 8 keeps RV's Appendix introduction only; the Protocol Summary stays in the PDF -->
+<!-- CONVERSION-NOTE: Impact taken from the Description text; check it (all 15 findings) -->
+
+<!-- CONVERSION-NOTE: category inferred from the finding text; check it (all 15 findings) -->
 
 ## 1. Executive summary
 
@@ -118,12 +114,6 @@ issues and verify proposed fixes.
 | **Location** | `modules/primitives/src/lib.rs:L120-L163`, `modules/primitives/src/lib.rs:L11`, `modules/auth/src/core.rs:L126` |
 | **Resolved in** | https://github.com/Moonlight-Protocol/soroban-core/commit/97922db |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Moderate" proposed from firm rating "Medium"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: Impact is the Description paragraph that states consequences; firm to confirm or rewrite -->
-
-<!-- CONVERSION-NOTE: category inferred: access-control-auth -->
 
 **Description.**
 
@@ -271,12 +261,6 @@ field too, or XDR-encoding the whole (contract, conditions, live_until) tuple as
 | **Resolved in** | https://github.com/Moonlight-Protocol/soroban-core/commit/49b0fdb |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Moderate" proposed from firm rating "Medium"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: Impact is the Description paragraph that states consequences; firm to confirm or rewrite -->
-
-<!-- CONVERSION-NOTE: category inferred: liveness-dos -->
-
 **Description.**
 
 No UTXO write path validates that a created key is a well-formed P-256 point. Store::create accepts any
@@ -376,12 +360,6 @@ be resolved.
 | **Resolved in** | https://github.com/Moonlight-Protocol/soroban-core/commit/90bf08c |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Moderate" proposed from firm rating "Medium"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: Impact is the Description paragraph that states consequences; firm to confirm or rewrite -->
-
-<!-- CONVERSION-NOTE: category inferred: data-validation -->
-
 **Description.**
 
 The signed-effects binding compares conditions as a set keyed by canonical XDR bytes, so byte-identical
@@ -472,12 +450,6 @@ system's overall robustness.
 | **Resolved in** | https://github.com/Moonlight-Protocol/soroban-core/commit/e769ee7 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informative"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: Impact is the Description paragraph that states consequences; firm to confirm or rewrite -->
-
-<!-- CONVERSION-NOTE: category inferred: state-archival-ttl -->
-
 <!-- CONVERSION-NOTE: line numbers refer to commit(s) f9cdd3b, not the audited commit; confirm -->
 
 **Description.**
@@ -558,12 +530,6 @@ live_until_ledger == 0 exempted to preserve the library's cancel path.
 | **Location** | `modules/utxo-core/src/core.rs:L95-L141`, `contracts/privacy-channel/src/transact.rs:L41-L58` |
 | **Resolved in** | https://github.com/Moonlight-Protocol/soroban-core/commit/12a5280 |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informative"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: no impact statement found: Impact repeats the first Description paragraph; firm to rewrite -->
-
-<!-- CONVERSION-NOTE: category inferred: accounting-arithmetic -->
 
 **Description.**
 
@@ -672,12 +638,6 @@ recommended.
 | **Resolved in** | https://github.com/Moonlight-Protocol/soroban-core/commit/97922db |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informative"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: no impact statement found: Impact repeats the first Description paragraph; firm to rewrite -->
-
-<!-- CONVERSION-NOTE: category inferred: state-archival-ttl -->
-
 **Description.**
 
 The hash_payload docstring states that "all integer amounts are encoded as little-endian 8-byte
@@ -772,12 +732,6 @@ docstring accurately describes the new XDR-based encoding.
 | **Resolved in** | https://github.com/Moonlight-Protocol/soroban-core/commit/7d24257 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informative"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: no impact statement found: Impact repeats the first Description paragraph; firm to rewrite -->
-
-<!-- CONVERSION-NOTE: category inferred: cross-contract-trust -->
-
 **Description.**
 
 transact wraps its body in a temporary-storage reentrancy guard, where enter_reentrancy_guard sets
@@ -871,12 +825,6 @@ ReentrantCall error, as recommended.
 | **Location** | `modules/utxo-core/src/core.rs:L95-L141`, `modules/storage/src/lib.rs:L74-L116` |
 | **Resolved in** | https://github.com/Moonlight-Protocol/soroban-core/commit/7374602 |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informative"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: no impact statement found: Impact repeats the first Description paragraph; firm to rewrite -->
-
-<!-- CONVERSION-NOTE: category inferred: code-quality -->
 
 **Description.**
 
@@ -987,12 +935,6 @@ Fixed in https://github.com/Moonlight-Protocol/soroban-core/pull/43 (head at htt
 | **Location** | `modules/auth/src/core.rs:L215-L222` |
 | **Resolved in** | https://github.com/Moonlight-Protocol/soroban-core/commit/cc765e7 |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informative"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: Impact is the Description paragraph that states consequences; firm to confirm or rewrite -->
-
-<!-- CONVERSION-NOTE: category inferred: cryptography -->
 
 <!-- CONVERSION-NOTE: code excerpts from stellar/rs-soroban-env (outside the audited repo) left out of Location -->
 
@@ -1113,12 +1055,6 @@ and non-binding.
 | **Resolved in** | https://github.com/Moonlight-Protocol/soroban-core/commit/cc765e7 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informative"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: Impact is the Description paragraph that states consequences; firm to confirm or rewrite -->
-
-<!-- CONVERSION-NOTE: category inferred: cryptography -->
-
 **Description.**
 
 ChannelAuthContract.add_provider stores any Address in the provider registry without validating its
@@ -1224,12 +1160,6 @@ Fixed in https://github.com/Moonlight-Protocol/soroban-core/pull/47 (head at htt
 | **Resolved in** | https://github.com/Moonlight-Protocol/soroban-core/commit/cc765e7 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informative"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: no impact statement found: Impact repeats the first Description paragraph; firm to rewrite -->
-
-<!-- CONVERSION-NOTE: category inferred: access-control-auth -->
-
 **Description.**
 
 The UTXO check of ChannelAuthContract.__check_auth skips every authorization context that carries no
@@ -1312,12 +1242,6 @@ Fixed in https://github.com/Moonlight-Protocol/soroban-core/pull/47 (head at htt
 | **Location** | `modules/auth/src/core.rs:L107-L127`, `modules/storage/src/lib.rs:L104-L116` |
 | **Resolved in** | https://github.com/Moonlight-Protocol/soroban-core/commit/cc765e7 |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informative"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: Impact is the Description paragraph that states consequences; firm to confirm or rewrite -->
-
-<!-- CONVERSION-NOTE: category inferred: cryptography -->
 
 **Description.**
 
@@ -1421,12 +1345,6 @@ Fixed in https://github.com/Moonlight-Protocol/soroban-core/pull/47 (head at htt
 | **Resolved in** | https://github.com/Moonlight-Protocol/soroban-core/commit/0d59e24 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informative"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: Impact is the Description paragraph that states consequences; firm to confirm or rewrite -->
-
-<!-- CONVERSION-NOTE: category inferred: access-control-auth -->
-
 **Description.**
 
 A deposit entry (from, amount, conditions) splits the depositor's consent across two authorizations. The
@@ -1497,12 +1415,6 @@ Fixed in https://github.com/Moonlight-Protocol/soroban-core/pull/46 (head at htt
 | **Location** | `contracts/privacy-channel/src/transact.rs:L209-L230` |
 | **Resolved in** | https://github.com/Moonlight-Protocol/soroban-core/commit/0d59e24 |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informative"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: Impact is the Description paragraph that states consequences; firm to confirm or rewrite -->
-
-<!-- CONVERSION-NOTE: category inferred: state-archival-ttl -->
 
 **Description.**
 
@@ -1581,13 +1493,7 @@ verify_external_operations ( WithdrawToChannelAddress ).
 | **Resolved in** | https://github.com/Moonlight-Protocol/soroban-core/commit/32d929e |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informative"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: no impact statement found: Impact repeats the first Description paragraph; firm to rewrite -->
-
-<!-- CONVERSION-NOTE: remediation PR/commit present on a Acknowledged finding; confirm status -->
-
-<!-- CONVERSION-NOTE: category inferred: observability -->
+<!-- CONVERSION-NOTE: remediation PR or commit present on a finding marked Acknowledged; confirm status -->
 
 **Description.**
 

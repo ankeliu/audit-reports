@@ -43,8 +43,10 @@ def test_halborn_normalize_fixture():
     assert hal1["status"] == "Resolved" and hal1["remediation_verified_by"] == "firm"
     assert hal1["proof"] and "RUST\n\nCopy" not in hal1["proof"]
     assert hal1["location"].startswith("contracts/proxy_asset_manager/src/storage.rs:L34")
-    assert any("unified severity" in n for n in hal1["conversion_notes"])
-    assert any("category inferred" in n for n in hal1["conversion_notes"])
+    # Rule-based severity mappings carry no note; repeated guesses roll up into one report-level note.
+    assert not any("unified severity" in n for n in hal1["conversion_notes"])
+    assert not any("category inferred" in n for n in hal1["conversion_notes"])
+    assert any(n.startswith("category inferred from the finding text") for n in report["conversion_notes"])
 
     risk = by_id["SPLYCE-HAL-003"]
     assert risk["status"] == "Risk Accepted" and risk["remediation_verified_by"] == "not-reviewed"
@@ -79,3 +81,29 @@ def test_examples_are_clean_drafts():
         text = path.read_text()
         assert render(parse(text)) == text, path.name
         assert _codes(validate_text(text, today=TODAY)) == DRAFT_WARNINGS, path.name
+
+
+def test_tidy_notes_drops_rule_based_and_rolls_up_repeats(valid_report):
+    from auditbank.converters.base import tidy_notes
+
+    r = valid_report
+    r["conversion_notes"] = ["Section 1 is the firm's summary verbatim", "license defaulted"]
+    r["findings"][0]["conversion_notes"] = [
+        'unified severity "High" proposed from firm rating "High"; firm to confirm',
+        "category inferred: accounting-arithmetic",
+        "only on this finding",
+    ]
+    r["findings"][1]["conversion_notes"] = [
+        'unified severity "Low" proposed from firm rating "Warning"; firm to confirm',
+        "category inferred: data-validation",
+    ]
+    r["findings"][2]["conversion_notes"] = ["category inferred: observability"]
+    tidy_notes(r)
+    assert r["findings"][0]["conversion_notes"] == ["only on this finding"]
+    assert r["findings"][1]["conversion_notes"] == [
+        'unified severity "Low" proposed from firm rating "Warning"; firm to confirm'
+    ]
+    assert r["conversion_notes"] == [
+        "license defaulted",
+        "category inferred from the finding text; check it (all 3 findings)",
+    ]

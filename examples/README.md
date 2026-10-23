@@ -11,10 +11,11 @@
 | [`moonlight--rv--2026-07-24.md`](moonlight--rv--2026-07-24.md) | [Runtime Verification PDF](https://strapi.runtimeverification.com/uploads/Moonlight_report_64808bfd8e.pdf) | `runtime_verification.py` |
 | [`redstone--ver--2025-10-27.md`](redstone--ver--2025-10-27.md) | [Veridise PDF](https://veridise.com/wp-content/uploads/2025/10/VAR-Redstone-251006-Oracles-SDK-V2.pdf) | `veridise.py` |
 
-Each file validates with zero errors and two expected draft warnings: `SIGNOFF_PENDING` (no firm sign-off yet)
-and `CONVERSION_NOTES_OPEN` (every proposed severity, inferred category or location, and assumed date or
-license is flagged with a `<!-- CONVERSION-NOTE -->` for the firm to confirm). Content copyright remains with
-each firm; the `Apache-2.0` license in these drafts is a placeholder default the firm must confirm.
+Each file has zero errors and two warnings that clear when the firm signs off:
+`SIGNOFF_PENDING` (no firm approval yet) and `CONVERSION_NOTES_OPEN` (the few points the firm needs to confirm,
+such as inferred categories, the report date, and the license, each marked with a `<!-- CONVERSION-NOTE -->`).
+These are the same questions as in each firm's [converter review issue](https://github.com/ankeliu/audit-reports/issues?q=label%3Aconverter-review);
+once a firm answers, the converter is updated and those notes stop appearing. Content copyright remains with each firm.
 
 Regenerate with:
 

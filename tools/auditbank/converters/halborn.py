@@ -261,7 +261,7 @@ class HalbornConverter(Converter):
             out["remediation_verified_by"] = "not-reviewed"
         out["resolved_in"] = f.get("remediationHash") or None
         if out["resolved_in"] and state != "Solved":
-            notes.append(f"remediation commit present on a {state} finding; consider Partially Resolved")
+            notes.append(f"remediation commit present on a finding marked {state}; consider Partially Resolved")
 
         description_html, excerpts = _strip_code_headers(f.get("description") or "")
         description = html_to_md(description_html) or ""

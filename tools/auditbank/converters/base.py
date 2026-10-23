@@ -354,6 +354,50 @@ def finalize(report: dict) -> dict:
     for f in report["findings"]:
         if not f.get("location"):
             f["conversion_notes"].append("location not found in the source; firm to supply path:line")
+    return tidy_notes(report)
+
+
+STANDARD_SEVERITY = re.compile(r'^unified severity "(\w+)" proposed from firm rating "([^"]+)"; firm to confirm$')
+RULE_BASED = [re.compile(r"^category mapped from \w+ type '(?!Logic Error)")]
+INFO_ONLY = re.compile(r"^Section \d")
+NOTE_GROUPS = [
+    (re.compile(r"^category (inferred|proposed)"), "category inferred from the finding text; check it"),
+    (re.compile(r"^location inferred"), "location inferred from contract names and code excerpts; check it"),
+    (re.compile(r"(?i)impact (is the|repeats)|no impact statement|no impact heading"),
+     "Impact taken from the Description text; check it"),
+]
+
+
+def _is_rule_based(note: str) -> bool:
+    """Notes for mappings that follow the published rules (FILLING_INSTRUCTIONS.md), not guesses."""
+    m = STANDARD_SEVERITY.match(note)
+    if m:
+        return m.group(2).lower() != "warning" and UNIFIED_FROM_LABEL.get(m.group(2).lower()) == m.group(1)
+    return any(rx.match(note) for rx in RULE_BASED)
+
+
+def tidy_notes(report: dict) -> dict:
+    """Keep only notes a reviewer must act on. A note that repeats across findings becomes one report-level
+    note listing the finding IDs; a note on a single finding stays on that finding."""
+    report["conversion_notes"] = [n for n in report["conversion_notes"] if not INFO_ONLY.match(n)]
+    entries = []  # (finding, group key, original note)
+    ids_by_key: dict[str, list[str]] = {}
+    for f in report["findings"]:
+        for note in f["conversion_notes"]:
+            if _is_rule_based(note):
+                continue
+            key = next((msg for rx, msg in NOTE_GROUPS if rx.search(note)), note)
+            entries.append((f, key, note))
+            ids_by_key.setdefault(key, []).append(f["id"])
+        f["conversion_notes"] = []
+    for f, key, note in entries:
+        if len(ids_by_key[key]) == 1:
+            f["conversion_notes"].append(note)
+    total = len(report["findings"])
+    for key, ids in ids_by_key.items():
+        if len(ids) > 1:
+            scope = f"all {total} findings" if len(ids) == total else ", ".join(ids)
+            report["conversion_notes"].append(f"{key} ({scope})")
     return report
 
 

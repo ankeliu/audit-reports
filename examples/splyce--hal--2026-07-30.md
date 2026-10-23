@@ -104,13 +104,13 @@ severity_standard: audit-bank-v0.2
 
 <!-- CONVERSION-NOTE: scope.repositories[].commit_final is the last of 64 listed remediation commits; Halborn to confirm it is the final reviewed commit -->
 
-<!-- CONVERSION-NOTE: Section 1 is Halborn's Assessment Summary verbatim; trim toward ~250 words if desired -->
-
-<!-- CONVERSION-NOTE: Section 2 is Halborn's Introduction; the key contracts table is not in the source -->
-
-<!-- CONVERSION-NOTE: Section 5 built from Halborn's out-of-scope notes; Halborn has no assumptions section -->
-
 <!-- CONVERSION-NOTE: firm disclaimer lacks point-in-time / no-warranty / authoritative-PDF language; template default appended; firm to confirm or substitute its own -->
+
+<!-- CONVERSION-NOTE: category inferred from the finding text; check it (all 67 findings) -->
+
+<!-- CONVERSION-NOTE: location inferred from contract names and code excerpts; check it (SPLYCE-HAL-001, SPLYCE-HAL-002, SPLYCE-HAL-008, SPLYCE-HAL-009, SPLYCE-HAL-011, SPLYCE-HAL-013, SPLYCE-HAL-015, SPLYCE-HAL-025, SPLYCE-HAL-027, SPLYCE-HAL-031, SPLYCE-HAL-035, SPLYCE-HAL-038, SPLYCE-HAL-043, SPLYCE-HAL-044, SPLYCE-HAL-046, SPLYCE-HAL-047, SPLYCE-HAL-051, SPLYCE-HAL-052, SPLYCE-HAL-053, SPLYCE-HAL-054, SPLYCE-HAL-055, SPLYCE-HAL-056, SPLYCE-HAL-057, SPLYCE-HAL-058, SPLYCE-HAL-059, SPLYCE-HAL-060, SPLYCE-HAL-061, SPLYCE-HAL-062, SPLYCE-HAL-063, SPLYCE-HAL-064, SPLYCE-HAL-065, SPLYCE-HAL-067) -->
+
+<!-- CONVERSION-NOTE: remediation commit present on a finding marked Acknowledged; consider Partially Resolved (SPLYCE-HAL-050, SPLYCE-HAL-056, SPLYCE-HAL-062) -->
 
 ## 1. Executive summary
 
@@ -149,12 +149,6 @@ This security assessment was commissioned by `Splyce`, a permissionless institut
 | **Location** | `contracts/proxy_asset_manager/src/storage.rs:L34`, `contracts/stoken/src/stoken.rs:L2211`, `contracts/proxy_asset_manager/src/proxy_asset_manager.rs:L345` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/a68e6628a802eea48e0b7f37fb29313915dba121 |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Critical" proposed from firm rating "Critical"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: liveness-dos -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
 
 **Description.**
 
@@ -382,12 +376,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/stoken/src/stoken.rs:L986-L992`, `contracts/stoken/src/constants.rs:L65` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/ea0cdc3c8591207b96be912a015db6be2bdc1d08 |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Moderate" proposed from firm rating "Medium"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: oracle-external-dependency -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
 
 **Description.**
 
@@ -694,10 +682,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | null |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Moderate" proposed from firm rating "Medium"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: accounting-arithmetic -->
-
 **Description.**
 
 `FixedYieldOracle.calculate_current_price` (fixed_yield_oracle.rs:352) computes share price as a pure function of elapsed time and the configured `annual_rate_bps`, reading `read_created_at`, `read_initial_price`, and `read_annual_rate_bps` with no reference to vault solvency, underlying token balance, or total share supply. When the externally managed portfolio underperforms or incurs losses, the oracle continues reporting a monotonically increasing price regardless of the vault's actual asset-to-share ratio. Any token holder who redeems shares at the overstated price exits with more underlying than the vault's per-share entitlement.
@@ -962,10 +946,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/83521aa23af19af7f234324c74614d3525a44a73 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Moderate" proposed from firm rating "Medium"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: oracle-external-dependency -->
-
 **Description.**
 
 `FixedYieldOracle.calculate_current_price()` always computes share price using the *current* `annual_rate_bps` applied retroactively from `created_at` (the oracle's original deployment timestamp), so any governance rate change immediately re-prices the entire elapsed history with no snapshot or rebase of the starting point.
@@ -1183,10 +1163,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/0095517510bf2cc9e5330989f7bfd2cd9bc24c6a |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Moderate" proposed from firm rating "Medium"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: access-control-auth -->
-
 **Description.**
 
 `SToken.accept_allowlist_mint()` establishes mutual swap trust between two vaults using only an `asset_manager` equality check, and `SToken.swap_tokens()` subsequently reads each vault's price-staleness bound independently rather than enforcing any parity between the two vaults' safety parameters.
@@ -1262,10 +1238,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/284ead3c4f6ad662e031d2be408f8b1d293864e4 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Moderate" proposed from firm rating "Medium"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: liveness-dos -->
-
 **Description.**
 
 `Factory.deploy_vault()` appends each newly deployed vault address to a single `Vec<Address>` stored under the `Vaults` key in instance storage, then writes the entire updated vector back on every deployment. Instance storage in Soroban is a single ledger entry whose serialized size is bounded by the network's ledger entry size limit. A Stellar contract address serializes to 40 bytes in XDR (`SCVal` discriminant 4 B + `ScAddress` discriminant 4 B + 32-byte hash). Once the cumulative size of all instance storage entries exceeds this limit, every call to `write_vaults` fails, causing `deploy_vault` to revert permanently.
@@ -1330,10 +1302,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/nav_oracle/src/nav_oracle.rs:L162-L164`, `contracts/stoken/src/stoken.rs:L1368`, `contracts/stoken/src/stoken.rs:L2874-L2878`, `contracts/stoken/src/stoken.rs:L3019-L3023`, `contracts/stoken/src/stoken.rs:L2136-L2159` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/7598ec29f265301256a0c09b8a5a8a07624e529e |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Moderate" proposed from firm rating "Medium"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: accounting-arithmetic -->
 
 **Description.**
 
@@ -1507,12 +1475,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/2ddb07793fc7b93bfb704625e525632dba9af114 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Moderate" proposed from firm rating "Medium"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: accounting-arithmetic -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
-
 **Description.**
 
 `Accountant.distribute_tokens()` reads a single hardcoded `token` address written at initialization and transfers only that token to `recipient1` and `recipient2`. There is no distribution path for any other token type.
@@ -1585,12 +1547,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/stoken/src/stoken.rs:L2882-L2884`, `contracts/stoken/src/stoken.rs:L3286-L3290`, `contracts/stoken/src/stoken.rs:L3027-L3029`, `contracts/stoken/src/stoken.rs:L1292-L1296` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/130b06a4a5bcc612b77335f47f1a7f748ff5ee32 |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Moderate" proposed from firm rating "Medium"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: access-control-auth -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
 
 **Description.**
 
@@ -1698,10 +1654,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/6a0e7d5b422cc35306401d8a0f9f22892a775ee3 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Moderate" proposed from firm rating "Medium"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: oracle-external-dependency -->
-
 **Description.**
 
 `SToken.swap_tokens()` reads vault prices exclusively via `read_price` and never consults `read_pending_price`. When the oracle submits a price exceeding `max_deviation_bps`, the update is queued as `PendingPrice` and `read_price` remains at the stale pre-drop value. Because `update_price` does not call `write_last_price_update_timestamp` on the pending path (see related finding **FIND-011**), the staleness check in `swap_tokens` (lines 2136–2146) also passes, treating the accepted price as fresh.
@@ -1768,12 +1720,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/proxy_asset_manager/src/proxy_asset_manager.rs` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/4690a1715aa589b8cb4ea288e7179afb4e2e2b6e |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Moderate" proposed from firm rating "Medium"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: access-control-auth -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
 
 **Description.**
 
@@ -1891,10 +1837,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/a24a3849868361be5f4c73c6cf76093a849e4f28 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: liveness-dos -->
-
 **Description.**
 
 `SToken.accrue_management_fee()` mints dilutive fee shares to the accountant but contains no check for the vault's paused state. Every other state-modifying user-facing function, `deposit_underlying` (line 1028), `withdraw_request` (line 1041), and `swap_tokens` (line 2092), gates on `read_paused(&env)` and returns `STokenCoreError::VaultPaused`. `accrue_management_fee` is unrestricted (any external actor can call it) and bypasses this guard entirely, minting fee shares at any time including during an active emergency pause.
@@ -1971,12 +1913,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/576abe2d8d0d45c5eb0aba06fff89c5da5127d42 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: access-control-auth -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
-
 **Description.**
 
 `SToken.swap_tokens()` reads `swap_fee_bps` exclusively from the source vault's configuration, never consulting the destination vault's fee setting. Any vault share holder can exploit this by always initiating swaps from the lower-fee side of a mutually allowlisted pair:
@@ -2040,10 +1976,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/stoken/src/stoken.rs:L1589-L1594`, `contracts/stoken/src/stoken.rs:L1283-L1285` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/5b5c7d4270d3c2b9e37556056ef9675fd9704b8f |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: state-archival-ttl -->
 
 **Description.**
 
@@ -2118,12 +2050,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/stoken/src/stoken.rs:L307` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/2d66b61c5f9ef8736c5dd8309a1971f77fdfd5bf |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: oracle-external-dependency -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
 
 **Description.**
 
@@ -2211,10 +2137,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/4f70241e821f397f836604e96450453cfd8813b6 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: oracle-external-dependency -->
-
 **Description.**
 
 `NavOracle.update_vault_price_from_nav()` computes the vault's share price using the raw on-chain token balance (`underlying_asset.balance(&stoken_address)`) rather than the vault's internally tracked `total_idle` counter. Because anyone on Stellar can transfer tokens directly to any address, an attacker holding shares can inflate `vault_underlying_balance` without minting shares, causing the oracle to compute an inflated price that, if within the `max_deviation_bps` auto-accept window (default 50 bps), is applied immediately. The `expected_total_supply` guard does not prevent this because a direct token transfer does not alter total share supply.
@@ -2295,10 +2217,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/b95efdee0d9d5318e82a537a4329d0f647b22cc6 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: accounting-arithmetic -->
-
 **Description.**
 
 `calculate_management_fee` computes `fee_shares = S * r / (1 + r)` where `r = mgmt_fee_bps * elapsed_secs / (BPS_PRECISION * SECONDS_PER_YEAR)`, by placing `fee_rate_denominator + fee_rate_numerator` in the divisor. The standard supply-dilution formula, used by Yearn V2, Enzyme Finance, and Index Coop, to charge exactly `r` as a fraction of post-mint supply requires `fee_rate_denominator - fee_rate_numerator` (i.e., `S * r / (1 - r)`). With the additive denominator the realized fee as a fraction of post-mint supply is `r / (1 + 2r)` instead of `r`, an unconditional undercharge on every accrual regardless of interval length or caller.
@@ -2357,11 +2275,7 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/1f4dc3e82b3d46bc472cadd33cbd9b19e91b521b |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
 <!-- CONVERSION-NOTE: no Impact heading in the source: Impact repeats the first sentence; firm to rewrite -->
-
-<!-- CONVERSION-NOTE: category inferred: accounting-arithmetic -->
 
 **Description.**
 
@@ -2442,10 +2356,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/stoken/src/stoken.rs`, `contracts/factory/src/factory.rs` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/3085c03851ada94222096450a02393e147b01db2 |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: upgrade-migration -->
 
 **Description.**
 
@@ -2528,10 +2438,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/stoken/src/stoken.rs` |
 | **Resolved in** | null |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: access-control-auth -->
 
 **Description.**
 
@@ -2616,10 +2522,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/stoken/src/stoken.rs` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/91911fba3dc12fa4d49b3a89cbc220db3db79e57 |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: operational -->
 
 **Description.**
 
@@ -2706,10 +2608,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/932059dc442e27497a253addab7300559eeca5e2 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: accounting-arithmetic -->
-
 **Description.**
 
 `SToken.emergency_withdraw()` transfers the underlying asset out of the vault on the second call but never decrements `total_idle`, leaving the vault's liquidity counter overstated by the withdrawn amount. Every other fund-outflow path (`process_deposits`, `fulfill_withdrawal`) decrements `total_idle` after transfer; `emergency_withdraw` does not. After execution, `total_idle > vault_balance`, violating the core accounting invariant.
@@ -2771,10 +2669,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/fixed_yield_oracle/src/fixed_yield_oracle.rs`, `contracts/nav_oracle/src/nav_oracle.rs` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/08ea9e9bd6ecb239c7a70f452ed08da1a0756bc8 |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: governance-centralization -->
 
 **Description.**
 
@@ -2886,10 +2780,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/3b58a390697ccff1a68ca69c680409d6e8c857c4 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: state-archival-ttl -->
-
 **Description.**
 
 In `SToken::accept_roles`, `ProxyAssetManager::accept_manager`, and `Accountant::accept_manager`, the accept step is executed exclusively by the CURRENT role holder; the incoming new role holder never calls `require_auth()` to authenticate the transfer. This one-sided design exposes two distinct failure modes:
@@ -2971,12 +2861,6 @@ Halborn remediation date: 2026-07-30.
 | **Location** | `contracts/nav_oracle/src/nav_oracle.rs:L172-L178`, `contracts/stoken/src/stoken.rs:L192-L199`, `contracts/nav_oracle/src/nav_oracle.rs:L268-L276` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/4d92c953660757cfcfcd523c4b3df589ff86d564 |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: accounting-arithmetic -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
 
 **Description.**
 
@@ -3065,10 +2949,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/accountant/src/accountant.rs`, `contracts/asset/src/asset.rs` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/1d3393f9292d2af39c99b44bc99782c2eb9ebc0d |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: operational -->
 
 **Description.**
 
@@ -3170,12 +3050,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/9c6e495c1791d4759c20178aa98faeb3380d12eb |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: operational -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
-
 **Description.**
 
 `SToken.process_deposits()` checks only `amount <= total_idle` before transferring underlying tokens to the asset manager, with no floor reserved for `total_withdrawals_pending`, allowing the processor to deploy all idle funds, including those conceptually owed to pending withdrawal requests, and block all withdrawal fulfillments until the asset manager manually returns liquidity.
@@ -3246,10 +3120,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/stoken/src/stoken.rs` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/6adb6ff0e6f533865e5e450ba0f6a367a9a64bf4 |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: observability -->
 
 **Description.**
 
@@ -3326,10 +3196,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/stoken/src/stoken.rs` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/e56c78cd66420da9785dd22a811b0ab0eb1449e2 |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: observability -->
 
 **Description.**
 
@@ -3418,10 +3284,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/nav_oracle/src/nav_oracle.rs:L80-L84`, `contracts/fixed_yield_oracle/src/fixed_yield_oracle.rs:L68-L72`, `contracts/accountant/src/accountant.rs` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/b35602b28889d7502d40334fdbc01b419d1dbdef |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: governance-centralization -->
 
 **Description.**
 
@@ -3563,12 +3425,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/68e96c8bb7c0bb2334a6e2d863e6b93418a4f0eb |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: access-control-auth -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
-
 **Description.**
 
 `SToken.accrue_management_fee()` mints dilutive fee shares to the accountant with no call to `check_max_total_shares`, unlike every other share-minting path in the contract (`deposit_core`, `allowlist_mint`, and the late-cancel penalty mint), which all enforce the `max_total_shares` cap before minting.
@@ -3635,10 +3491,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/stoken/src/stoken.rs`, `contracts/factory/src/factory.rs` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/29924b337dc1debe65f9471afcaa38f6e474a4b2 |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: upgrade-migration -->
 
 **Description.**
 
@@ -3709,10 +3561,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/factory/src/factory.rs` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/8b3b3452cc85267b21627ba4cd5f4257b0b5d61d |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: governance-centralization -->
 
 **Description.**
 
@@ -3795,10 +3643,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/factory/src/factory.rs`, `contracts/stoken/src/stoken.rs` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/306a8043a0c596edb84fef13a1b7f8214bbc99f6 |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: data-validation -->
 
 **Description.**
 
@@ -3894,12 +3738,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/46321f0a966a70465041f99aeabb8a1cf14c8d8a |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: governance-centralization -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
-
 **Description.**
 
 `Multisig.remove_signer()` and `Multisig.remove_context_rule()` do not validate that the stored `SimpleThreshold` value remains satisfiable after the mutation, enabling any current quorum of signers, whether through a configuration mistake or compromised keys, to permanently brick the multisig account.
@@ -3976,10 +3814,6 @@ Halborn remediation date: 2026-07-11.
 | **Location** | `contracts/stoken/src/stoken.rs` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/dd7b112bc6d9a53e3b7f970e23c7305cb257feac |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: oracle-external-dependency -->
 
 **Description.**
 
@@ -4069,10 +3903,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/7183258bc2591e9be118ce1c75a97793a1876f99 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: governance-centralization -->
-
 **Description.**
 
 All seven upgradeable contracts (SToken, Factory, Accountant, Asset, FixedYieldOracle, NavOracle, ProxyAssetManager) allow immediate, irreversible WASM replacement in a single transaction with no propose/accept two-step flow, no timelock, and no cooldown. The upgrade path requires only a single `upgrader`-role key administered by `admin`. Nothing in the protocol enforces that `admin` or `upgrader` be a Multisig smart account rather than a plain Ed25519 keypair.
@@ -4144,13 +3974,7 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/1dc7b8949dc90362b753b4611e0721cc963b8549 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: remediation commit present on a Risk Accepted finding; consider Partially Resolved -->
-
-<!-- CONVERSION-NOTE: category inferred: governance-centralization -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
+<!-- CONVERSION-NOTE: remediation commit present on a finding marked Risk Accepted; consider Partially Resolved -->
 
 **Description.**
 
@@ -4249,10 +4073,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/multisig/src/multisig.rs` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/0b6235173dce158e550f52273a8399a70d5b1a29 |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: governance-centralization -->
 
 **Description.**
 
@@ -4354,10 +4174,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/237de60e4494744ff9f9e34338f9cd18646d83d6 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: governance-centralization -->
-
 **Description.**
 
 `Factory.propose_vault_wasm_hash()` unconditionally overwrites any existing `PendingWasmHash` entry without a guard or acknowledgment, and there is no `cancel_vault_wasm_hash()` function in the contract. The behavior is confirmed intentional by the test coverage (`test_propose_vault_wasm_hash_overwrites_pending`).
@@ -4438,10 +4254,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/0fcbe14a58bc920e35d05d5b3c84f681f5e6044c |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: liveness-dos -->
-
 **Description.**
 
 `SToken::accept_roles` atomically revokes the old `asset_manager` role with no migration window, invalidating `ProxyAssetManager::return_funds` authorization for any capital deployed before the rotation.
@@ -4515,10 +4327,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/9e8d7c580507d93dbb6fd6a27c0dce01dbdc80f3 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: state-archival-ttl -->
-
 **Description.**
 
 `SToken.propose_withdrawal_params()` validates `new_system_penalty_bps` only against `BPS_PRECISION = 10_000` (100%), so any value from 0 to 10,000 bps inclusive is accepted. In `cancel_withdrawal()`, when a withdrawal request's TTL has expired, `penalty_shares_to_mint = apply_basis_points(shares_after_fee, read_system_penalty_bps(&env))` mints additional shares to the user as compensation for processor delay. At `system_penalty_bps = 10_000`, `penalty_shares_to_mint = shares_after_fee`, so the canceling user receives their original `shares_after_fee` returned plus an equal quantity of freshly minted shares, doubling their position and diluting every remaining holder.
@@ -4591,12 +4399,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/proxy_asset_manager/src/proxy_asset_manager.rs` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/82373900318e72b9e53b72c7a4d6ac326b17935c |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: operational -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
 
 **Description.**
 
@@ -4679,12 +4481,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/stoken/src/storage.rs`, `contracts/stoken/src/stoken.rs` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/8535bf265cd3735d164e0d559bd91c8a370b5a5c |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: accounting-arithmetic -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
 
 **Description.**
 
@@ -4786,10 +4582,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/0bbb214ecc831fa1e446884409bf113659c3c282 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: state-archival-ttl -->
-
 **Description.**
 
 `SToken.propose_cooldowns()` guards against concurrent pending state by checking `read_pending_fees`, `read_pending_limits`, `read_pending_whitelist`, and `read_pending_roles`, but does not check `read_pending_withdrawal_params`. Because `accept_withdrawal_params()` reads the current `config_cooldown_secs` at acceptance time (not a snapshot from when the proposal was created), a manager can interleave a `propose_withdrawal_params` call with a `propose_cooldowns` call to reduce the effective timelock guarding the withdrawal params acceptance.
@@ -4866,12 +4658,6 @@ Halborn remediation date: 2026-07-01.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/7e991590f235b5ca655ed408b3e0838c466f9265 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: data-validation -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
-
 **Description.**
 
 `SToken.propose_limits()` contains a no-op guard that returns `NoLimitsChanges` when all four checked parameters match their current on-chain values. The guard covers `new_max_total_shares`, `new_max_shares_per_user`, `new_max_total_idle`, and `new_max_deviation_bps` but omits the fifth governable parameter `new_min_shares_to_mint`. A caller who explicitly passes current on-chain values for all four checked parameters while supplying a changed value for `new_min_shares_to_mint` triggers the guard and receives `NoLimitsChanges` even though a real governance change was intended.
@@ -4923,12 +4709,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/fixed_yield_oracle/src/fixed_yield_oracle.rs` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/aca67a0f784417b07bab779c51d20af56c0cfbe8 |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informational"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: accounting-arithmetic -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
 
 **Description.**
 
@@ -5006,10 +4786,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/stoken/src/storage.rs` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/3522377574649fe44a817fdc7268fecddcba26e8 |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informational"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: state-archival-ttl -->
 
 **Description.**
 
@@ -5091,10 +4867,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | null |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informational"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: observability -->
-
 **Description.**
 
 `SToken.accept_roles()` processes all pending role changes sequentially using a single `caller` variable that is set to the address of the transaction sender (the current manager) at function entry and never updated. When a call to `accept_roles` includes both a `new_manager` assignment and changes to any subset of the other roles (processor, accountant, oracle, asset_manager, guardian), the manager rotation is applied first, then each subsequent `grant_role_no_auth` / `revoke_role_no_auth` call for the remaining roles is passed the now-revoked old manager address as the `caller` argument.
@@ -5158,12 +4930,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/nav_oracle/src/nav_oracle.rs:L127`, `contracts/nav_oracle/src/nav_oracle.rs:L108`, `contracts/stoken/src/stoken.rs:L307` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/4507153d506ee128007d50d590a0d970ce98be57 |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informational"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: remediation commit present on a Acknowledged finding; consider Partially Resolved -->
-
-<!-- CONVERSION-NOTE: category inferred: oracle-external-dependency -->
 
 **Description.**
 
@@ -5282,12 +5048,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/85cfa881be817a73732f9382866e180e27a9e98e |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informational"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: governance-centralization -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
-
 **Description.**
 
 `Multisig.__constructor()` passes the caller-supplied `policies` map directly to `add_context_rule` without validating that a `ThresholdPolicy` entry is present when multiple signers are provided, allowing a multi-signer Multisig to be deployed and used as a vault admin or manager without any M-of-N enforcement.
@@ -5349,12 +5109,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/accountant/src/accountant.rs` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/5aa8c1255ca6e0d29010c5f255886f784dbfc0a1 |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informational"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: governance-centralization -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
 
 **Description.**
 
@@ -5468,12 +5222,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/82e0236aaa9fb57516bc4e6e9c7b223362a369c5 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informational"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: governance-centralization -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
-
 **Description.**
 
 `SToken.propose_cooldowns()` returns `CooldownChangeTimelockActive` if any of `pending_fees`, `pending_limits`, `pending_whitelist`, or `pending_roles` is set (lines 2373-2384), and no cancel function exists for any of these proposals. A rogue manager can permanently block cooldown changes by continuously re-proposing fees, limits, whitelist, or roles just before the existing pending proposal reaches acceptance, resetting its timestamp and restarting the blocking condition indefinitely.
@@ -5553,12 +5301,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/3d0f715dee6fa245b3686b8dde91459b424c2bd9 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informational"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: accounting-arithmetic -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
-
 **Description.**
 
 `NavOracle.update_vault_price_from_nav()` casts the vault's underlying token balance from `i128` (as returned by the Soroban SAC `token::Client::balance()`) to `u64` using a bare `as u64` truncation on line 151, with no sign check and no bounds check. The primary realistic risk is the negative-value path: a malicious or non-standard underlying token that reports a negative balance would be silently cast to a very large positive `u64`, dramatically inflating `total_nav` and causing the oracle to push an artificially high price to the SToken vault, which then applies it to all deposits, withdrawals, and swaps.
@@ -5626,12 +5368,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/4dfade69264e347bf4089806538528bb93de8c05 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informational"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: accounting-arithmetic -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
-
 **Description.**
 
 `Accountant.distribute_xlm()` computes the fee split using an unchecked `as u64` cast and bare subtraction, diverging from the fully checked arithmetic pattern used in the sibling `Accountant.distribute_tokens()` function. While the intermediate `u128` multiplication cannot overflow with today's `u64` input types (maximum intermediate value is `u64::MAX * u64::MAX / u64::MAX = u64::MAX`, which fits in `u64`), and the bare `amount - amount1` subtraction cannot underflow because `amount1` is floored to at most `amount`, this is a code-quality hazard: any future widening of the `amount` parameter type to `u128` would cause the `as u64` cast to silently truncate the high bits, producing an arbitrarily incorrect split without a compile-time error. The two sibling functions that implement identical logic now diverge in safety posture, increasing maintenance risk.
@@ -5695,14 +5431,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/multisig/src/multisig.rs:L97-L101`, `contracts/threshold_policy/src/threshold_policy.rs:L75-L82` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/430ef4ed809ae41066efe8c0fd86001afdb8cdb3 |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informational"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: remediation commit present on a Acknowledged finding; consider Partially Resolved -->
-
-<!-- CONVERSION-NOTE: category inferred: governance-centralization -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
 
 **Description.**
 
@@ -5776,12 +5504,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/5f643a380646cf9ab742133c23dfca2790b7a948 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informational"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: operational -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
-
 **Description.**
 
 `ProxyAssetManager.initialize()` writes the caller-supplied `config.underlying_asset` to storage with no check against the underlying asset actually used by the bound vault (`config.vault`), while `SToken.process_deposits()` always transfers the vault's real underlying asset to the proxy regardless of what the proxy itself was configured to expect.
@@ -5842,12 +5564,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/multisig/src/multisig.rs:L97-L100` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/780d5f8c557c8a0f0ea7b5badb2631a516516fe8 |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informational"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: governance-centralization -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
 
 **Description.**
 
@@ -5919,12 +5635,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/stoken/src/stoken.rs:L967-L980`, `contracts/stoken/src/stoken.rs:L1438-L1442` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/45853ca3132914b70903e8bb9d676024685c410f |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informational"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: oracle-external-dependency -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
 
 **Description.**
 
@@ -6007,12 +5717,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/04a0cdd3a458373838d5cec9906863343657e214 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informational"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: data-validation -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
-
 **Description.**
 
 `SToken.validate_new_limits()` enforces `min_shares_to_mint ≤ max_shares_per_user` only when both values are supplied as `Some` in the same call, and `propose_limits()` never substitutes the currently stored `max_shares_per_user` when only `min_shares_to_mint` is being changed, unlike the equivalent `max_shares_per_user ≤ max_total_shares` check, which `propose_limits` already computes using effective (`unwrap_or(read_*)`) values.
@@ -6083,12 +5787,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/dc3dbee4ebca41a5bb27e3f9084571e04395ba3e |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informational"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: liveness-dos -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
-
 **Description.**
 
 `SToken.cancel_withdrawal()` reverts with `VaultPaused` whenever the vault is paused, even though the function only moves share tokens already held in vault custody back to the caller (plus an optional penalty mint) and never transfers underlying assets.
@@ -6146,14 +5844,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/stoken/src/stoken.rs:L967-L972`, `contracts/stoken/src/stoken.rs:L306` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/576fbcf5550a524f7db3ec77bd860efcdf34909c |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informational"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: remediation commit present on a Acknowledged finding; consider Partially Resolved -->
-
-<!-- CONVERSION-NOTE: category inferred: oracle-external-dependency -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
 
 **Description.**
 
@@ -6225,12 +5915,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/proxy_asset_manager/src/proxy_asset_manager.rs:L523-L539`, `contracts/proxy_asset_manager/src/proxy_asset_manager.rs:L428-L435` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/42e9fd0247e782aa751d3c0666b6b61009a2445d |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informational"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: data-validation -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
 
 **Description.**
 
@@ -6310,12 +5994,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/5f651f2596c3ea6f7a26d422699babb13156e7c6 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informational"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: data-validation -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
-
 **Description.**
 
 `Asset.mint()` accepts `amount: i128` and passes it directly to `Base::mint` with no contract-level guard against zero or negative values, relying entirely on the `stellar_tokens` library's internal behavior, which is out of scope and may change across library versions. Any account granted the `minter` role (administered by `authority`) can call `mint` with `amount = 0` or `amount < 0`.
@@ -6375,12 +6053,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/stoken/src/stoken.rs:L543-L545`, `contracts/stoken/src/stoken.rs:L518-L522`, `contracts/stoken/src/stoken.rs:L529-L533`, `contracts/stoken/src/stoken.rs:L568-L572` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/d9683230260c9d9d90ab94ed2c22cd52bc85eae9 |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informational"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: state-archival-ttl -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
 
 **Description.**
 
@@ -6461,10 +6133,6 @@ Halborn remediation date: 2026-07-22.
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/83dd285d9e267efc32dca7142146f12a8c052a82 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informational"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: governance-centralization -->
-
 **Description.**
 
 `SToken.unpause_vault()` resets `emergency_withdraw_timelock_end` to zero (line 1807) but does not clear `EmergencyWithdrawTokenMint` or `EmergencyWithdrawalAmount`, leaving stale non-zero values in storage after an unpause that can no longer be executed.
@@ -6535,12 +6203,6 @@ Halborn remediation date: 2026-07-22.
 | **Location** | `contracts/fixed_yield_oracle/src/fixed_yield_oracle.rs:L366-L370` |
 | **Resolved in** | https://github.com/Splyce-Finance/splyce-stellar-s-token/commit/a13f46aa277bab5d85581f1b853080089ee5e404 |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Informational"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred: state-archival-ttl -->
-
-<!-- CONVERSION-NOTE: location inferred from contract names and code excerpt line ranges; confirm -->
 
 **Description.**
 

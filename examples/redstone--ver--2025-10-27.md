@@ -90,15 +90,19 @@ severity_standard: audit-bank-v0.2
 
 <!-- CONVERSION-NOTE: scope.repositories[].commit_final left null: Veridise lists fix commits per finding, not a final reviewed commit -->
 
-<!-- CONVERSION-NOTE: Section 1 assembled from Veridise's Executive Summary paragraphs; trim toward ~250 words -->
-
-<!-- CONVERSION-NOTE: Section 2 is Veridise's Project Summary; the key contracts table is not in the source -->
-
 <!-- CONVERSION-NOTE: firm disclaimer lacks point-in-time / no-warranty / authoritative-PDF language; template default appended; firm to confirm or substitute its own -->
 
 <!-- CONVERSION-NOTE: the source states "© 2025 Veridise Inc. All Rights Reserved.", which conflicts with the default publication.license Apache-2.0; Veridise to confirm reuse terms -->
 
 <!-- CONVERSION-NOTE: 1 item(s) Veridise marked Invalid are excluded from findings and listed in Section 8 -->
+
+<!-- CONVERSION-NOTE: category inferred from the finding text; check it (REDSTONE-VER-001, REDSTONE-VER-002) -->
+
+<!-- CONVERSION-NOTE: Veridise abbreviates paths with [...]; firm to supply full repo-relative paths (REDSTONE-VER-002, REDSTONE-VER-003, REDSTONE-VER-006, REDSTONE-VER-007, REDSTONE-VER-008, REDSTONE-VER-009, REDSTONE-VER-005) -->
+
+<!-- CONVERSION-NOTE: Veridise "Warning" mapped to unified "Low" (Warning sits between Info and Low in the Veridise matrix); Veridise to confirm (REDSTONE-VER-003, REDSTONE-VER-004, REDSTONE-VER-007, REDSTONE-VER-008, REDSTONE-VER-009) -->
+
+<!-- CONVERSION-NOTE: client states intended behavior (Veridise Appendix A.1); recorded as Risk Accepted (REDSTONE-VER-006, REDSTONE-VER-007, REDSTONE-VER-008, REDSTONE-VER-009) -->
 
 ## 1. Executive summary
 
@@ -132,10 +136,6 @@ From Oct. 6, 2025 to Oct. 14, 2025, RedStone engaged Veridise to conduct a secur
 | **Location** | `rust-sdk/crates/redstone/src/types/signer_address.rs:L25` |
 | **Resolved in** | https://github.com/redstone-finance/rust-sdk/pull/60 (e24a58a) |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred from Veridise type 'Logic Error' and content: access-control-auth -->
 
 **Description.**
 
@@ -199,12 +199,6 @@ The developers implemented the suggested recommendation.
 | **Location** | `redstone-oracles-monorepo/packages/[...]/utils.rs:L9` |
 | **Resolved in** | https://github.com/redstone-finance/redstone-oracles-monorepo/commit/e78b8415759bb7d8d0b31972051836451016a729 |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category inferred from Veridise type 'Logic Error' and content: oracle-external-dependency -->
-
-<!-- CONVERSION-NOTE: Veridise abbreviates paths with [...]; firm to supply full repo-relative paths -->
 
 **Description.**
 
@@ -271,12 +265,6 @@ The code in feed_to_string now trim the byte array from left to right and right 
 | **Resolved in** | https://github.com/redstone-finance/redstone-oracles-monorepo/commit/e7a9bc257e364cff3b0e9c74ec3894c2ac95f4c8 |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: Veridise "Warning" mapped to unified "Low" (Warning sits between Info and Low in the Veridise matrix); Veridise to confirm -->
-
-<!-- CONVERSION-NOTE: category mapped from Veridise type 'Usability Issue': operational; confirm -->
-
-<!-- CONVERSION-NOTE: Veridise abbreviates paths with [...]; firm to supply full repo-relative paths -->
-
 **Description.**
 
 The ownership transfer process does not follow a two-step pattern; instead, ownership is transferred in a single step, immediately revoking the previous owner’s rights.
@@ -312,10 +300,6 @@ The developers implemented the suggested recommendation.
 | **Location** | `rust-sdk/crates/redstone/src/crypto/mod.rs:L47-L51` |
 | **Resolved in** | https://github.com/redstone-finance/rust-sdk/pull/62, https://github.com/redstone-finance/rust-sdk/pull/63 (3257c1a, be93165) |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: Veridise "Warning" mapped to unified "Low" (Warning sits between Info and Low in the Veridise matrix); Veridise to confirm -->
-
-<!-- CONVERSION-NOTE: category mapped from Veridise type 'Data Validation': data-validation; confirm -->
 
 **Description.**
 
@@ -364,14 +348,6 @@ The developers implemented the suggested recommendation.
 | **Resolved in** | null |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: unified severity "Low" proposed from firm rating "Low"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: client states intended behavior (Veridise Appendix A.1); recorded as Risk Accepted -->
-
-<!-- CONVERSION-NOTE: category mapped from Veridise type 'Data Validation': data-validation; confirm -->
-
-<!-- CONVERSION-NOTE: Veridise abbreviates paths with [...]; firm to supply full repo-relative paths -->
-
 **Description.**
 
 The RedStone adapter contract implements an oracle system that aggregates price data from multiple trusted signers. The system is configured with 5 authorized signers and requires a minimum of 3 valid signatures to accept a price update (signer_count_threshold: 3). When price updates are submitted via the write_prices() function, the payload is processed through get_prices_from_payload(), which invokes the RedStone SDK’s process_payload() function. This SDK function verifies that at least 3 signatures from the authorized signer set are valid, then calculates the median of the signed price values to determine the final price stored on-chain. The contract does not implement any validation to ensure price values from different signers are within reasonable proximity of each other. The median calculation tolerates less than 50% of input values being malicious. When only 3 signatures are provided (the minimum threshold), 2 malicious signers constitute 67% of the data points, enabling them to control the median output. Without deviation checks, these 2 signers can submit identical extreme values that override the honest signer’s price. For example, if the honest price is $100 and two malicious signers submit $1, the median of [$1, $1, $100] equals $1. The lack of validation against price deviation means this manipulation succeeds even though an honest signer participated. Notably, these 2 malicious signers represent only 40% of the total 5-signer set, yet they can fully compromise the oracle’s integrity.
@@ -407,14 +383,6 @@ The developers acknowledged the reported behavior and confirmed that it is inten
 | **Location** | `redstone-oracles-monorepo/packages/[...]/lib.rs:L97-L104` |
 | **Resolved in** | null |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: Veridise "Warning" mapped to unified "Low" (Warning sits between Info and Low in the Veridise matrix); Veridise to confirm -->
-
-<!-- CONVERSION-NOTE: client states intended behavior (Veridise Appendix A.1); recorded as Risk Accepted -->
-
-<!-- CONVERSION-NOTE: category mapped from Veridise type 'Data Validation': data-validation; confirm -->
-
-<!-- CONVERSION-NOTE: Veridise abbreviates paths with [...]; firm to supply full repo-relative paths -->
 
 **Description.**
 
@@ -454,14 +422,6 @@ The developers acknowledged the reported behavior and confirmed that it is inten
 | **Resolved in** | null |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: Veridise "Warning" mapped to unified "Low" (Warning sits between Info and Low in the Veridise matrix); Veridise to confirm -->
-
-<!-- CONVERSION-NOTE: client states intended behavior (Veridise Appendix A.1); recorded as Risk Accepted -->
-
-<!-- CONVERSION-NOTE: category mapped from Veridise type 'Maintainability': code-quality; confirm -->
-
-<!-- CONVERSION-NOTE: Veridise abbreviates paths with [...]; firm to supply full repo-relative paths -->
-
 **Description.**
 
 The RedStone adapter contract verifies price feed data signatures using a set of trusted signer addresses defined in the configuration. These signer addresses are stored in the constant REDSTONE_PRIMARY_PROD_ALLOWED_SIGNERS, which contains five hardcoded 20-byte Ethereum-style addresses. When the payload is processed through get_prices_from_payload(), the function calls STELLAR_CONFIG.redstone_config(), which converts the hardcoded signers into SignerAddress objects via redstone_signers(). These signers are then used to verify the signatures on price feed payloads. Because these signer addresses are defined as compile-time constants, they are embedded directly into the deployed WASM binary. This design prevents both emergency revocation of compromised signers and routine key rotation. If a signer’s private key is compromised or simply reaches its recommended rotation period, there is no runtime mechanism to revoke that signer or add a replacement. The only remediation path is to upgrade the contract with a new WASM binary via the upgrade() function. Contract upgrades involve deploying new bytecode, which introduces operational delays and risks of their own.
@@ -498,14 +458,6 @@ The developers acknowledged the reported behavior and confirmed that it is inten
 | **Resolved in** | null |
 | **Redacted** | false |
 
-<!-- CONVERSION-NOTE: Veridise "Warning" mapped to unified "Low" (Warning sits between Info and Low in the Veridise matrix); Veridise to confirm -->
-
-<!-- CONVERSION-NOTE: client states intended behavior (Veridise Appendix A.1); recorded as Risk Accepted -->
-
-<!-- CONVERSION-NOTE: category mapped from Veridise type 'Data Validation': data-validation; confirm -->
-
-<!-- CONVERSION-NOTE: Veridise abbreviates paths with [...]; firm to supply full repo-relative paths -->
-
 **Description.**
 
 The RedStone Rust SDK provides a multi-chain oracle solution supporting chains such as EVM chains, Solana and Soroban. The PayloadDecoder in payload_decoder.rs processes oracle payloads by decoding DataPackage structures and verifying their signatures. During trim_data_package(), the SDK extracts signable_bytes consisting solely of the data package contents (data points, timestamp, value size, and point count) without any chain-specific domain separator. The Crypto::recover_address() function then computes keccak256(message) directly on these bytes to recover the signer’s address. This means the signature is computed over identical data regardless of which blockchain the payload is used on. For example, a DataPackage signed for an EVM chain contains bytes representing: [data_points][timestamp][value_size][point_count]. When this same payload is submitted to Soroban, the signable_bytes extracted in trim_data_package() will be identical, causing recover_address() to successfully recover the same signer address, passing the validation on both chains. This design allows the same signed oracle data to be accepted as valid on multiple blockchains whenever they share the same authorized signer set. While this may be intentional, it creates a dependency: all blockchain implementations must process payloads identically, or the same valid signed DataPackages could produce different oracle values across chains.
@@ -541,12 +493,6 @@ The developers acknowledged the reported behavior and confirmed that it is inten
 | **Location** | `redstone-oracles-monorepo/packages/[...]/lib.rs:L38`, `redstone-oracles-monorepo/packages/[...]/lib.rs:L38-L39`, `rust-sdk/crates/redstone/src/types/mod.rs:L34` |
 | **Resolved in** | null |
 | **Redacted** | false |
-
-<!-- CONVERSION-NOTE: unified severity "Informational" proposed from firm rating "Info"; firm to confirm -->
-
-<!-- CONVERSION-NOTE: category mapped from Veridise type 'Maintainability': code-quality; confirm -->
-
-<!-- CONVERSION-NOTE: Veridise abbreviates paths with [...]; firm to supply full repo-relative paths -->
 
 <!-- CONVERSION-NOTE: the source groups several issues under one finding; firm may split them -->
 
