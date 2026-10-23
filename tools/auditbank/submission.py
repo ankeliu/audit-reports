@@ -79,11 +79,11 @@ def check_form(form: dict) -> dict:
     if source and urlparse(source).scheme != "https":
         raise SubmissionError("the report URL must be an https:// link")
     if not source and not attachment:
-        named = re.search(r"[\w.()\[\] -]+\.(?:pdf|md)\b", form.get("attachment") or "", re.I)
+        named = re.search(r"[\w.()\[\]-]+\.(?:pdf|md)\b", form.get("attachment") or "", re.I)
         if named:
             raise SubmissionError(
-                f"The file {named.group(0).strip()} wasn't attached; the Attachment box only contains text. "
-                "Edit this issue, drag the file into the Attachment box, wait for the upload link to appear, and save."
+                f"{named.group(0)} wasn't attached: the Attachment box only has text. "
+                "Drag the file into that box and wait for its link to appear before saving."
             )
         raise SubmissionError("Add the published report's link, or attach its PDF or standard .md file.")
     return {

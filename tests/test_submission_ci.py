@@ -83,7 +83,7 @@ def test_unattached_pdf_gets_a_clear_message():
     body = ISSUE_BODY.replace(
         "https://www.halborn.com/audits/splyce/smart-contract-assessment-de69cd", "_No response_"
     ).replace("### Attachment\n\n_No response_", "### Attachment\n\nDrag Moonlight_report.pdf into this box.")
-    with pytest.raises(SubmissionError, match="Moonlight_report.pdf wasn't attached"):
+    with pytest.raises(SubmissionError, match="^Moonlight_report.pdf wasn't attached"):
         check_form(parse_issue_form(body))
 
 
