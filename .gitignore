@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+build/
+dist/
+
+# Node
+node_modules/
+
+# Firm reports are firm copyright -- never commit downloaded PDFs/HTML
+*.pdf
+tests/fixtures/_downloads/
+
+# Local planning notes
+CLAUDE_CODE_PLAN.md
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
