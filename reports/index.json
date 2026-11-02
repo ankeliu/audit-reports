@@ -1,5 +1,27 @@
 {
   "generated_at": "2026-11-02",
   "schema_version": "0.2",
-  "reports": []
+  "reports": [
+    {
+      "path": "reports/moonlight/moonlight--rv--2026-07-24.md",
+      "project_slug": "moonlight",
+      "client": "Moonlight",
+      "audit_firm": "Runtime Verification",
+      "firm_abbrev": "RV",
+      "report_date": "2026-07-24",
+      "platform": "soroban",
+      "disclosure_status": "public",
+      "conversion_method": null,
+      "findings_summary": {
+        "total": 15,
+        "critical": 0,
+        "high": 0,
+        "moderate": 3,
+        "low": 0,
+        "informational": 12
+      },
+      "pdf_url": "https://strapi.runtimeverification.com/uploads/Moonlight_report_64808bfd8e.pdf",
+      "firm_report_url": null
+    }
+  ]
 }

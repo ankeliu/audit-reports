@@ -5,4 +5,4 @@ Each firm's linked PDF or report page is the authoritative document.
 
 | Project | Firm | Date | Findings (total) | Link |
 |---|---|---|---|---|
-| _No reports yet_ | | | | |
+| Moonlight | Runtime Verification | 2026-07-24 | 15 | [report](moonlight/moonlight--rv--2026-07-24.md) · [firm original](https://strapi.runtimeverification.com/uploads/Moonlight_report_64808bfd8e.pdf) |
