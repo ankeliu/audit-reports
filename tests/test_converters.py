@@ -107,3 +107,34 @@ def test_tidy_notes_drops_rule_based_and_rolls_up_repeats(valid_report):
         "license defaulted",
         "category inferred from the finding text; check it (all 3 findings)",
     ]
+
+
+def test_halborn_page_reviewed_from_an_archive():
+    """Some Halborn pages (e.g. Templar) list an uploaded zip instead of a repository and file list."""
+    firm_report = json.loads((FIXTURES / "halborn-splyce.findings.json").read_text())
+    firm_report["sources"] = [
+        {
+            "repositoryUrl": None,
+            "commitHash": None,
+            "scopeFiles": [],
+            "outOfScopeFiles": [],
+            "outOfScopeExtra": [],
+            "files": ["soroban.zip"],
+        }
+    ]
+    firm_report["introduction_html"] = firm_report["assessment_summary_html"] = firm_report["methodology_html"] = None
+    firm_report["sections_html"] = {
+        "Executive Summary": "<p>Halborn reviewed the vault.</p>",
+        "Scope and Methodology": (
+            '<p>Paths are relative to <a href="https://github.com/Example/contracts">github.com/Example/contracts</a>.</p>'
+            "<ul><li><code>contracts/proxy_asset_manager/**</code></li><li><code>contracts/stoken/**</code></li></ul>"
+        ),
+    }
+    report = finalize(HalbornConverter().normalize(firm_report, "splyce"))
+    _assert_clean_draft(report)
+    repo = report["scope"]["repositories"][0]
+    assert repo["url"] == "https://github.com/Example/contracts" and repo["commit_start"] is None
+    assert report["scope"]["in_scope_paths"] == ["contracts/proxy_asset_manager/**", "contracts/stoken/**"]
+    assert report["sections"]["executive_summary"] == "Halborn reviewed the vault."
+    assert report["findings"][0]["location"].startswith("contracts/")
+    assert any("soroban.zip" in n for n in report["conversion_notes"])

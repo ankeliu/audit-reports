@@ -42,7 +42,7 @@ def build() -> dict:
             "status": _enum(v["status"]),
             "remediation_verified_by": _enum(v["remediation_verified_by"]),
             "category": _enum(v["category"]),
-            "location": NONEMPTY,
+            "location": {"anyOf": [NONEMPTY, {"type": "null"}]},
             "resolved_in": STR_OR_NULL,
             "redacted": _obj({"value": {"type": "boolean"}, "reason": STR_OR_NULL}),
             "description": NONEMPTY,
@@ -104,8 +104,8 @@ def build() -> dict:
     publication["else"] = {"properties": {"embargo_until": {"type": "null"}}}
     repository = _obj(
         {
-            "url": {"anyOf": [URL, withheld]},
-            "commit_start": {"anyOf": [SHA, withheld]},
+            "url": {"anyOf": [URL, withheld, {"type": "null"}]},
+            "commit_start": {"anyOf": [SHA, withheld, {"type": "null"}]},
             "commit_final": {"anyOf": [SHA, {"type": "null"}]},
         }
     )

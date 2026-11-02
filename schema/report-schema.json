@@ -349,6 +349,9 @@
                   },
                   {
                     "const": "withheld"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -360,6 +363,9 @@
                   },
                   {
                     "const": "withheld"
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               },
@@ -553,8 +559,15 @@
             ]
           },
           "location": {
-            "type": "string",
-            "minLength": 1
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "resolved_in": {
             "type": [

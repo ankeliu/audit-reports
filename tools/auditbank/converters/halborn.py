@@ -138,6 +138,9 @@ class HalbornConverter(Converter):
             "introduction_html": sections.get("Introduction"),
             "assessment_summary_html": sections.get("Assessment Summary"),
             "methodology_html": sections.get("Test Approach and Methodology"),
+            # Page layouts differ between reports; keep every named section and the full summary too.
+            "sections_html": {k: v for k, v in sections.items() if k and v},
+            "executive_summary_html": resolve(audit.get("executiveSummary")),
             "disclaimer_text": disclaimer_text,
             "sources": [
                 {
@@ -146,6 +149,7 @@ class HalbornConverter(Converter):
                     "scopeFiles": s.get("scopeFiles") or [],
                     "outOfScopeFiles": s.get("outOfScopeFiles") or [],
                     "outOfScopeExtra": s.get("outOfScopeExtra") or [],
+                    "files": [x.get("filename") for x in s.get("file") or [] if x.get("filename")],
                 }
                 for s in audit.get("sources") or []
             ],
@@ -189,14 +193,28 @@ class HalbornConverter(Converter):
             notes.append("the page offers a PDF download; add its URL as report.pdf_url if it is public")
         report["heading"] = f"{client}: {fr.get('name') or 'Security Assessment'} by Halborn"
 
+        blocks = _blocks(fr)
         scope = report["scope"]
-        intro_md = html_to_md(fr.get("introduction_html")) or ""
+        intro_md = blocks.get("introduction") or ""
         platform_from_text(report, intro_md)
         commits = fr.get("remediation_commits") or []
+        scope_text = "\n".join(blocks.values())
         for i, src in enumerate(fr["sources"]):
             commit_final = commits[-1] if commits and i == len(fr["sources"]) - 1 else None
+            url = src["repositoryUrl"]
+            if not url:
+                found = re.findall(r"github\.com/([\w.-]+/[\w.-]*[\w-])", scope_text)
+                repos = sorted({r.removesuffix(".git") for r in found})
+                if len(repos) == 1:
+                    url = f"https://github.com/{repos[0]}"
+                    notes.append(f"repository URL taken from the scope description ({url}); confirm")
+            if not src["commitHash"]:
+                archive = ", ".join(src.get("files") or []) or "an uploaded archive"
+                notes.append(
+                    f"Halborn reviewed {archive}, so the page has no audited commit; firm to supply it if known"
+                )
             scope["repositories"].append(
-                {"url": src["repositoryUrl"], "commit_start": src["commitHash"], "commit_final": commit_final}
+                {"url": url, "commit_start": src["commitHash"] or None, "commit_final": commit_final}
             )
         if commits:
             notes.append(
@@ -204,32 +222,37 @@ class HalbornConverter(Converter):
                 "Halborn to confirm it is the final reviewed commit"
             )
         scope_files = [p for s in fr["sources"] for p in s["scopeFiles"]]
-        scope["in_scope_paths"] = scope_files
+        scope_globs = [] if scope_files else _scope_globs(blocks.get("in-scope components") or scope_text)
+        scope["in_scope_paths"] = scope_files or scope_globs
+        if scope_globs:
+            notes.append("in-scope paths taken from the scope description; confirm")
         scope["out_of_scope"] = [p for s in fr["sources"] for p in s["outOfScopeFiles"] + s["outOfScopeExtra"]]
-        scope["languages"] = ["rust"] if any(p.endswith(".rs") for p in scope_files) else []
+        rust = any(p.endswith(".rs") for p in scope_files) or "soroban" in scope_text.lower()
+        scope["languages"] = ["rust"] if rust else []
 
-        findings = [self._finding(f, slug, scope_files) for f in fr["findings"]]
+        findings = [self._finding(f, slug, scope_files, scope_globs) for f in fr["findings"]]
         report["findings"] = findings
         if any(f["remediation_verified_by"] == "firm" for f in findings):
             report["audit"]["type"] = ["code-review", "fix-review"]
 
         sections = report["sections"]
-        sections["executive_summary"] = html_to_md(fr.get("assessment_summary_html"))
-        notes.append("Section 1 is Halborn's Assessment Summary verbatim; trim toward ~250 words if desired")
-        sections["project_context"] = intro_md or None
-        notes.append("Section 2 is Halborn's Introduction; the key contracts table is not in the source")
+        sections["executive_summary"] = _pick(blocks, "assessment summary", "executive summary") or intro_md or None
+        sections["project_context"] = intro_md or _pick(blocks, "executive summary") or None
         extra = [x for s in fr["sources"] for x in s["outOfScopeExtra"]]
+        assumptions = [
+            "\n".join(f"- Out of scope: {x}" for x in extra),
+            _pick(blocks, "threat model and risk assessment", "out of scope") or "",
+        ]
         sections["assumptions_limitations"] = (
-            "\n".join(f"- Out of scope: {x}" for x in extra) if extra else "No assumptions stated in the source."
+            "\n\n".join(a for a in assumptions if a) or "No assumptions stated in the source."
         )
-        notes.append("Section 5 built from Halborn's out-of-scope notes; Halborn has no assumptions section")
-        sections["methodology"] = html_to_md(fr.get("methodology_html"))
+        sections["methodology"] = _pick(blocks, "test approach and methodology", "methodology", "scope and methodology")
         sections["disclaimer"], note = disclaimer_with_default(self.firm_name, fr.get("disclaimer_text"))
         if note:
             notes.append(note)
         return report
 
-    def _finding(self, f: dict, slug: str, scope_files: list[str]) -> dict:
+    def _finding(self, f: dict, slug: str, scope_files: list[str], scope_globs: list[str]) -> dict:
         out = new_finding()
         notes = out["conversion_notes"]
         source_id = f"HAL-{f['halIndex']:02d}"
@@ -280,11 +303,39 @@ class HalbornConverter(Converter):
         out["category"] = infer_category(out["title"], description, out["unified_severity"])
         notes.append(f"category inferred: {out['category']}")
 
-        location, inferred = _locations(out["title"], description, excerpts, scope_files)
+        location, inferred = _locations(out["title"], description, excerpts, scope_files, scope_globs)
         out["location"] = location
         if location and inferred:
             notes.append("location inferred from contract names and code excerpt line ranges; confirm")
         return out
+
+
+def _blocks(fr: dict) -> dict[str, str]:
+    """Every named text block on the page, lowercased: page sections plus the summary's own subsections."""
+    blocks: dict[str, str] = {}
+    legacy = {
+        "Introduction": fr.get("introduction_html"),
+        "Assessment Summary": fr.get("assessment_summary_html"),
+        "Test Approach and Methodology": fr.get("methodology_html"),
+    }
+    for name, html in {**legacy, **(fr.get("sections_html") or {})}.items():
+        md = html_to_md(html)
+        if md:
+            blocks.setdefault(name.lower(), md)
+    summary = html_to_md(fr.get("executive_summary_html")) or ""
+    for heading, body in re.findall(r"^#{1,6}\s+(.+?)\s*\n([\s\S]*?)(?=^#{1,6}\s|\Z)", summary, re.M):
+        if body.strip():
+            blocks.setdefault(heading.strip().lower(), body.strip())
+    return blocks
+
+
+def _pick(blocks: dict[str, str], *names: str) -> str | None:
+    return next((blocks[n] for n in names if blocks.get(n)), None)
+
+
+def _scope_globs(text: str) -> list[str]:
+    """Folder globs such as `contract/vault/soroban/src/**` named in the scope description."""
+    return list(dict.fromkeys(re.findall(r"\b[\w.-]+(?:/[\w.-]+)+/\*\*", text or "")))
 
 
 def out_hash(f: dict) -> str | None:
@@ -306,7 +357,9 @@ def _strip_code_headers(html: str) -> tuple[str, list[tuple[str, str]]]:
     return str(soup), excerpts
 
 
-def _locations(title: str, text: str, excerpts, scope_files: list[str]) -> tuple[str | None, bool]:
+def _locations(
+    title: str, text: str, excerpts, scope_files: list[str], scope_globs: list[str] | None = None
+) -> tuple[str | None, bool]:
     """Resolve `path:Lx-Ly` locations from explicit .rs mentions, then code excerpts, then contract names."""
     main_file = {}
     for path in scope_files:
@@ -331,6 +384,10 @@ def _locations(title: str, text: str, excerpts, scope_files: list[str]) -> tuple
 
     for name, start, end in RS_MENTION.findall(text):
         candidates = [p for p in scope_files if p.endswith("/" + name) or p == name]
+        if not scope_files and "/" in name:
+            # No file list (e.g. code shared as an archive): trust full paths inside the in-scope folders.
+            prefixes = [g.split("*")[0] for g in scope_globs or []]
+            candidates = [name] if not prefixes or any(name.startswith(pre) for pre in prefixes) else []
         if len(candidates) > 1:
             dirs = {"/".join(h.split("/")[:2]) for h in hints}
             narrowed = [c for c in candidates if "/".join(c.split("/")[:2]) in dirs]
