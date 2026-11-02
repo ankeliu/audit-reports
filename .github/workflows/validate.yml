@@ -127,10 +127,11 @@ jobs:
         with:
           python-version: "3.11"
       - run: pip install -q -e tools/
-      - run: auditbank index
       - name: Commit index
         run: |
-          if git diff --quiet -- reports/; then exit 0; fi
+          # Only when the list of reports changed; the generated_at date alone isn't worth a commit.
+          if auditbank index --check; then exit 0; fi
+          auditbank index
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -am "chore(reports): rebuild index"
