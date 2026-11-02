@@ -1,5 +1,27 @@
 {
   "generated_at": "2026-11-02",
   "schema_version": "0.2",
-  "reports": []
+  "reports": [
+    {
+      "path": "reports/templar-protocol/templar-protocol--hal--2026-05-25.md",
+      "project_slug": "templar-protocol",
+      "client": "Templar Protocol",
+      "audit_firm": "Halborn",
+      "firm_abbrev": "HAL",
+      "report_date": "2026-05-25",
+      "platform": "soroban",
+      "disclosure_status": "public",
+      "conversion_method": null,
+      "findings_summary": {
+        "total": 102,
+        "critical": 0,
+        "high": 4,
+        "moderate": 22,
+        "low": 1,
+        "informational": 75
+      },
+      "pdf_url": null,
+      "firm_report_url": "https://www.halborn.com/audits/templar-protocol/smart-contract-assessment-0669c5"
+    }
+  ]
 }

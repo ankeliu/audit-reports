@@ -5,4 +5,4 @@ Each firm's linked PDF or report page is the authoritative document.
 
 | Project | Firm | Date | Findings (total) | Link |
 |---|---|---|---|---|
-| _No reports yet_ | | | | |
+| Templar Protocol | Halborn | 2026-05-25 | 102 | [report](templar-protocol/templar-protocol--hal--2026-05-25.md) · [firm original](https://www.halborn.com/audits/templar-protocol/smart-contract-assessment-0669c5) |
