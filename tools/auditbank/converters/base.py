@@ -18,6 +18,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 import requests
+import yaml
 from markdownify import markdownify
 
 from ..paths import REPO_ROOT, vocab
@@ -150,8 +151,28 @@ def slugify(text: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
 
 
-def unified_from_label(label: str | None) -> str | None:
-    return UNIFIED_FROM_LABEL.get((label or "").strip().lower())
+FIRMS_DIR = REPO_ROOT / "firms"
+
+
+def firm_settings(firm: str) -> dict:
+    """Settings the firm has confirmed in its review issue (firms/<firm>.yml). Empty when nothing is confirmed."""
+    for path in sorted(FIRMS_DIR.glob("*.yml")):
+        data = yaml.safe_load(path.read_text()) or {}
+        if data.get("firm") == firm:
+            return data | {"_path": path}
+    return {}
+
+
+def confirmed_map(firm: str, key: str) -> dict[str, str]:
+    """A confirmed `severity_map` or `status_map`, with lowercased keys."""
+    return {str(k).strip().lower(): v for k, v in (firm_settings(firm).get(key) or {}).items() if v}
+
+
+def unified_from_label(label: str | None, firm: str | None = None) -> str | None:
+    label = (label or "").strip().lower()
+    if firm and label in confirmed_map(firm, "severity_map"):
+        return confirmed_map(firm, "severity_map")[label]
+    return UNIFIED_FROM_LABEL.get(label)
 
 
 def severity_note(label: str, unified: str) -> str:
@@ -307,7 +328,7 @@ def new_report(firm: str) -> dict:
         "publication": {
             "disclosure_status": "public",
             "embargo_until": None,
-            "license": DEFAULT_LICENSE,
+            "license": firm_settings(firm).get("license") or DEFAULT_LICENSE,
             "conversion_method": None,
         },
         "audit": {"type": ["code-review"], "methods": [], "tooling": None},
@@ -324,9 +345,9 @@ def new_report(firm: str) -> dict:
         "findings_summary": {},
         "severity_standard": f"audit-bank-v{vocab()['schema_version']}",
         "heading": None,
-        "conversion_notes": [
-            f'publication.license defaulted to "{DEFAULT_LICENSE}"; firm to confirm reuse terms',
-        ],
+        "conversion_notes": []
+        if firm_settings(firm).get("license")
+        else [f'publication.license defaulted to "{DEFAULT_LICENSE}"; firm to confirm reuse terms'],
         "findings": [],
         "sections": {
             "executive_summary": None,
@@ -370,11 +391,14 @@ NOTE_GROUPS = [
 ]
 
 
-def _is_rule_based(note: str) -> bool:
-    """Notes for mappings that follow the published rules (FILLING_INSTRUCTIONS.md), not guesses."""
+def _is_rule_based(note: str, firm: str | None = None) -> bool:
+    """Notes for mappings that follow the published rules or the firm's confirmed settings, not guesses."""
     m = STANDARD_SEVERITY.match(note)
     if m:
-        return m.group(2).lower() != "warning" and UNIFIED_FROM_LABEL.get(m.group(2).lower()) == m.group(1)
+        label = m.group(2).lower()
+        if firm and confirmed_map(firm, "severity_map").get(label) == m.group(1):
+            return True
+        return label != "warning" and UNIFIED_FROM_LABEL.get(label) == m.group(1)
     return any(rx.match(note) for rx in RULE_BASED)
 
 
@@ -386,7 +410,7 @@ def tidy_notes(report: dict) -> dict:
     ids_by_key: dict[str, list[str]] = {}
     for f in report["findings"]:
         for note in f["conversion_notes"]:
-            if _is_rule_based(note):
+            if _is_rule_based(note, (report.get("report") or {}).get("audit_firm")):
                 continue
             key = next((msg for rx, msg in NOTE_GROUPS if rx.search(note)), note)
             entries.append((f, key, note))

@@ -15,8 +15,10 @@ from urllib.parse import urlparse
 from .base import (
     Converter,
     RawDoc,
+    confirmed_map,
     demote_headings,
     disclaimer_with_default,
+    firm_settings,
     infer_category,
     new_finding,
     new_report,
@@ -373,7 +375,11 @@ class VeridiseConverter(Converter):
         sections["disclaimer"], note = disclaimer_with_default(self.firm_name, firm_disclaimer)
         if note:
             notes.append(note)
-        if fr.get("copyright") and "all rights reserved" in fr["copyright"].lower():
+        if (
+            fr.get("copyright")
+            and "all rights reserved" in fr["copyright"].lower()
+            and not firm_settings(self.firm_name).get("license")
+        ):
             # One license note, not two: replace the generic default note with the specific conflict.
             notes[:] = [n for n in notes if not n.startswith("publication.license")]
             notes.append(
@@ -400,10 +406,11 @@ class VeridiseConverter(Converter):
         out["title"] = f["title"]
 
         severity = f.get("severity") or ""
-        out["unified_severity"] = unified_from_label(severity)
+        confirmed_severity = confirmed_map(self.firm_name, "severity_map")
+        out["unified_severity"] = unified_from_label(severity, self.firm_name)
         rating = f"{severity} (Veridise impact x likelihood matrix); Type: {f.get('type')}"
         out["firm_severity_rating"] = f"{rating} (source: {f['id']})"
-        if severity.lower() == "warning":
+        if severity.lower() == "warning" and "warning" not in confirmed_severity:
             notes.append(
                 'Veridise "Warning" mapped to unified "Low" (Warning sits between Info and Low in the Veridise '
                 "matrix); Veridise to confirm"
@@ -415,10 +422,12 @@ class VeridiseConverter(Converter):
 
         status = f.get("status") or ""
         has_fix = bool(f.get("fix_urls") or f.get("fix_commits"))
-        out["status"] = STATUS.get(status, "Unresolved")
-        if status not in STATUS:
+        confirmed_status = {k: v for k, v in (firm_settings(self.firm_name).get("status_map") or {}).items() if v}
+        statuses = STATUS | confirmed_status
+        out["status"] = statuses.get(status, "Unresolved")
+        if status not in statuses:
             notes.append(f"Veridise status {status!r} mapped to Unresolved; confirm")
-        if status == "Intended Behavior":
+        if status == "Intended Behavior" and status not in confirmed_status:
             notes.append("client states intended behavior (Veridise Appendix A.1); recorded as Risk Accepted")
         if status == "Fixed" and has_fix:
             out["remediation_verified_by"] = "firm"

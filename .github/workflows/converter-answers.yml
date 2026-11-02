@@ -1,0 +1,88 @@
+name: converter-answers
+
+# A firm's reply on its "Converter review" issue becomes a PR that updates firms/<firm>.yml (license,
+# rating and status mappings) and .github/firm-reviewers.yml, for the firm's engineer to approve.
+# Comments are public and untrusted: they reach the tooling only as a JSON file, the model can only
+# fill a fixed schema, and every value is validated before it is written. Replies from SDF
+# (owner, members, collaborators) are ignored unless they start with /apply.
+
+on:
+  issue_comment:
+    types: [created]
+
+concurrency:
+  group: converter-answers-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    if: >-
+      contains(github.event.issue.labels.*.name, 'converter-review') &&
+      !github.event.issue.pull_request &&
+      github.event.comment.user.type != 'Bot' &&
+      (!contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association) ||
+       startsWith(github.event.comment.body, '/apply'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: tools/pyproject.toml
+      - name: Install tooling
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils > /dev/null
+          pip install -q -e "tools/[ai]"
+
+      - name: Read the thread and apply the answers
+        id: answers
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          printf '%s' "$ISSUE_BODY" > "$RUNNER_TEMP/issue.md"
+          gh api --paginate "repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" \
+            | jq -s 'add // []' > "$RUNNER_TEMP/comments.json"
+          python -m auditbank.answers \
+            --title "$ISSUE_TITLE" \
+            --issue "${{ github.event.issue.number }}" \
+            --body-file "$RUNNER_TEMP/issue.md" \
+            --comments "$RUNNER_TEMP/comments.json" \
+            --workdir "$RUNNER_TEMP/answers" \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Open the PR
+        if: steps.answers.outputs.changed == 'true'
+        id: pr
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.SUBMISSION_TOKEN || github.token }}
+          branch: ${{ steps.answers.outputs.branch }}
+          base: main
+          title: ${{ steps.answers.outputs.title }}
+          body-path: ${{ runner.temp }}/answers/pr-body.md
+          commit-message: "chore(firms): ${{ steps.answers.outputs.title }}"
+          add-paths: |
+            firms/*.yml
+            .github/firm-reviewers.yml
+            examples/*.md
+          labels: converter-review
+
+      - name: Reply on the issue
+        if: steps.pr.outputs.pull-request-url || steps.answers.outputs.comment == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -n "${{ steps.pr.outputs.pull-request-url }}" ]; then
+            body="Thanks! Your answers are applied in ${{ steps.pr.outputs.pull-request-url }}. Please review and approve it."
+          else
+            body="$(cat "$RUNNER_TEMP/answers/comment.md")"
+          fi
+          gh api "repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments" -f body="$body" --silent

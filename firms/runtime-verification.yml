@@ -1,0 +1,13 @@
+# Converter settings for Runtime Verification, confirmed by Runtime Verification in its review issue:
+# https://github.com/ankeliu/audit-reports/issues/4
+# An empty value means "not confirmed yet": the converter uses its default and flags it for review.
+# Replies on the issue are turned into a pull request that updates this file, for Runtime Verification to approve.
+firm: Runtime Verification
+review_issue: 4
+license: null        # reuse terms for archived summaries, e.g. "CC BY 4.0" (unconfirmed default: Apache-2.0)
+severity_map: {}     # Runtime Verification rating -> unified severity (Critical, High, Moderate, Low, Informational)
+status_map: {}       # Runtime Verification status -> archive status (see FILLING_INSTRUCTIONS.md)
+example:
+  source: https://strapi.runtimeverification.com/uploads/Moonlight_report_64808bfd8e.pdf
+  slug: moonlight
+  path: examples/moonlight--rv--2026-07-24.md

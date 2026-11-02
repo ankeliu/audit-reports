@@ -97,7 +97,7 @@ jobs:
             reports/index.json
             reports/README.md
           labels: ${{ steps.sub.outputs.needs_firm_review == 'true' && 'report,needs-firm-review' || 'report' }}
-          reviewers: ${{ steps.sub.outputs.reviewer }}
+          # Firm reviewers are @-mentioned in the body: review requests only work for repo collaborators.
           delete-branch: true
 
       - name: Link the PR

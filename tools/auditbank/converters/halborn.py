@@ -14,6 +14,7 @@ from .base import (
     Converter,
     RawDoc,
     disclaimer_with_default,
+    firm_settings,
     html_to_md,
     infer_category,
     new_finding,
@@ -260,7 +261,7 @@ class HalbornConverter(Converter):
         out["title"] = (f.get("title") or "").strip()
 
         grade = (f.get("bvss_grade") or [None])[0]
-        out["unified_severity"] = unified_from_label(grade)
+        out["unified_severity"] = unified_from_label(grade, self.firm_name)
         rating = f"{grade}, BVSS 2.0 {f.get('bvss_score')} ({f.get('bvss_vector')})"
         out["firm_severity_rating"] = f"{rating} (source: {source_id})"
         if out["unified_severity"]:
@@ -269,8 +270,9 @@ class HalbornConverter(Converter):
             notes.append(f"BVSS grade {grade!r} has no unified mapping; firm to assign")
 
         state = f.get("remediationState")
-        out["status"] = STATUS.get(state, "Unresolved")
-        if state not in STATUS:
+        statuses = STATUS | {k: v for k, v in (firm_settings(self.firm_name).get("status_map") or {}).items() if v}
+        out["status"] = statuses.get(state, "Unresolved")
+        if state not in statuses:
             notes.append(f"Halborn remediation state {state!r} mapped to Unresolved; confirm")
         if state == "Solved" and out_hash(f):
             out["remediation_verified_by"] = "firm"

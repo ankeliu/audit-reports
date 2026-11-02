@@ -1,0 +1,13 @@
+# Converter settings for Veridise, confirmed by Veridise in its review issue:
+# https://github.com/ankeliu/audit-reports/issues/5
+# An empty value means "not confirmed yet": the converter uses its default and flags it for review.
+# Replies on the issue are turned into a pull request that updates this file, for Veridise to approve.
+firm: Veridise
+review_issue: 5
+license: null        # reuse terms for archived summaries, e.g. "CC BY 4.0" (unconfirmed default: Apache-2.0)
+severity_map: {}     # Veridise rating -> unified severity (Critical, High, Moderate, Low, Informational)
+status_map: {}       # Veridise status -> archive status (see FILLING_INSTRUCTIONS.md)
+example:
+  source: https://veridise.com/wp-content/uploads/2025/10/VAR-Redstone-251006-Oracles-SDK-V2.pdf
+  slug: redstone
+  path: examples/redstone--ver--2025-10-27.md

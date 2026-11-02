@@ -427,7 +427,7 @@ class RuntimeVerificationConverter(Converter):
         out["title"] = f["title"]
 
         severity = f.get("severity") or ""
-        out["unified_severity"] = unified_from_label(severity)
+        out["unified_severity"] = unified_from_label(severity, self.firm_name)
         if out["unified_severity"]:
             notes.append(severity_note(severity, out["unified_severity"]))
         else:

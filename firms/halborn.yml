@@ -1,0 +1,13 @@
+# Converter settings for Halborn, confirmed by Halborn in its review issue:
+# https://github.com/ankeliu/audit-reports/issues/3
+# An empty value means "not confirmed yet": the converter uses its default and flags it for review.
+# Replies on the issue are turned into a pull request that updates this file, for Halborn to approve.
+firm: Halborn
+review_issue: 3
+license: null        # reuse terms for archived summaries, e.g. "CC BY 4.0" (unconfirmed default: Apache-2.0)
+severity_map: {}     # Halborn rating -> unified severity (Critical, High, Moderate, Low, Informational)
+status_map: {}       # Halborn status -> archive status (see FILLING_INSTRUCTIONS.md)
+example:
+  source: https://www.halborn.com/audits/splyce/smart-contract-assessment-de69cd
+  slug: splyce
+  path: examples/splyce--hal--2026-07-30.md

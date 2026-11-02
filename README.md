@@ -22,6 +22,7 @@ Every pull request is checked automatically. The SDF audit coordinator then conf
 | [`reports/`](reports/) | Accepted reports and their index |
 | [`schema/`](schema/) | JSON Schema and the allowed values for severity, status, category, and firms |
 | [`tools/`](tools/) | The `auditbank` command-line tool |
+| [`firms/`](firms/) | Each firm's confirmed converter settings (license, how its ratings map) |
 | [`site/`](site/) | The submission page |
 | [`examples/`](examples/) | Sample conversions, removed once firms approve their converters |
 
@@ -35,7 +36,7 @@ auditbank convert <report URL or PDF>      # draft a standard file from a publis
 
 ## Converters
 
-Each firm reviews how its reports are converted before the converter is used for real submissions. Questions for each firm are in the [converter review issues](https://github.com/ankeliu/audit-reports/issues?q=label%3Aconverter-review); firms can answer there.
+Each firm reviews how its reports are converted before the converter is used for real submissions. Questions for each firm are in the [converter review issues](https://github.com/ankeliu/audit-reports/issues?q=label%3Aconverter-review). When a firm replies there, its answers are turned into a pull request updating its settings in [`firms/`](firms/), which an engineer at the firm approves. Every later conversion for that firm uses them.
 
 ## Principles
 
